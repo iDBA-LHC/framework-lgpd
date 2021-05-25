@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Alterar foto</h2>
+<mat-dialog-content class="mat-typography">
+  <div *ngIf="imageUrl && imageUrl !== ''" styleClass="logoPreview">
+    <img [src]="imageUrl" class="logoPreview" />
+  </div>
+  <label class="mat-raised-button mat-button-base mat-primary"
+    >Selecionar imagem
+    <input
+      type="file"
+      accept="image/*"
+      (change)="showPreview($event)"
+      class="input-file"
+    />
+  </label>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button [mat-dialog-close]="imageUrl" color="accent">
+    Salvar
+  </button>
+  <button mat-raised-button (click)="onNoClick()" color="warn">
+    Fechar
+  </button>
+</mat-dialog-actions>

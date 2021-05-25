@@ -1,0 +1,72 @@
+<mat-card class="marginContent">
+    <div fxLayout="row">
+      <div fxFlex>
+        <mat-form-field>
+          <input
+            matInput
+            (keyup)="applyFilter($event.target.value)"
+            placeholder="Pesquisar Título"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+  
+    <div *ngIf="!isLoading"
+      fxLayout="row"
+      fxLayoutAlign="center"
+      fxLayoutGap="gappx">
+      <mat-spinner></mat-spinner>
+    </div>
+  
+    <div class="mat-elevation-z8"  style="width: 100%; max-width: 100%; word-break: inherit; overflow: auto;" [hidden]="!isLoading">
+      <table mat-table [dataSource]="dataSource" matSort style="min-height: 350px;">
+        
+        <ng-container matColumnDef="numeroNotaFiscal">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota Fiscal</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.numeroNotaFiscal }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="numeroPedido">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Pedido</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.numeroPedido }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="numeroParcela">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Parcela</th>
+            <td mat-cell *matCellDef="let element; let i = index">{{ element.numeroParcela }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataVencimento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Vencimento</th>
+            <td mat-cell *matCellDef="let element; let i = index">{{ element.dataVencimentoFormatada }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nomeEmitente">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Emitente</th>
+            <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeEmitente }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="valorAberto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Abertos</th>
+            <td mat-cell *matCellDef="let element; let i = index">{{ element.valorAberto }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="valorVencido">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Vencidos</th>
+            <td mat-cell *matCellDef="let element; let i = index">{{ element.valorVencido }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator [length]="length"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     (page)="pageEvent($event)">
+      </mat-paginator>
+        
+    </div>
+  </mat-card>
+  
+

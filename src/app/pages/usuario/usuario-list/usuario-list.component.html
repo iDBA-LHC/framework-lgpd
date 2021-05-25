@@ -1,0 +1,93 @@
+<mat-card class="marginContent">
+    <div fxLayout="row">
+      <div fxFlex>
+        <mat-form-field fxFlex="30">
+          <input
+            matInput
+            (keyup)="applyFilter($event.target.value)"
+            placeholder="Buscar Usuário"/>
+        </mat-form-field>
+  
+        <div fxFlex style="align-items: center; margin-left: 15px;">
+            <mat-slide-toggle
+                color="primary"
+                fxFlex="100"
+                (change)="applyValue($event)">
+                <span class="ng-tns-c15-3 ng-star-inserted">Inativos</span>
+            </mat-slide-toggle>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="5px">
+        <!--<div fxLayout="column" fxLayoutAlign="start end">
+          <button mat-raised-button color="accent" (click)="downloadPdf()">
+            <mat-icon>picture_as_pdf</mat-icon> Baixar PDF
+          </button>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="start end">
+          <button mat-raised-button color="accent" (click)="openPdf()">
+            <mat-icon>picture_as_pdf</mat-icon> Abrir PDF
+          </button>
+        </div>-->
+        <div fxLayout="column" fxLayoutAlign="start end">
+          <a
+            mat-raised-button
+            color="accent"
+            [routerLink]="['/usuario', '']"
+            routerLinkActive="active">
+            <mat-icon>add</mat-icon>Novo Usuário</a>
+        </div>
+      </div>
+    </div>
+  
+    <div
+      *ngIf="!isLoading"
+      fxLayout="row"
+      fxLayoutAlign="center"
+      fxLayoutGap="gappx">
+      <mat-spinner></mat-spinner>
+    </div>
+  
+    <div class="mat-elevation-z8" [hidden]="!isLoading">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="nomeUsuario">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuário</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeUsuario }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="nomeEmpresa">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeEmpresa }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="example-button-row">
+              <button
+                mat-raised-button
+                color="accent"
+                [routerLink]="['/usuario', element.codigoUsuario]">
+                Editar
+              </button>
+              <button
+                mat-raised-button
+                color="warn"
+                [disabled]="element.indAtivo ? false : true"
+                (click)="inativarUsuario(element)">Inativar
+              </button>
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="element.indAtivo ? false : true"
+                (click)="gerarSenha(element)">Gerar Senha
+              </button>
+            </div>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-card>
+  

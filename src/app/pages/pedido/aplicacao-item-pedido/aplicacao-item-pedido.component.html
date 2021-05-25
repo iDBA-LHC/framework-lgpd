@@ -1,0 +1,55 @@
+<mat-card class="marginContent" style="width: 95%;">
+    <div class="mat-elevation-z8" style="width: 100%;">
+      <div style="width: 100%;">
+        <form
+          fxLayout="column wrap"
+          fxLayoutAlign="space-between center"
+          fxFlex="100"
+          fxFlex.gt-sm="100" 
+          [formGroup]="aplicacaoItemPedidoForm"
+          style="width: 100%;">
+          <mat-card-header>
+            <mat-card-title>
+             <h2>Nova Aplicação</h2>
+            </mat-card-title>
+          </mat-card-header>        
+
+          <mat-form-field >   
+            <mat-label>Aplicação</mat-label>
+
+            <input 
+              matInput
+              formControlName="aplicacao"
+              placeholder="Aplicação"
+              [matAutocomplete]="autoAplicacao"   
+              type="text"/> 
+              <mat-autocomplete #autoAplicacao="matAutocomplete" [displayWith]="displayAplicacaoItem">
+                <mat-option *ngFor="let aplicacaoItem of listaAplicacaoItemFiltrados | async" [value]="aplicacaoItem">
+                  {{aplicacaoItem.descricaoAplicacao}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="aplicacaoItemPedidoForm.controls.aplicacao.errors?.required">Aplicação é obrigatória</mat-error> 
+          </mat-form-field> 
+
+          <mat-form-field>   
+              <mat-label>Percentual</mat-label>
+              <input
+                matInput
+                formControlName="percentual"
+                placeholder="Preço Percentual"
+                autocomplete="off"
+                type="number"/>
+                <mat-error *ngIf="aplicacaoItemPedidoForm.controls.percentual.errors?.required">Percentual é obrigatório</mat-error>  
+          </mat-form-field>
+          
+          <mat-card-actions>
+            <button mat-raised-button color="accent"
+              (click)="salvarAplicacaoItemPedido();"
+              href="javascript: void(0);">Salvar</button>
+          </mat-card-actions>
+        </form>
+      </div>
+    </div>
+  </mat-card>
+  
+

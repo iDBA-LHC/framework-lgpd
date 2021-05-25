@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form
+    fxLayout="row wrap"
+    fxLayout="column"
+    fxLayoutAlign="space-between center"
+    fxFlex="100"
+    fxFlex.gt-sm="100"
+    id="newPriceForm"
+    [formGroup]="newPriceForm"
+    (ngSubmit)="processNewPrice()"
+  >
+    <mat-form-field fxFlex>
+      <mat-label>Novo preço</mat-label>
+      <input
+        matInput
+        formControlName="newPrice"
+        placeholder="Novo preço"
+        autocomplete="off"
+        type="text"
+        currencyMask
+        [options]="currencyOpts"
+      />
+      <mat-error *ngIf="newPriceForm.controls.newPrice.errors?.required"
+        >Campo obrigatório</mat-error
+      >
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button cdkFocusInitial form="newPriceForm" color="accent">
+    Salvar
+  </button>
+  <button mat-raised-button (click)="onNoClick()" color="warn">
+    Fechar
+  </button>
+</mat-dialog-actions>

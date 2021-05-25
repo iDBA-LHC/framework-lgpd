@@ -1,0 +1,75 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      <div>
+        <form
+          fxLayout="row wrap"
+          fxLayout="column"
+          fxLayoutAlign="space-between center"
+          fxFlex="100"
+          fxFlex.gt-sm="100"
+          [formGroup]="usuarioForm"
+          (submit)="salvarUsuario()">
+
+            <mat-card-header>
+                <mat-card-title>
+                    <h2 *ngIf="!usuarioId">Novo Usuário</h2>
+                    <h2 *ngIf="usuarioId">Editar Usuário</h2>
+                </mat-card-title>
+            </mat-card-header>
+  
+            <mat-form-field fxFlex style="width: 50%;" fxLayoutGap="10px">
+                <mat-label>Nome</mat-label>
+                <input
+                    matInput
+                    formControlName="nomeUsuario"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="usuarioForm.controls.nomeUsuario.errors?.required">Nome é Obrigatório</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex style="width: 50%;" fxLayoutGap="10px">
+                <mat-label>Email</mat-label>
+                <input
+                    matInput
+                    formControlName="emailUsuario"
+                    placeholder="Email"
+                    autocomplete="off"
+                    type="email"/>
+                <mat-error *ngIf="usuarioForm.controls.emailUsuario.errors?.required">Email é Obrigatório</mat-error>
+                <mat-error *ngIf="usuarioForm.controls.emailUsuario.hasError('invalidEmail')">Email Informado não é Válido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="!meuUsuario" style="width: 50%;" fxLayoutGap="10px">   
+              <mat-label>Cliente</mat-label>
+              <input 
+                matInput
+                formControlName="empresa"
+                placeholder="Cliente"
+                [matAutocomplete]="autoEmpresa"/>  
+  
+              <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa">
+                <mat-option *ngFor="let cliente of listaEmpresasFiltrados | async" [value]="cliente">
+                  {{cliente.nomeEmpresa}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="usuarioForm.controls.empresa.errors?.required">Cliente é Obrigatório</mat-error> 
+            </mat-form-field> 
+
+            <mat-slide-toggle *ngIf="!meuUsuario" color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indAtivo" style="width: 50%;">
+                <span class="ng-tns-c15-3 ng-star-inserted">Ativo</span>
+            </mat-slide-toggle>
+
+            <mat-slide-toggle *ngIf="!meuUsuario" color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indAdmin" style="width: 50%;">
+                <span class="ng-tns-c15-3 ng-star-inserted">Administrador</span>
+            </mat-slide-toggle>
+
+            <mat-card-actions>
+              <button mat-raised-button color="accent">Salvar</button>
+              <button mat-raised-button color="primary" (click)="$event.preventDefault()" [disabled]="usuarioId ? false : true">Gerar Senha</button>
+            </mat-card-actions>
+        </form>
+      </div>
+    </div>
+  </mat-card>
+  

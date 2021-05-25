@@ -1,0 +1,195 @@
+<mat-card class="marginContent" style="width: 90%;">
+  <div class="mat-elevation-z8" style="width: 100%;">
+    <div style="width: 100%;">
+      <form
+        fxLayout="column wrap"
+        fxLayoutAlign="space-between center"
+        fxFlex="100"
+        fxFlex.gt-sm="100" 
+        [formGroup]="itemPedidoForm"
+        style="width: 100%;">
+        <mat-card-header>
+          <mat-card-title>
+          <h2 *ngIf="visualizando">Consultar Item</h2>
+          <h2 *ngIf="!editando && !visualizando">Novo Item</h2>
+          <h2 *ngIf="editando && !visualizando">Editar Item {{itemPedidoForm.controls.codigoItem.value}}</h2>
+          </mat-card-title>
+        </mat-card-header>        
+
+        <mat-form-field style="width: 90%;">   
+          <mat-label>Item</mat-label>
+          <input *ngIf="editando || visualizando"
+            matInput
+            formControlName="descricaoItem"
+            placeholder="Item"                
+            type="text"
+            readonly="true"/>
+
+          <input *ngIf="!editando && !visualizando"
+            matInput
+            formControlName="item"
+            placeholder="Item"
+            [matAutocomplete]="autoItem"  
+            (input)="filtraItensListaPreco($event.target.value)" 
+            type="text"/> 
+            <mat-autocomplete autoActiveFirstOption="true" #autoItem="matAutocomplete" [displayWith]="displayItem" >
+              <mat-option *ngFor="let item of itemListaPrecoFiltrado | async" [value]="item" (onSelectionChange)="setItemInformations(item)">
+                {{item.filtro}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="itemPedidoForm.controls.item.errors?.required">Código do Item é obrigatório</mat-error> 
+        </mat-form-field> 
+        
+        <div fxLayout="row" fxLayoutGap="10px" fxFlexOffset="0px" style="width: 90%">
+
+          <mat-form-field style="width: 30%;">   
+            <mat-label>Unidade</mat-label>
+            <input
+              matInput
+              formControlName="unidadeMedida"
+              placeholder="Unidade de medida"
+              autocomplete="off"
+              readonly="true"       
+              type="text"/>
+          </mat-form-field>
+
+          <mat-form-field style="width: 70%;" >
+            <mat-label>Preço Tabela</mat-label> 
+            <input
+              matInput
+              formControlName="precoTabela"
+              autocomplete="off"
+              readonly="true"
+              type="text"/>
+          </mat-form-field>
+
+        </div>  
+
+        <div fxLayout="column" fxLayoutGap="10px" fxFlexOffset="0px" style="width: 90%; align-content: center;">
+
+          <mat-slide-toggle style="width: 100%; align-self: center; display: inline-flex" color="primary" fxFlex="50" formControlName="indBonificado">
+            <span class="ng-tns-c15-3 ng-star-inserted" style="overflow: visible;">Item Bonificado</span>
+          </mat-slide-toggle>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="10px" fxFlexOffset="0px" style="width: 90%; padding-top: 10px">
+
+          <mat-form-field style="width: 50%;" >
+              <mat-label>Quantidade</mat-label> 
+              <input
+                matInput
+                formControlName="quantidadeItem"
+                placeholder="Quantidade"
+                autocomplete="off"
+                type="number"
+                (blur)="calculateTotal()"
+                />
+                <mat-error *ngIf="itemPedidoForm.controls.quantidadeItem.errors?.required">Quantidade do Item é obrigatório</mat-error>  
+            </mat-form-field>
+
+          <mat-form-field style="width: 50%;">   
+            <mat-label>Preço Unitário</mat-label>
+            <input
+              matInput
+              formControlName="precoUnitario"
+              placeholder="Preço Unitário"
+              autocomplete="off"
+              type="number"
+              (blur)="calculateTotal()"
+              />
+              <mat-error *ngIf="itemPedidoForm.controls.precoUnitario.errors?.required">Preço Unitário do Item é obrigatório</mat-error>  
+          </mat-form-field>
+
+        </div>  
+
+        <mat-form-field style="width: 90%;" >
+          <mat-label>Preço Total</mat-label> 
+          <input
+            matInput
+            formControlName="precoTotal"
+            autocomplete="off"
+            readonly="true"
+            value = "0"
+            type="number"/>
+        </mat-form-field>
+
+        <div *ngIf="!visualizando" fxLayout="row">
+          <div fxLayout="row" fxLayoutGap="5px">              
+            <div fxLayout="column" fxLayoutAlign="start end">
+              <a mat-raised-button
+                color="accent"
+                (click)="itemPedidoForm.valid && incluirAplicacao();" href="javascript: void(0);">
+                <mat-icon>add</mat-icon>Inserir Aplicação</a>
+              <br>
+            </div>
+          </div>
+        </div>
+      
+        <div class="mat-elevation-z8">
+
+          <table mat-table [dataSource]="dataSourceAplicacao">
+
+            <ng-container matColumnDef="descricaoAplicacao">
+              <th mat-header-cell *matHeaderCellDef> Aplicação </th>
+              <td mat-cell *matCellDef="let element"> {{ element.descricaoAplicacao }} 
+
+              </td>
+            </ng-container>         
+
+            <ng-container matColumnDef="percentual">
+              <th mat-header-cell *matHeaderCellDef>  %  </th>
+              <td mat-cell *matCellDef="let element; let i = index">
+                <mat-form-field>
+                  <input matInput
+                    type="number"
+                    [value]="element.percentual" 
+                    (blur)="element.percentual = $event.target.value"
+                    [readonly]="visualizando"
+                    >
+                    
+                  </mat-form-field>
+              </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <div *ngIf="!visualizando" class="remove-button-div">
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="removerAplicacaoItemPedido(element,$event)">
+                    <span class="remove-button-text">
+                      Remover
+                    </span>  
+                    <span class="material-icons remove-button-icon">
+                      delete
+                    </span>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        
+        </table>
+
+        </div>
+        
+        <mat-card-actions *ngIf="!visualizando">
+          <button mat-raised-button color="accent"
+            (click)="salvarItemPedido();"
+            href="javascript: void(0);">Salvar</button>
+        </mat-card-actions>
+
+        <mat-card-actions *ngIf="visualizando">
+          <button mat-raised-button color="accent"
+            (click)="this.dialogRef.close()"
+            href="javascript:void(0);">Voltar</button>
+        </mat-card-actions>
+
+      </form>
+    </div>
+  </div>
+</mat-card>

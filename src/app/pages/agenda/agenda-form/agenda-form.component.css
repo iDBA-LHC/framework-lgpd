@@ -1,0 +1,39 @@
+h3 {
+    margin: 0 0 10px;
+  }
+  
+  pre {
+    background-color: #f5f5f5;
+    padding: 15px;
+  }
+
+  .groupX {
+    font-size: 16px;
+    margin: 20px 0;
+    padding: 3px 15px 3px 15px;
+    /*color: rgb(49, 46, 46);
+    background-color: rgba(224, 224, 224, 0.96);*/
+    background-color: #4186c5;
+    color: white;
+    text-transform: none;
+    font-weight: 400;
+    min-width:100px;
+}
+
+.left {
+    border-radius: 10px 0 0 10px;
+}
+
+.middle {
+    border-radius: 0;
+    border-left: 1px solid rgba(230, 230, 230, 0.96);
+    border-right: 1px solid rgba(230, 230, 230, 0.96);
+}
+
+.right {
+    border-radius: 0 10px 10px 0;
+}
+
+.selecionado{
+  background-color: #153f65;
+}

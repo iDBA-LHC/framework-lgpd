@@ -1,0 +1,11 @@
+.bottom-img {
+    display: block;
+    max-height: 200px;
+  }
+  
+  .bottom-img-wrapper {
+    z-index: 1;
+    position: fixed;
+    bottom: 15px;
+    right: 30px;
+  }

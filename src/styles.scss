@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "custom-theme.scss";
+@import url("https://fonts.googleapis.com/css?family=Armata&display=swap");
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+@import url("app/shared/themes/_custom.scss");
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+/*@import url("https://unpkg.com/bootstrap-css-only@4.4.1/css/bootstrap.min.css");*/
+@import url("https://unpkg.com/@fortawesome/fontawesome-free@5.15.1/css/all.css");
+/*@import url("https://unpkg.com/flatpickr@4.6.6/dist/flatpickr.css");*/
+@include mat-core();
+@include angular-material-theme($idba-theme);
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

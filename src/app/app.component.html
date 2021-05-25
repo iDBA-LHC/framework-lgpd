@@ -1,0 +1,28 @@
+<div class="my-overlay" *ngIf="showOverlay">
+  <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+</div>
+
+<mat-sidenav-container class="container">
+  <mat-sidenav
+    *ngIf="isLoggedIn$ | async as isLoggedIn"
+    #sidenav
+    [(mode)]="over"
+    [(opened)]="opened"
+    class="bottom-to-top sidemenu-back"
+  >
+    <app-sidemenu></app-sidemenu>
+  </mat-sidenav>
+
+  <mat-sidenav-content perfectScrollbar>
+    <app-header
+      *ngIf="isLoggedIn$ | async as isLoggedIn"
+      (sideNav)="getSideNav()"
+    >
+    </app-header>
+    <router-outlet></router-outlet>
+    <!--<div class="bottom-img-wrapper" *ngIf="isLoggedIn$ | async as isLoggedIn">
+      <img src="./../assets/img/dark.png" class="bottom-img"/>
+    </div>-->
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

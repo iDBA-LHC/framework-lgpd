@@ -1,0 +1,19 @@
+<div
+  fxLayout="row"
+  fxLayoutAlign="center"
+  fxLayoutGap="gappx"
+  class="color-white"
+>
+  <h3 [routerLink]="['/home']" class="cursorPointer">Framework LGPD</h3>
+</div>
+
+<ng-material-multilevel-menu
+  [configuration]="config"
+  [items]="appitems"
+  (selectedItem)="selectedItem($event)"
+>
+</ng-material-multilevel-menu>
+
+<!--<div class="bottom-img-wrapper">
+  <img [routerLink]="['/home']" src="./../../../../assets/img/light.png" class="bottom-img"/>
+</div>-->

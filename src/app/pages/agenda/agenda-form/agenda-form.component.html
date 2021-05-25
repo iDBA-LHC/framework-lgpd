@@ -1,0 +1,200 @@
+<mat-card class="marginContent">
+  <div class="mat-elevation-z8">
+    <div>
+      <form
+      fxLayout="row wrap"
+      fxLayout="column"
+      fxLayoutAlign="space-between center"
+      fxFlex="100"
+      fxFlex.gt-sm="100"
+      (submit)="salvarAgenda()">
+
+      <mat-card-header>
+        <mat-card-title>
+          <h2>{{ this.tecnicoSelecionado.nomeTecnico }}</h2>
+        </mat-card-title>
+      </mat-card-header>
+
+      <div class="row text-center" style="width: 100%;" fxLayout="row">
+        <div class="col-md-4" style="width: 33%; text-align: center;">
+          <div class="btn-group">
+            <section layout="row" layout-align="center center">
+              <button mat-raised-button color="primary" class="left"
+                mwlCalendarPreviousView
+                [view]="view"
+                [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">Anterior</button>
+
+              <button mat-raised-button color="primary" class="middle"
+                mwlCalendarToday
+                [(viewDate)]="viewDate">Hoje</button>
+
+              <button mat-raised-button color="primary" class="right"
+                mwlCalendarNextView
+                [view]="view"
+                [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">Próximo</button>
+            </section>
+          </div>
+        </div>
+        <div class="col-md-4 text-uppercase" style="width: 33%; text-align: center;">
+          <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):locale:weekStartsOn }}</h3>
+        </div>
+        <div class="col-md-4" style="width: 33%; text-align: center;">
+          <div class="btn-group">
+
+            <section layout="row" layout-align="center center">
+              <button mat-raised-button color="primary" class="left"
+                (click)="setView(CalendarView.Month)"
+                [class.active]="view === CalendarView.Month">Mês</button>
+              <button mat-raised-button color="primary" class="middle"
+                (click)="setView(CalendarView.Week)"
+                [class.active]="view === CalendarView.Week">Semana</button>
+              <button mat-raised-button color="primary" class="right"
+                (click)="setView(CalendarView.Day)"
+                [class.active]="view === CalendarView.Day">Dia</button>
+            </section> 
+          </div>
+        </div>
+      </div>
+
+      <br/>
+
+      <div [ngSwitch]="view" style="width: 100%;">
+        <mwl-calendar-month-view
+          *ngSwitchCase="CalendarView.Month"
+          [viewDate]="viewDate"
+          [events]="events"
+          [refresh]="refresh"
+          [locale]="locale"
+          [activeDayIsOpen]="activeDayIsOpen"          
+          (dayClicked)="dayClicked($event.day)"
+          (eventClicked)="handleEvent('Clicked', $event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)">
+
+        </mwl-calendar-month-view>
+        <mwl-calendar-week-view
+          *ngSwitchCase="CalendarView.Week"
+          [viewDate]="viewDate"
+          [events]="events"
+          [refresh]="refresh"
+          [locale]="locale"
+          [dayStartHour]="horarioTrabalhoInicio"
+          [dayEndHour]="horarioTrabalhoFim"
+          [excludeDays]="excludeDays"
+          (eventClicked)="handleEvent('Clicked', $event.event)"
+          (hourSegmentClicked)="incluirTarefaAgenda($event)"
+          (eventTimesChanged)="eventTimesChanged($event)">
+
+        </mwl-calendar-week-view>
+        <mwl-calendar-day-view
+          *ngSwitchCase="CalendarView.Day"
+          [viewDate]="viewDate"
+          [events]="events"
+          [refresh]="refresh"
+          [locale]="locale"
+          [dayStartHour]="horarioTrabalhoInicio"
+          [dayEndHour]="horarioTrabalhoFim"
+          (eventClicked)="handleEvent('Clicked', $event.event)"
+          (hourSegmentClicked)="incluirTarefaAgenda($event)"
+          (eventTimesChanged)="eventTimesChanged($event)">
+        </mwl-calendar-day-view>
+      </div>
+
+      <mat-card-actions>
+        <button mat-raised-button color="accent">Salvar</button>
+      </mat-card-actions>
+  
+  <!-- Everything you see below is just for the demo, you don't need to include it in your app -->
+  
+  <!--<br /><br /><br />
+  
+  <h3>
+    Edit events
+    <button class="btn btn-primary float-right" (click)="addEvent()">
+      Add new
+    </button>
+    <div class="clearfix"></div>
+  </h3>
+  
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Primary color</th>
+          <th>Secondary color</th>
+          <th>Starts at</th>
+          <th>Ends at</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr *ngFor="let event of events">
+          <td>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="event.title"
+              (keyup)="refresh.next()"
+            />
+          </td>
+          <td>
+            <input
+              type="color"
+              [(ngModel)]="event.color.primary"
+              (change)="refresh.next()"
+            />
+          </td>
+          <td>
+            <input
+              type="color"
+              [(ngModel)]="event.color.secondary"
+              (change)="refresh.next()"
+            />
+          </td>
+          <td>
+            <input
+              class="form-control"
+              type="text"
+              mwlFlatpickr
+              [(ngModel)]="event.start"
+              (ngModelChange)="refresh.next()"
+
+
+              
+              dateFormat="Y-m-dTH:i"
+              altFormat="F j, Y H:i"
+              placeholder="Not set"
+            />
+          </td>
+          <td>
+            <input
+              class="form-control"
+              type="text"
+              mwlFlatpickr
+              [(ngModel)]="event.end"
+              (ngModelChange)="refresh.next()"
+
+
+              dateFormat="Y-m-dTH:i"
+              altFormat="F j, Y H:i"
+              placeholder="Not set"
+            />
+          </td>
+          <td>
+            <button class="btn btn-danger" (click)="deleteEvent(event)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>-->
+  
+
+      </form>
+    </div>
+  </div>
+</mat-card>
