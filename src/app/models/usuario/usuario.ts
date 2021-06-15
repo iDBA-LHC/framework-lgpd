@@ -2,10 +2,12 @@ export class Usuario {
     codigoUsuario: number;
     nomeUsuario: string;
     emailUsuario: string;
-    codigoCliente: number;
+    codigoArea: number;
+    nomeArea: string;
+    codigoEmpresa: number;
     nomeEmpresa: string;
-    indAtivo: boolean;
-    indAdmin: boolean;
-    dataHoraLogin: Date;
-    dataHoraValidade: Date;
+    indTipoUsuario: number;
+    indAtivo: number;
+    indNivelAcesso: number;
+    chaveExternaUsuario: string;    
 }

@@ -1,6 +1,15 @@
 export class Empresa {
-    codigoEmpresa: string;
+
+    codigoEmpresa: number;
     nomeEmpresa: string;
-    nomeAbreviado: string;
-    rowid: string;
+    numeroCNPJ: number;
+    indMatrizFilial: number;
+    codigoEmpresaMatriz: number;
+    nomeEmpresaMatriz: string;
+    enderecoEmpresa: string;
+    nomeControlador: string;
+    numeroCPFControlador: number;
+    telefoneControlador: string;
+    emailControlador: string;
+
 }

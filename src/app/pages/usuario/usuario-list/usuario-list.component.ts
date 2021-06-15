@@ -5,44 +5,8 @@ import { ExportPdfService } from 'src/app/services/export-pdf.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from 'src/app/models/usuario/usuario';
 import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
-
-
-const mockedUsuarios: Usuario[] = [
-  {
-    codigoUsuario: 1,
-    nomeUsuario: "Huguinho",
-    emailUsuario: "a@a.a",
-    codigoCliente: 1,
-    nomeEmpresa: "Empresa 1",
-    indAtivo: false,
-    indAdmin: false,
-    dataHoraLogin: null,
-    dataHoraValidade: null,
-  },
-  {
-    codigoUsuario: 2,
-    nomeUsuario: "Zezinho",
-    emailUsuario: "b@b.b",
-    codigoCliente: 1,
-    nomeEmpresa: "Empresa 1",
-    indAtivo: true,
-    indAdmin: false,
-    dataHoraValidade: null,
-    dataHoraLogin: null,
-  },
-  {
-    codigoUsuario: 3,
-    nomeUsuario: "Luizinho",
-    emailUsuario: "c@c.c",
-    codigoCliente: 1,
-    nomeEmpresa: "Empresa 1",
-    indAtivo: true,
-    indAdmin: false,
-    dataHoraLogin: null,
-    dataHoraValidade: null,
-  },
-
-];
+import { AuthService } from 'src/app/services/auth.service';
+import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 
 @Component({
   selector: 'app-usuario-list',
@@ -55,8 +19,6 @@ export class UsuarioListComponent implements OnInit {
 
   displayedColumns: string[] = ["nomeUsuario", "nomeEmpresa","actions"];
 
-  private somenteAtivos = true;
-
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -65,31 +27,45 @@ export class UsuarioListComponent implements OnInit {
     private usuarioService: UsuarioService,
     private snackBar: CustomSnackBarService,
     private dialog: MatDialog,
-    private exportPdfService: ExportPdfService
+    private exportPdfService: ExportPdfService,
+    private authService: AuthService
   ) {}
 
 
   ngOnInit() {
-    this.pesquisaUsuarios(this.somenteAtivos);
+    this.pesquisaUsuarios();
   }
 
-  pesquisaUsuarios(active?: boolean) {
-    //this.categoryService.getAll(active).subscribe((categoryResponseList) => {
-    //this.dataSource = new MatTableDataSource(categoryResponseList);
-    this.dataSource = new MatTableDataSource(mockedUsuarios);
-    setTimeout(() => {
-      this.dataSource.filterPredicate = (
-        data: { nomeUsuario: string,
-                nomeEmpresa: string },
-        filterValue: string
-      ) => data.nomeUsuario.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-           data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ;
-
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+  pesquisaUsuarios() {
     this.isLoading = true;
-    //});
+    this.usuarioService.listaTodosUsuarios().subscribe(
+      (response) => {
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource<Usuario>(response.body);
+        setTimeout(() => {
+          this.dataSource.filterPredicate = (
+            data: { nomeUsuario: string,
+                    nomeEmpresa: string },
+            filterValue: string
+          ) => data.nomeUsuario.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+               data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ;
+    
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;          
+        });
+      },
+      (err) =>{
+        if (err.status === 401)
+        {
+          TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaUsuarios();}));
+        }
+        else
+        {
+          this.isLoading = false;
+          TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+        }
+      }
+    );    
   }
 
   gerarSenha(usuario: Usuario)
@@ -127,17 +103,33 @@ export class UsuarioListComponent implements OnInit {
 
     confirmRemoveDialog.afterClosed().subscribe((result) => {
       if (result) {
-        this.usuarioService.inativarUsuario(usuario.codigoUsuario).subscribe(
-          () => {
-            this.snackBar.openSnackBar(
-              `${usuario.nomeUsuario} foi inativado com sucesso.`,
-              null
-            );
-          },
-          (err) => this.snackBar.openSnackBar(err.error, null, "Error")
-        );
+        usuario.indAtivo = 0;
+        this.confirmaInativarUsuario(usuario);
+        this.isLoading = true;
       }
     });
+  }
+
+  private confirmaInativarUsuario(usuario:Usuario)
+  {
+    this.usuarioService.inativarUsuario(usuario).subscribe(
+      (response) => {
+        this.snackBar.openSnackBar(
+          `Usuário ${usuario.nomeUsuario} foi inativado com sucesso.`,
+          null
+        );
+        this.pesquisaUsuarios();
+      },
+      (err) => {
+        if (err.status === 401)
+        {
+          TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaInativarUsuario(usuario);}));
+        }
+        else
+        {
+          TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+        }
+      });
   }
 
   applyFilter(value: string) {

@@ -11,7 +11,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatSidenavModule } from "@angular/material/sidenav";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { JwtModule, JWT_OPTIONS } from "@auth0/angular-jwt";
 import { NgxMaskModule, IConfig } from "ngx-mask";
 import { MatPaginatorIntl, MAT_DATE_LOCALE } from "@angular/material";
@@ -25,6 +25,7 @@ import { AplicacaoItemPedidoComponent } from './pages/pedido/aplicacao-item-pedi
 import { StorageServiceModule} from 'angular-webstorage-service';
 import { TarefaAgendaFormComponent } from './pages/agenda/tarefa-agenda/tarefa-agenda-form.component';
 import { AuthMeuUsuarioGuard } from './guards/auth-meu-usuario.guard';
+import { AuthTokenInterceptor } from './shared/utils/auth-token-interceptor';
 
 
 export function jwtOptionsFactory() {
@@ -74,6 +75,7 @@ export function tokenGetter() {
     AuthMeuUsuarioGuard,
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlPTBR },
     { provide: MAT_DATE_LOCALE, useValue: "pt-BR" },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [

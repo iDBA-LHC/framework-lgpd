@@ -1,21 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Usuario } from '../models/usuario/usuario';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse} from '@angular/common/http';
 import { AESService } from '../shared/components/aes/aesservice';
+import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class UsuarioService {
 
   constructor(
     private http: HttpClient,
-    private aesService: AESService
+    private aesService: AESService,
+    private authService: AuthService,
   ) { }
+
+  listaTodosUsuarios()
+  {
+    return this.http.get<Usuario[]>(environment.apiURL + "usuario/", { observe: "response" });
+  }
 
   pesquisaUsuario(id: number)
   {
-    return this.http.get<Usuario>("" + id);
+    return this.http.get<Usuario>(environment.apiURL + "usuario/" + id.toString(), { observe: "response" });
   }
 
   gerarSenha(id: number)
@@ -23,23 +34,24 @@ export class UsuarioService {
     return this.http.get<Usuario>("" + id);
   }
 
-  inativarUsuario(id: number)
+  inativarUsuario(usuario: Usuario)
   {
-    return this.http.get<Usuario>("" + id);
+    return this.http.put<Usuario>(environment.apiURL + "usuario/" + usuario.codigoUsuario + "/status", usuario, { observe: "response" });
   }
 
-  alterarUsuario<Usuario>(usuario: Usuario)
+  alterarUsuario(usuario: Usuario)
   {
-    console.log(JSON.stringify(usuario));
-    console.log(this.aesService.encrypt(JSON.stringify(usuario)));
-    return this.http.post<Usuario>("", usuario);
+    return this.http.put<Usuario>(environment.apiURL + "usuario/" + usuario.codigoUsuario , usuario, { observe: "response" });
   }
 
-  criarUsuario<Usuario>(usuario: Usuario)
+  alterarMeuUsuario(usuario: Usuario)
   {
-    /*console.log(JSON.stringify(usuario));
-    console.log(this.aesService.encrypt(JSON.stringify(usuario)));*/
-    return this.http.post<Usuario>("", usuario);
+    return this.http.put<Usuario>(environment.apiURL + "meu-usuario/" + usuario.codigoUsuario , usuario, { observe: "response" });
+  }
+
+  incluirUsuario(usuario: Usuario)
+  {
+    return this.http.post(environment.apiURL + "usuario/" , usuario, { observe: "response" });
   }
 
 }

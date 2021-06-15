@@ -44,6 +44,22 @@ const routes: Routes = [
           ),
         canActivate: [AuthMeuUsuarioGuard],  
       },
+      {
+        path: "empresa",
+        loadChildren: () =>
+          import("./pages/usuario/usuario.module").then(
+            (module) => module.UsuarioModule
+          ),
+        canActivate: [AuthGuard],  
+      },
+      {
+        path: "area",
+        loadChildren: () =>
+          import("./pages/usuario/usuario.module").then(
+            (module) => module.UsuarioModule
+          ),
+        canActivate: [AuthGuard],  
+      },
     ],
     canActivate: [AuthGuard],
   },

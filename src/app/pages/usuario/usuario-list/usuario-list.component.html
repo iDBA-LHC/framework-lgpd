@@ -7,15 +7,6 @@
             (keyup)="applyFilter($event.target.value)"
             placeholder="Buscar Usuário"/>
         </mat-form-field>
-  
-        <div fxFlex style="align-items: center; margin-left: 15px;">
-            <mat-slide-toggle
-                color="primary"
-                fxFlex="100"
-                (change)="applyValue($event)">
-                <span class="ng-tns-c15-3 ng-star-inserted">Inativos</span>
-            </mat-slide-toggle>
-        </div>
       </div>
       <div fxLayout="row" fxLayoutGap="5px">
         <!--<div fxLayout="column" fxLayoutAlign="start end">
@@ -40,14 +31,14 @@
     </div>
   
     <div
-      *ngIf="!isLoading"
+      *ngIf="isLoading"
       fxLayout="row"
       fxLayoutAlign="center"
       fxLayoutGap="gappx">
       <mat-spinner></mat-spinner>
     </div>
   
-    <div class="mat-elevation-z8" [hidden]="!isLoading">
+    <div class="mat-elevation-z8" [hidden]="isLoading">
       <table mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="nomeUsuario">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuário</th>

@@ -9,33 +9,44 @@ import {
 import { Observable } from "rxjs";
 import { map, take } from "rxjs/operators";
 import { Injectable } from "@angular/core";
+import { MenuItems } from '../shared/components/sidemenu/models/menu-items';
+import { MenuItemButton } from '../shared/components/sidemenu/models/buttons/menu-item-button';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private snackBar: CustomSnackBarService
+    private snackBar: CustomSnackBarService,
+    
   ) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
-    /*return this.authService.isLoggedIn.pipe(
-      take(1),
-      map((isLoggedIn: boolean) => {
-        return true; 
-      })
-    );*/
+    
 
     return this.authService.isLoggedIn.pipe(
       take(1),
 
       map((isLoggedIn: boolean) => {
 
-        if (!isLoggedIn) {
-          
+        var menuItems: MenuItems = new MenuItems(this.authService);
+        var menuItemButton:MenuItemButton = <MenuItemButton> menuItems.menuItems.filter(menuItem => menuItem.link == next.routeConfig.path)[0];
+
+        if ((!menuItemButton || menuItemButton.hidden) && (next.routeConfig.path != "home") && (next.routeConfig.path.length != 0))
+        {
+          this.snackBar.openSnackBar(
+            "Você Não Tem Permissão de Acesso a Esta Página",
+            null,
+            "Warn"
+          );
+          this.router.navigate(["/home"]);
+          return false;
+        }
+
+        if (!isLoggedIn) {          
           this.router.navigate(["/public/sign-in"]);
           return false;
         }

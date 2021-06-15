@@ -1,5 +1,12 @@
 <mat-card class="marginContent">
-    <div class="mat-elevation-z8">
+  <div class="mat-elevation-z8">
+    
+    <div *ngIf="isLoading" class="overlay-spinner">
+      <div class="center-spinner">
+        <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+      </div>
+    </div>
+
       <div>
         <form
           fxLayout="row wrap"
@@ -17,7 +24,7 @@
                 </mat-card-title>
             </mat-card-header>
   
-            <mat-form-field fxFlex style="width: 50%;" fxLayoutGap="10px">
+            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
                 <mat-label>Nome</mat-label>
                 <input
                     matInput
@@ -28,7 +35,7 @@
                 <mat-error *ngIf="usuarioForm.controls.nomeUsuario.errors?.required">Nome é Obrigatório</mat-error>
             </mat-form-field>
 
-            <mat-form-field fxFlex style="width: 50%;" fxLayoutGap="10px">
+            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
                 <mat-label>Email</mat-label>
                 <input
                     matInput
@@ -40,33 +47,86 @@
                 <mat-error *ngIf="usuarioForm.controls.emailUsuario.hasError('invalidEmail')">Email Informado não é Válido</mat-error>
             </mat-form-field>
 
-            <mat-form-field *ngIf="!meuUsuario" style="width: 50%;" fxLayoutGap="10px">   
-              <mat-label>Cliente</mat-label>
+            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+              <mat-label>Chave Externa</mat-label>
+              <input
+                  matInput
+                  formControlName="chaveExternaUsuario"
+                  placeholder="Chave Externa"
+                  autocomplete="off"
+                  type="text"/>
+              <mat-error *ngIf="usuarioForm.controls.chaveExternaUsuario.errors?.required">Chave Externa é Obrigatória</mat-error>
+          </mat-form-field>
+
+            <mat-form-field *ngIf="!meuUsuario" style="width: 50%;" fxFlexOffset="5px">   
+              <mat-label>Empresa</mat-label>
               <input 
                 matInput
                 formControlName="empresa"
-                placeholder="Cliente"
-                [matAutocomplete]="autoEmpresa"/>  
+                placeholder="Empresa"
+                [matAutocomplete]="autoEmpresa"/>
   
-              <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa">
-                <mat-option *ngFor="let cliente of listaEmpresasFiltrados | async" [value]="cliente">
-                  {{cliente.nomeEmpresa}}
+              <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa" (optionSelected) = "selecionaEmpresa($event)">
+                <mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+                  {{empresa.nomeEmpresa}}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="usuarioForm.controls.empresa.errors?.required">Cliente é Obrigatório</mat-error> 
+              <mat-error *ngIf="usuarioForm.controls.empresa.errors?.required">Empresa é Obrigatória</mat-error> 
             </mat-form-field> 
+
+            <mat-form-field *ngIf="!meuUsuario" style="width: 50%;" fxFlexOffset="5px">   
+              <mat-label>Área</mat-label>
+              <input 
+                matInput
+                formControlName="area"
+                placeholder="Área"
+                [matAutocomplete]="autoArea"/>  
+  
+              <mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea">
+                <mat-option *ngFor="let area of listaAreasFiltradas | async" [value]="area">
+                  {{area.nomeArea}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="usuarioForm.controls.area.errors?.required">Área é Obrigatória</mat-error> 
+            </mat-form-field> 
+
+            <mat-form-field *ngIf="!meuUsuario" style="width: 50%;" fxFlexOffset="5px">
+              <mat-label>Tipo de Usuário</mat-label>
+              <mat-select
+                placeholder="Tipo de Usuário"
+                formControlName="indTipoUsuario">
+
+                <mat-option
+                  *ngFor="let button of tipoUsuarioButtons.buttons"
+                  [value]="button.cod">{{ button.description }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="usuarioForm.controls.indTipoUsuario.errors?.required">Tipo de Usuário</mat-error>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="!meuUsuario" style="width: 50%;" fxFlexOffset="5px">
+              <mat-label>Nível de Acesso</mat-label>
+              <mat-select
+                placeholder="Nível de Acesso"
+                formControlName="indNivelAcesso">
+
+                <mat-option
+                  *ngFor="let button of nivelAcessoButtons.buttons"
+                  [value]="button.cod">{{ button.description }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="usuarioForm.controls.indNivelAcesso.errors?.required">Nível de Acesso</mat-error>
+            </mat-form-field>
 
             <mat-slide-toggle *ngIf="!meuUsuario" color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indAtivo" style="width: 50%;">
                 <span class="ng-tns-c15-3 ng-star-inserted">Ativo</span>
             </mat-slide-toggle>
 
-            <mat-slide-toggle *ngIf="!meuUsuario" color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indAdmin" style="width: 50%;">
-                <span class="ng-tns-c15-3 ng-star-inserted">Administrador</span>
-            </mat-slide-toggle>
-
             <mat-card-actions>
               <button mat-raised-button color="accent">Salvar</button>
-              <button mat-raised-button color="primary" (click)="$event.preventDefault()" [disabled]="usuarioId ? false : true">Gerar Senha</button>
+              <button mat-raised-button color="primary" 
+                (click)="gerarSenha($event);" 
+                [disabled]="usuarioId ? false : true">Gerar Senha</button>
             </mat-card-actions>
         </form>
       </div>

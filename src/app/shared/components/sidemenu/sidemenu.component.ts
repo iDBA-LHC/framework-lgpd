@@ -1,6 +1,9 @@
 import { AuthService } from "./../../../services/auth.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { environment } from 'src/environments/environment';
+import { MenuItems } from './models/menu-items';
+import { MenuItemButton } from './models/buttons/menu-item-button';
 
 @Component({
   selector: "app-sidemenu",
@@ -8,17 +11,17 @@ import { Router } from "@angular/router";
   styleUrls: ["./sidemenu.component.css"],
 })
 export class SidemenuComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, 
+              private router: Router) {}
 
-  ngOnInit() {}
+  menuItems: MenuItems;
 
-  appitems = [
-    {
-      label: "Usuário",
-      link: "/usuario",
-      icon: "account_circle",
-    },
-  ];
+  menu = [];
+
+  ngOnInit() {
+    this.menuItems = new MenuItems(this.authService);
+    this.menu = this.menuItems.menuItems;
+  }
 
   config = {
     paddingAtStart: true,
@@ -33,6 +36,6 @@ export class SidemenuComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([event.link]);
+    this.router.navigate(["/" + event.link]);
   }
 }
