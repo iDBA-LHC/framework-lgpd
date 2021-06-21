@@ -21,12 +21,12 @@ export class MenuItems  {
                 icon: "work",
                 hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
             },
-            {
+           /*{
                 label: "Area",
                 link: "area",
                 icon: "event_seat",
                 hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
-            }
+            }*/
         ];
     }
 }

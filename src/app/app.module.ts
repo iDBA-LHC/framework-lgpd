@@ -17,13 +17,8 @@ import { NgxMaskModule, IConfig } from "ngx-mask";
 import { MatPaginatorIntl, MAT_DATE_LOCALE } from "@angular/material";
 import { NgxCurrencyModule } from "ngx-currency";
 import { UpdatePriceModalComponent } from "./shared/components/update-price-modal/update-price-modal.component";
-import { ItemPedidoComponent } from './pages/pedido/item-pedido/item-pedido.component';
-import { ListarTituloComponent } from './pages/pedido/listar-titulo/listar-titulo.component';
-import { CopiarPedidoRapidoComponent } from './pages/pedido/copiar-pedido-rapido/copiar-pedido-rapido.component';
 import { PopupModule } from './shared/popup.module';
-import { AplicacaoItemPedidoComponent } from './pages/pedido/aplicacao-item-pedido/aplicacao-item-pedido.component';
 import { StorageServiceModule} from 'angular-webstorage-service';
-import { TarefaAgendaFormComponent } from './pages/agenda/tarefa-agenda/tarefa-agenda-form.component';
 import { AuthMeuUsuarioGuard } from './guards/auth-meu-usuario.guard';
 import { AuthTokenInterceptor } from './shared/utils/auth-token-interceptor';
 
@@ -83,11 +78,6 @@ export function tokenGetter() {
     ConfirmModalComponent,
     PhotoModalComponent,
     UpdatePriceModalComponent,
-    ItemPedidoComponent,
-    ListarTituloComponent,
-    CopiarPedidoRapidoComponent,
-    AplicacaoItemPedidoComponent,
-    TarefaAgendaFormComponent,
 
   ],
 })

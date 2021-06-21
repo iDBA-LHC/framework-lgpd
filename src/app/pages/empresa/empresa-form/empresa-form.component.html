@@ -1,0 +1,139 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      
+      <div *ngIf="isLoading" class="overlay-spinner">
+        <div class="center-spinner">
+          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+        </div>
+      </div>
+  
+        <div>
+          <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="empresaForm"
+            (submit)="salvarEmpresa()">
+  
+              <mat-card-header>
+                  <mat-card-title>
+                      <h2 *ngIf="!empresaId">Nova Empresa</h2>
+                      <h2 *ngIf="empresaId">Editar Empresa</h2>
+                  </mat-card-title>
+              </mat-card-header>
+    
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Nome Empresa</mat-label>
+                  <input
+                      matInput
+                      formControlName="nomeEmpresa"
+                      placeholder="Nome"
+                      autocomplete="off"
+                      type="text"/>
+                  <mat-error *ngIf="empresaForm.controls.nomeEmpresa.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>CNPJ</mat-label>
+                <input
+                    matInput
+                    formControlName="numeroCNPJ"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="empresaForm.controls.numeroCNPJ.errors?.required">CNPJ é Obrigatório</mat-error>
+                <mat-error *ngIf="empresaForm.controls.numeroCNPJ.hasError('invalidCNPJ')">CNPJ Informado não é Válido</mat-error>
+              </mat-form-field>
+  
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Endereço</mat-label>
+                <input
+                    matInput
+                    formControlName="enderecoEmpresa"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="empresaForm.controls.enderecoEmpresa.errors?.required">Endereço é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Nome Controlador</mat-label>
+                <input
+                    matInput
+                    formControlName="nomeControlador"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="empresaForm.controls.nomeControlador.errors?.required">Nome do Controlador é Obrigatório</mat-error>
+              </mat-form-field>
+              
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>CPF Controlador</mat-label>
+                <input
+                    matInput
+                    formControlName="numeroCPFControlador"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="empresaForm.controls.numeroCPFControlador.errors?.required">CPF do Controlador é Obrigatório</mat-error>
+                <mat-error *ngIf="empresaForm.controls.numeroCPFControlador.hasError('invalidCPF')">CPF Informado não é Válido</mat-error>
+              </mat-form-field>
+              
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Telefone Controlador</mat-label>
+                <input
+                    matInput
+                    formControlName="telefoneControlador"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="empresaForm.controls.telefoneControlador.errors?.required">Telefone do Controlador é Obrigatório</mat-error>
+              </mat-form-field>              
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Email Controlador</mat-label>
+                  <input
+                      matInput
+                      formControlName="emailControlador"
+                      placeholder="Email"
+                      autocomplete="off"
+                      type="email"/>
+                  <mat-error *ngIf="empresaForm.controls.emailControlador.errors?.required">Email é Obrigatório</mat-error>
+                  <mat-error *ngIf="empresaForm.controls.emailControlador.hasError('invalidEmail')">Email Informado não é Válido</mat-error>
+              </mat-form-field>              
+  
+              <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" 
+                formControlName="indMatrizFilial" 
+                style="width: 50%;"
+                (click)="trataMatrizFilial(!this.empresaForm.controls.indMatrizFilial.value)">
+
+                  <span class="ng-tns-c15-3 ng-star-inserted">Matriz</span>
+              </mat-slide-toggle>
+
+              <mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+                <mat-label>Empresa Matriz</mat-label>
+                <input 
+                  matInput
+                  formControlName="empresaMatriz"
+                  placeholder="EmpresaMatriz"
+                  [matAutocomplete]="autoEmpresaMatriz"/>
+    
+                <mat-autocomplete #autoEmpresaMatriz="matAutocomplete" [displayWith]="displayEmpresaMatriz" (optionSelected) = "selecionaEmpresaMatriz($event)">
+                  <mat-option *ngFor="let empresaMatriz of listaEmpresasFiltradas | async" [value]="empresaMatriz">
+                    {{empresaMatriz.nomeEmpresa}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="empresaForm.controls.empresaMatriz.errors?.required">Matriz é Obrigatória</mat-error>
+              </mat-form-field> 
+  
+              <mat-card-actions>
+                <button mat-raised-button color="accent">Salvar</button>
+              </mat-card-actions>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+    
+  

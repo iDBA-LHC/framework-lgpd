@@ -2,13 +2,13 @@ export class Empresa {
 
     codigoEmpresa: number;
     nomeEmpresa: string;
-    numeroCNPJ: number;
+    numeroCNPJ: string;
     indMatrizFilial: number;
     codigoEmpresaMatriz: number;
     nomeEmpresaMatriz: string;
     enderecoEmpresa: string;
     nomeControlador: string;
-    numeroCPFControlador: number;
+    numeroCPFControlador: string;
     telefoneControlador: string;
     emailControlador: string;
 

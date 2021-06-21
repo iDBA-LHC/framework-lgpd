@@ -1,6 +1,6 @@
 import { AuthGuard } from "./guards/auth.guard";
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule, Router } from "@angular/router";
 import { AuthMeuUsuarioGuard } from './guards/auth-meu-usuario.guard';
 
 const routes: Routes = [
@@ -21,14 +21,6 @@ const routes: Routes = [
           canActivate: [AuthGuard],
       },      
       {
-        path: "agenda",
-        loadChildren: () =>
-          import("./pages/agenda/agenda.module").then(
-            (module) => module.AgendaModule
-          ),
-          canActivate: [AuthGuard],
-      },
-      {
         path: "usuario",
         loadChildren: () =>
           import("./pages/usuario/usuario.module").then(
@@ -47,8 +39,8 @@ const routes: Routes = [
       {
         path: "empresa",
         loadChildren: () =>
-          import("./pages/usuario/usuario.module").then(
-            (module) => module.UsuarioModule
+          import("./pages/empresa/empresa.module").then(
+            (module) => module.EmpresaModule
           ),
         canActivate: [AuthGuard],  
       },
@@ -81,4 +73,11 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  constructor(private router: Router) {
+      this.router.errorHandler = (error: any) => {
+        console.log(error);
+        this.router.navigate(['/home']);         
+      }
+    }
+  }

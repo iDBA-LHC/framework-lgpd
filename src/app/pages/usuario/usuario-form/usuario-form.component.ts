@@ -216,7 +216,7 @@ export class UsuarioFormComponent implements OnInit {
 
   private pesquisaEmpresas()
   {
-    this.empresaService.listaEmpresas().subscribe(
+    this.empresaService.listaTodasEmpresas().subscribe(
       (retorno) => {
         this.listaEmpresas = retorno.body;
 

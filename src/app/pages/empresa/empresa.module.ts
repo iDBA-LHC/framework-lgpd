@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { EmpresaRoutingModule } from './empresa-routing.module';
+
 
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule
+    CommonModule, EmpresaRoutingModule
   ]
 })
-export class PopupModule { }
+export class EmpresaModule { }

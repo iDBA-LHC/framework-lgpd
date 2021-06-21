@@ -110,7 +110,7 @@ export function cpfValidator(control: FormControl) {
 
 export function cnpjValidator(control: FormControl) {
   if (control.value) {
-    const cnpj: string = control.value.replace(/(\.|\/|\-)/g, "");
+    const cnpj: string = control.value.toString().replace(/(\.|\/|\-)/g, "");
     if (cnpj.length != 14) {
       return { invalidCNPJ: true };
     }
