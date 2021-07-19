@@ -47,11 +47,25 @@ const routes: Routes = [
       {
         path: "area",
         loadChildren: () =>
-          import("./pages/usuario/usuario.module").then(
-            (module) => module.UsuarioModule
+          import("./pages/area/area.module").then(
+            (module) => module.AreaModule
           ),
         canActivate: [AuthGuard],  
-      },
+      }, {
+        path: "base-legal",
+        loadChildren: () =>
+          import("./pages/base-legal/base-legal.module").then(
+            (module) => module.BaseLegalModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
+        path: "ciclo-de-vida",
+        loadChildren: () =>
+          import("./pages/ciclo-de-vida/ciclo-de-vida.module").then(
+            (module) => module.CicloDeVidaModule
+          ),
+        canActivate: [AuthGuard],
+      }
     ],
     canActivate: [AuthGuard],
   },

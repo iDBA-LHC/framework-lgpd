@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { Area } from '../models/area/area';
+import { BaseLegal } from '../models/base-legal/base-legal';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AreaService {
+export class BaseLegalService {
   constructor(private http: HttpClient,
               private authService: AuthService, ) {}
             
-  listaTodasAreas()
+  listaTodasBasesLegais()
   {
-    return this.http.get<Area[]>(environment.apiURL + "area", { observe: "response" });
+      return [
+          new BaseLegal(),
+          new BaseLegal()
+      ];
+    // return this.http.get<BaseLegal[]>(environment.apiURL + "base-legal", { observe: "response" });
   }
 }
