@@ -1,6 +1,6 @@
 export class BaseLegal {
 
-    codigoBaseLegal: number;
-    nomeBaseLegal: string;
+    codigoBase: number;
+    nomeBase: string;
     
 }

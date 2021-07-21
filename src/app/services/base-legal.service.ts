@@ -13,10 +13,21 @@ export class BaseLegalService {
             
   listaTodasBasesLegais()
   {
-      return [
-          new BaseLegal(),
-          new BaseLegal()
-      ];
-    // return this.http.get<BaseLegal[]>(environment.apiURL + "base-legal", { observe: "response" });
+    return this.http.get<BaseLegal[]>(environment.apiURL + "base_legal/", { observe: "response" });
+  }
+
+  incluirBaseLegal(baseLegal: BaseLegal) {
+    return this.http.post(`${environment.apiURL}base_legal/`, baseLegal, {observe: "response"});
+  }
+
+  pesquisaBaseLegal(id: number) {
+    return this.http.get<BaseLegal>(`${environment.apiURL}base_legal/${id}`,
+      { observe: "response" })
+  }
+
+  alterarBaseLegal(baseLegal: BaseLegal) {
+    return this.http.put<BaseLegal>(
+      `${environment.apiURL}base_legal/`,
+      baseLegal, { observe: "response" })
   }
 }
