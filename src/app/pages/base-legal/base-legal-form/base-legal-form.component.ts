@@ -45,47 +45,27 @@ export class BaseLegalFormComponent implements OnInit {
   pesquisaBaseLegal() {
     this.activatedRoute.params.subscribe(
       (data) => {
-        this.baseLegalId = data["id?"];
-        // Quando criar uma rota para buscar um único ID, descomentar
-        // this.baseLegalService.pesquisaBaseLegal(this.baseLegalId).subscribe(
-        //   (retorno) => {
-        //     this.baseLegalForm.patchValue({
-        //       nomeBase: retorno.body[0].nomeBase
-        //     });
-        //   },
-        //   (err) => {
-        //     if (err.status === 401)
-        //       {
-        //         TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaBaseLegal();}));
-        //       }
-        //       else
-        //       {
-        //         TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-        //       }
-        //   }
-        // );
-
-        this.baseLegalService.listaTodasBasesLegais().subscribe(
-            (response) => {
-                console.log(`Recebeu ${JSON.stringify(response.body)}`);
-                
-                for (let element of response.body) {
-                  if (element.codigoBase == this.baseLegalId) {
-                    this.baseLegalForm.patchValue({
-                        nomeBase: element.nomeBase
-                    });
-                  }
-                }
+        this.baseLegalId = parseInt(data["id?"]);
+        
+        if (this. baseLegalId) {
+          this.baseLegalService.pesquisaBaseLegal(this.baseLegalId).subscribe(
+            (retorno) => {
+              this.baseLegalForm.patchValue({
+                nomeBase: retorno.body[0].nomeBase
+              });
             },
             (err) => {
-                if (err.status == 401) {
-                    TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaBasesLegais();}));
-                } else {
-                    this.isLoading = false;
-                    TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              if (err.status === 401)
+                {
+                  TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaBaseLegal();}));
+                }
+                else
+                {
+                  TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
                 }
             }
-        )
+          );
+        }
 
         this.isLoading = false;
       }
