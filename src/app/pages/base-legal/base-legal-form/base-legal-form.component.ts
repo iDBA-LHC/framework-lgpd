@@ -47,7 +47,7 @@ export class BaseLegalFormComponent implements OnInit {
       (data) => {
         this.baseLegalId = parseInt(data["id?"]);
         
-        if (this. baseLegalId) {
+        if (this.baseLegalId) {
           this.baseLegalService.pesquisaBaseLegal(this.baseLegalId).subscribe(
             (retorno) => {
               this.baseLegalForm.patchValue({

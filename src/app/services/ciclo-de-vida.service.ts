@@ -11,8 +11,22 @@ export class CicloDeVidaService {
   constructor(private http: HttpClient,
               private authService: AuthService, ) {}
             
-  listaTodasAreas()
-  {
-    // return this.http.get<CicloDeVida[]>(environment.apiURL + "base-legal", { observe: "response" });
+  listaTodosCiclosDeVida() {
+    return this.http.get<CicloDeVida[]>(environment.apiURL + "ciclo_vida/", { observe: "response" });
+  }
+
+  pesquisaCicloDeVida(id: number) {
+    return this.http.get<CicloDeVida>(`${environment.apiURL}ciclo_vida/${id}`,
+      { observe: "response" })
+  }
+
+  incluirCicloDeVida(cicloDeVida: CicloDeVida) {
+    return this.http.post(`${environment.apiURL}ciclo_vida/`, cicloDeVida, {observe: "response"});
+  }
+
+  alterarCicloDeVida(cicloDeVida: CicloDeVida) {
+    return this.http.put<CicloDeVida>(
+      `${environment.apiURL}ciclo_vida/`,
+      cicloDeVida, { observe: "response" });
   }
 }

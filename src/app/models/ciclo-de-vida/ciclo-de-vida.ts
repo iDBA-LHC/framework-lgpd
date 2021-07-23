@@ -1,6 +1,4 @@
 export class CicloDeVida {
-
-    codigoCicloDeVida: number;
-    nomeCicloDeVida: string;
-    
+    codCicloVida: number;
+    nomeCicloVida: string;
 }

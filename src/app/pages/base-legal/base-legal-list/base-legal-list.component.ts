@@ -42,7 +42,6 @@ export class BaseLegalListComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 this.dataSource = new MatTableDataSource<BaseLegal>(response.body);
-                console.log(`Recebeu ${JSON.stringify(response.body)}`);
                 
                 setTimeout(() => {
                     this.dataSource.filterPredicate = (

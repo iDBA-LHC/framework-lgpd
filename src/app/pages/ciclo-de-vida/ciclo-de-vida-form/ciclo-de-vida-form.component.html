@@ -19,8 +19,8 @@
   
               <mat-card-header>
                   <mat-card-title>
-                      <h2 *ngIf="!cicloDeVidaId">Novo Ciclo de Vida</h2>
-                      <h2 *ngIf="cicloDeVidaId">Editar Ciclo de Vida</h2>
+                      <h2 *ngIf="!codCicloVida">Novo Ciclo de Vida</h2>
+                      <h2 *ngIf="codCicloVida">Editar Ciclo de Vida</h2>
                   </mat-card-title>
               </mat-card-header>
     
@@ -28,11 +28,11 @@
                   <mat-label>Nome Ciclo de Vida</mat-label>
                   <input
                       matInput
-                      formControlName="nomeCicloDeVida"
+                      formControlName="nomeCicloVida"
                       placeholder="Nome"
                       autocomplete="off"
                       type="text"/>
-                  <mat-error *ngIf="cicloDeVidaForm.controls.nomeCicloDeVida.errors?.required">Nome é Obrigatório</mat-error>
+                  <mat-error *ngIf="cicloDeVidaForm.controls.nomeCicloVida.errors?.required">Nome é Obrigatório</mat-error>
               </mat-form-field> 
   
               <mat-card-actions>
