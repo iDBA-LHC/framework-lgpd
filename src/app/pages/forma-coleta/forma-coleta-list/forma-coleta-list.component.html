@@ -1,0 +1,56 @@
+<mat-card class="marginContent">
+    <div fxLayout="row">
+        <div fxFlex>
+            <mat-form-field fxFlex="30">
+              <input
+                matInput
+                (keyup)="applyFilter($event.target.value)"
+                placeholder="Buscar Forma Coleta"/>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="5px">
+            <div fxLayout="column" fxLayoutAlign="start end">
+              <a
+                mat-raised-button
+                color="accent"
+                [routerLink]="['/forma-coleta', '']"
+                routerLinkActive="active">
+                <mat-icon>add</mat-icon>Nova Forma Coleta</a>
+            </div>
+          </div>
+    </div>
+
+    <div
+      *ngIf="isLoading"
+      fxLayout="row"
+      fxLayoutAlign="center"
+      fxLayoutGap="gappx">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div class="mat-elevation-z8" [hidden]="isLoading">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="nomeFormaColeta">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeFormaColeta }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="example-button-row">
+              <button
+                mat-raised-button
+                color="accent"
+                [routerLink]="['/forma-coleta/', element.codFormaColeta]">
+                Editar
+              </button>
+            </div>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+</mat-card>

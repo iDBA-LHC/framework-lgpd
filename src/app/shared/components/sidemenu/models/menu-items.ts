@@ -38,6 +38,11 @@ export class MenuItems  {
                 link: "ciclo-de-vida",
                 icon: "event_seat",
                 hidden: false,
+            }, {
+                label: "Forma Coleta",
+                link: "forma-coleta",
+                icon: "event_seat",
+                hidden: false,
             }
         ];
     }

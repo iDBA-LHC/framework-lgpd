@@ -65,6 +65,13 @@ const routes: Routes = [
             (module) => module.CicloDeVidaModule
           ),
         canActivate: [AuthGuard],
+      }, {
+        path: "forma-coleta",
+        loadChildren: () =>
+          import("./pages/forma-coleta/forma-coleta.module").then(
+            (module) => module.FormaColetaModule
+          ),
+        canActivate: [AuthGuard],
       }
     ],
     canActivate: [AuthGuard],
