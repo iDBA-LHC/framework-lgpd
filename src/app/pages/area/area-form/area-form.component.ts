@@ -10,6 +10,8 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 import { Area } from 'src/app/models/area/area';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { Empresa } from 'src/app/models/empresa/empresa';
+import { EmpresaService } from 'src/app/services/empresa.service';
 
 @Component({
   selector: 'app-area-form',
@@ -21,15 +23,20 @@ export class AreaFormComponent implements OnInit {
   areaForm: FormGroup;
   areaId: number;
   isLoading = false;
+  empresaAnt: Empresa;
 
   listaAreas: Area[];
   listaAreasFiltradas: Observable<Area[]>;
+
+  listaEmpresas: Empresa[];
+  listaEmpresasFiltradas: Observable<Empresa[]>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private areaService: AreaService,
+    private empresaService: EmpresaService,
     private snackBar: CustomSnackBarService,
     private router: Router,
     private dialog: MatDialog,
@@ -39,14 +46,16 @@ export class AreaFormComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.createForm();    
-    // this.pesquisaEmpresa();
-
+    this.createForm();   
+    this.pesquisaArea();
   }
 
   private createForm() {
     this.areaForm = this.formBuilder.group({
       nomeArea: ["", Validators.required],
+      nomeResponsavel: ["", Validators.required],
+      codEmpresa: [0,],
+      empresa: ["", Validators.required],
     });
   }
 
@@ -55,184 +64,132 @@ export class AreaFormComponent implements OnInit {
   }
 
   salvarArea() {
-    
+    if (this.areaForm.valid) {
+      const area: Area = this.areaForm.getRawValue();
+      area.codArea = this.areaId;
+      area.codUsuarioAlteracao = this.authService.getLoggedUserId();
+
+      if (this.areaId) {
+        this.areaService.alterarArea(area).subscribe(
+          (response) => {
+            this.snackBar.openSnackBar(`A Área ${area.nomeArea} foi atualizado com sucesso!`,null);
+            this.router.navigate(["/area"]);
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvarArea();}));            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+            }
+          }
+        )
+      } else {
+        this.areaService.incluirArea(area).subscribe(
+          (response) => {
+            this.snackBar.openSnackBar(`A Área ${area.nomeArea} foi criada com sucesso!`,null);
+            this.router.navigate(["/area"]);
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvarArea();}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+            }
+          }
+        )
+      }
+    }
   }
-  // private pesquisaEmpresa()
-  // {
-  //   this.activatedRoute.params.subscribe((data) => {
-  //     if (data["id?"]) {
-  //       this.empresaId = data["id?"];
-  //       this.areaService.pesquisaArea(this.empresaId).subscribe(
-  //           (retorno) => {
-  //             this.empresaForm.patchValue({
-  //               nomeEmpresa: retorno.body[0].nomeEmpresa,
-  //               numeroCNPJ: retorno.body[0].numeroCNPJ,
-  //               enderecoEmpresa: retorno.body[0].enderecoEmpresa,
-  //               nomeControlador: retorno.body[0].nomeControlador,
-  //               numeroCPFControlador: retorno.body[0].numeroCPFControlador,
-  //               telefoneControlador: retorno.body[0].telefoneControlador,
-  //               emailControlador: retorno.body[0].emailControlador,
-  //               indMatrizFilial: retorno.body[0].indMatrizFilial,
-  //               codigoEmpresaMatriz: retorno.body[0].codigoEmpresaMatriz,
-  //             });
+  
+  pesquisaArea() {
+    this.activatedRoute.params.subscribe(
+      (data) => {
+        this.areaId = parseInt(data["id?"]);
 
-  //             if (retorno.body[0].indMatrizFilial == 1)
-  //             {
-  //               this.empresaForm.controls.indMatrizFilial.setValue(true);
-  //             }
-  //             else
-  //             {
-  //               this.empresaForm.controls.indMatrizFilial.setValue(false);
-  //             }
-              
-  //             this.pesquisaEmpresasMatriz();
-  //             this.trataMatrizFilial(this.empresaForm.controls.indMatrizFilial.value);
-              
-  //           },
-  //           (err) =>{
-  //             if (err.status === 401)
-  //             {
-  //               TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaEmpresa();}));
-  //             }
-  //             else
-  //             {
-  //               TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-  //             }
-  //           });
-  //     }
-  //     else
-  //     {
-  //       this.pesquisaEmpresasMatriz();
-  //     }
-  //   }); 
-  // }
+        if (this.areaId) {
+          this.areaService.pesquisaArea(this.areaId).subscribe(
+            (retorno) => {
+              this.areaForm.patchValue({
+                nomeArea: retorno.body[0].nomeArea,
+                nomeResponsavel: retorno.body[0].nomeResponsavel,
+                codEmpresa: retorno.body[0].codEmpresa,
+                nomeEmpresa: retorno.body[0].nomeEmpresa,
+              });
 
-  // private pesquisaEmpresasMatriz()
-  // {
-  //   this.areaService.listaTodasEmpresas().subscribe(
-  //     (retorno) => {
-  //       this.listaEmpresas = retorno.body;
+              this.pesquisaEmpresas();
+            },
+            (err) =>{
+              if (err.status === 401)
+              {
+                TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaArea();}));
+              }
+              else
+              {
+                TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              }
+            }
+          )
+        } else {
+          this.pesquisaEmpresas();
+        }
+      }
+    )
+  }
 
-  //       if (this.empresaForm.controls.codigoEmpresaMatriz.value!=0)
-  //       {
-  //         let empresa: Area;
-  //         empresa = <Area>this.listaEmpresas.filter( empresa => empresa.codigoEmpresa == this.empresaForm.controls.codigoEmpresaMatriz.value)[0];
-  //         if(empresa){
-  //           this.empresaForm.controls.empresaMatriz.setValue(empresa);
-  //         }
-  //       }
+  displayEmpresa(empresa: Empresa): string {
+    return empresa && empresa.nomeEmpresa ? empresa.nomeEmpresa : '';
+  }
 
-  //       this.listaEmpresasFiltradas = this.empresaForm.controls.empresaMatriz.valueChanges
-  //       .pipe(
-  //         startWith(''),
-  //         map(value => typeof value === 'string' ? value : value.nomeEmpresa),
-  //         map(name => {
-  //           return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
-  //         }));
+  pesquisaEmpresas() {
+    this.empresaService.listaTodasEmpresas().subscribe(
+      (retorno) => {
+        this.listaEmpresas = retorno.body;
 
-  //       this.isLoading = false;  
-  //     },
-  //     (err) =>{
-  //       if (err.status === 401)
-  //       {
-  //         TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaEmpresasMatriz();}));
-  //       }
-  //       else
-  //       {
-  //         TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-  //       }
-  //     }
-  //   );    
-  // }
+        if (this.areaForm.controls.codEmpresa.value != 0) {
+          let empresa: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == this.areaForm.controls.codEmpresa.value)[0];
+          if (empresa) {
+            this.areaForm.controls.empresa.setValue(empresa);
+          }
+        }
 
-  // salvarEmpresa()
-  // {
+        this.listaEmpresasFiltradas = this.areaForm.controls.empresa.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => typeof value === 'string' ? value : value.nomeEmpresa),
+            map(name => {
+              return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
+            }));
+        this.isLoading = false;
+      }
+    )
+  }
 
-  //   if (this.empresaForm.controls.indMatrizFilial.value == false && 
-  //      (!this.empresaForm.controls.empresaMatriz.value.codigoEmpresa || this.empresaForm.controls.empresaMatriz.value.codigoEmpresa==0))
-  //   {
-  //     this.empresaForm.controls.empresaMatriz.setErrors( {required: true } );
-  //   }
-  //   else
-  //   {
-  //     this.empresaForm.controls.empresaMatriz.setErrors( null );
-  //   }    
+  private filtraEmpresa(value: string): Empresa[] {
+    const filterValue = value.toLowerCase();
 
-  //   if (this.empresaForm.valid) {
-  //     const empresa: Area = this.empresaForm.getRawValue();        
-  //     empresa.codigoEmpresa = this.empresaId;
+    return this.listaEmpresas.filter(item => item.nomeEmpresa.trim().toLowerCase().includes(filterValue));
+  }
 
-  //     if (this.empresaId) {     
-  //       //Alteração
-  //       this.areaService.alterarArea(empresa).subscribe(
-  //         (response) => {
-  //           this.snackBar.openSnackBar(`A Empresa ${empresa.nomeEmpresa} foi atualizada com sucesso!`,null);
-  //           this.router.navigate(["/empresa"]);
-  //         },
-  //         (err) => {
-  //           if (err.status === 401)
-  //           {
-  //             TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvarEmpresa();}));
-  //           }
-  //           else
-  //           {
-  //             TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-  //           }
-  //         }
-  //       );
-  //     }
-  //     else
-  //     {
-  //       //Inclusão
-  //       this.areaService.incluirEmpresa(area).subscribe(
-  //         (response) => {
-  //           this.snackBar.openSnackBar(`A Empresa ${empresa.nomeEmpresa} foi criada com sucesso!`,null);
-  //           this.router.navigate(["/empresa"]);
-  //         },
-  //         (err) => {
-  //           if (err.status === 401)
-  //           {
-  //             TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvarEmpresa();}));
-  //           }
-  //           else
-  //           {
-  //             TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-  //           }
-  //         }
-  //       );
-  //     }
-  //   }
-  //   else {
-  //     this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
-  //   }
-  // }
+  selecionaEmpresa(event){
+    let empresaSelecionada : Empresa = event.option.value;
+    this.isLoading = true;
 
-  // private filtraEmpresa(value: string): Area[] {
-  //   const filterValue = value.toLowerCase();
+    if (empresaSelecionada)
+    {      
+      //Só consultar no BD se houve alteração da empresa selecionada
+      if (empresaSelecionada != this.empresaAnt)
+      {
+        this.areaForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
+        this.empresaAnt = empresaSelecionada;
+      }
+    }
 
-  //   return this.listaEmpresas.filter(item => item.nomeEmpresa.trim().toLowerCase().includes(filterValue));
-  // }
-
-  // displayEmpresaMatriz(empresa: Area): string {
-  //   return empresa && empresa.nomeEmpresa ? empresa.nomeEmpresa : '';
-  // }
-
-  // selecionaEmpresaMatriz(event){
-  //   let empresaSelecionada : Area = event.option.value;
-  //   this.empresaForm.controls.empresaMatriz.setValue(empresaSelecionada);
-  // }
-
-  // trataMatrizFilial(value)
-  // {    
-  //   if (value == true)
-  //   {
-  //     this.empresaForm.controls.empresaMatriz.disable();
-  //   }
-  //   else
-  //   {
-  //     this.empresaForm.controls.empresaMatriz.enable();
-  //   }
-    
-  // }
+    this.isLoading = false;
+  }
 
 }

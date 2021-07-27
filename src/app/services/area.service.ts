@@ -15,4 +15,16 @@ export class AreaService {
   {
     return this.http.get<Area[]>(environment.apiURL + "area", { observe: "response" });
   }
+
+  incluirArea(area: Area) {
+    return this.http.post(`${environment.apiURL}area/`, area, { observe: "response" });
+  }
+
+  pesquisaArea(id: number) {
+    return this.http.get<Area>(`${environment.apiURL}area/${id}`, { observe: "response" })
+  }
+
+  alterarArea(area: Area) {
+    return this.http.put<Area>(`${environment.apiURL}area/`, area, { observe: "response" });
+  }
 }

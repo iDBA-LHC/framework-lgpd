@@ -16,7 +16,7 @@ export class AreaListComponent implements OnInit {
 
   isLoading = false;
 
-  displayedColumns: string[] = ["nomeArea", "nomeEmpresa", "actions"];
+  displayedColumns: string[] = ["nomeArea", "nomeEmpresa", "nomeResponsavel", "actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -44,10 +44,10 @@ export class AreaListComponent implements OnInit {
         setTimeout(() => {
           this.dataSource.filterPredicate = (
             data: { nomeArea: string,
-                    numeroCNPJ: number },
+                    nomeEmpresa: number },
             filterValue: string
           ) => data.nomeArea.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-               data.numeroCNPJ.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ;
+               data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ;
     
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;          
@@ -65,6 +65,10 @@ export class AreaListComponent implements OnInit {
         }
       }
     );    
+  }
+
+  applyFilter(value: string) {
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 
 }

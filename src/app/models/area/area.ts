@@ -1,9 +1,9 @@
 export class Area {
 
-    codigoArea: number;
+    codArea: number;
     nomeArea: string;
-    codigoEmpresa: number;
+    codEmpresa: number;
     nomeEmpresa: string;
     nomeResponsavel: string;
-    
+    codUsuarioAlteracao: number;
 }
