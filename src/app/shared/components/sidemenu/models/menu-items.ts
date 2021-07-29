@@ -44,13 +44,18 @@ export class MenuItems  {
                 icon: "event_seat",
                 hidden: false,
             }, {
-                label: "Local Armazenamento",
-                link: "local-armazenamento",
+                label: "Metadados",
+                link: "metadados",
                 icon: "event_seat",
                 hidden: false
             }, {
-                label: "Metadados",
-                link: "metadados",
+                label: "Compartilhamento",
+                link: "compartilhamento",
+                icon: "event_seat",
+                hidden: false
+            }, {
+                label: "Local Armazenamento",
+                link: "local-armazenamento",
                 icon: "event_seat",
                 hidden: false
             }

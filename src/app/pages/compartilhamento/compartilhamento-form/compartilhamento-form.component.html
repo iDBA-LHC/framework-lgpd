@@ -1,0 +1,95 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      
+      <div *ngIf="isLoading" class="overlay-spinner">
+        <div class="center-spinner">
+          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+        </div>
+      </div>
+  
+        <div>
+          <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="compartilhamentoForm"
+            (submit)="salvarCompartilhamento()">
+  
+              <mat-card-header>
+                  <mat-card-title>
+                      <h2 *ngIf="!codCompartilhamento">Novo Compartilhamento</h2>
+                      <h2 *ngIf="codCompartilhamento">Editar Compartilhamento</h2>
+                  </mat-card-title>
+              </mat-card-header>
+    
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Nome Compartilhamento</mat-label>
+                  <input
+                      matInput
+                      formControlName="nomeCompartilhamento"
+                      placeholder="Nome"
+                      autocomplete="off"
+                      type="text"/>
+                  <mat-error *ngIf="compartilhamentoForm.controls.nomeCompartilhamento.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field> 
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Nome Aplicação</mat-label>
+                <input
+                    matInput
+                    formControlName="nomeAplicacao"
+                    placeholder="Aplicação"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="compartilhamentoForm.controls.nomeAplicacao.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Nome Módulo</mat-label>
+                <input
+                    matInput
+                    formControlName="nomeModulo"
+                    placeholder="Nome Módulo"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="compartilhamentoForm.controls.nomeModulo.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Nome Fornecedor</mat-label>
+                <input
+                    matInput
+                    formControlName="nomeFornecedor"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="compartilhamentoForm.controls.nomeFornecedor.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field> 
+
+              <mat-form-field style="width: 50%;" fxFlexOffset="5px">   
+                <mat-label>Local Armazenamento</mat-label>
+                <input 
+                  matInput
+                  formControlName="localArmazenamento"
+                  placeholder="Local de Armazenamento"
+                  [matAutocomplete]="autoLocalArmazenamento"/>
+    
+                <mat-autocomplete #autoLocalArmazenamento="matAutocomplete" [displayWith]="displayLocalArmazenamento" (optionSelected) = "selecionaLocalArmazenamento($event)">
+                  <mat-option *ngFor="let localArmazenamento of listaLocaisArmazenamentoFiltrados | async" [value]="localArmazenamento">
+                    {{localArmazenamento.nomeLocalArmazenamento}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="compartilhamentoForm.controls.localArmazenamento.errors?.required">Local de Armazenamento é Obrigatório</mat-error> 
+              </mat-form-field> 
+
+              <mat-card-actions>
+                <button mat-raised-button color="accent">Salvar</button>
+              </mat-card-actions>
+          </form>
+        </div>
+      </div>
+</mat-card>
+    
+  

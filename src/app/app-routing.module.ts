@@ -79,6 +79,20 @@ const routes: Routes = [
             (module) => module.MetadadosModule
           ),
         canActivate: [AuthGuard],
+      }, {
+        path: "compartilhamento",
+        loadChildren: () =>
+          import("./pages/compartilhamento/compartilhamento.module").then(
+            (module) => module.CompartilhamentoModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
+        path: "local-armazenamento",
+        loadChildren: () =>
+          import("./pages/local-armazenamento/local-armazenamento.module").then(
+            (module) => module.LocalArmazenamentoModule
+          ),
+        canActivate: [AuthGuard],
       }
     ],
     canActivate: [AuthGuard],
