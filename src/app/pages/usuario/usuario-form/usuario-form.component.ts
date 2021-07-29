@@ -290,7 +290,7 @@ export class UsuarioFormComponent implements OnInit {
         if (this.usuarioForm.controls.codigoArea.value!=0)
         {
           let area: Area;
-          area = <Area>this.listaAreas.filter( area => area.codigoArea == this.usuarioForm.controls.codigoArea.value)[0];
+          area = <Area>this.listaAreas.filter( area => area.codArea == this.usuarioForm.controls.codigoArea.value)[0];
           if(area){
             this.usuarioForm.controls.area.setValue(area);
           }

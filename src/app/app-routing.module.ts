@@ -72,6 +72,13 @@ const routes: Routes = [
             (module) => module.FormaColetaModule
           ),
         canActivate: [AuthGuard],
+      }, {
+        path: "metadados",
+        loadChildren: () =>
+          import("./pages/metadados/metadados.module").then(
+            (module) => module.MetadadosModule
+          ),
+        canActivate: [AuthGuard],
       }
     ],
     canActivate: [AuthGuard],

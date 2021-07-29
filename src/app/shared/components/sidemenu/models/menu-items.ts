@@ -43,6 +43,16 @@ export class MenuItems  {
                 link: "forma-coleta",
                 icon: "event_seat",
                 hidden: false,
+            }, {
+                label: "Local Armazenamento",
+                link: "local-armazenamento",
+                icon: "event_seat",
+                hidden: false
+            }, {
+                label: "Metadados",
+                link: "metadados",
+                icon: "event_seat",
+                hidden: false
             }
         ];
     }
