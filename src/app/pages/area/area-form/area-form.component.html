@@ -65,9 +65,69 @@
               <mat-card-actions>
                 <button mat-raised-button color="accent">Salvar</button>
               </mat-card-actions>
-          </form>
+        </form>
     </div>
   </div>
+
+  <!-- Processos -->
+  <mat-expansion-panel *ngIf="areaId" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Processos
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    
+
+    <div class="marginContent">
+      <div fxLayout="row">
+        <div fxFlex>
+          <mat-form-field fxFlex="30">
+            <input
+              matInput
+              (keyup)="applyFilterProcesso($event.target.value)"
+              placeholder="Buscar Processo"/>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="5px">
+          <div fxLayout="column" fxLayoutAlign="start end">
+            <a
+              mat-raised-button
+              color="accent"
+              [routerLink]="['/area', areaId, 'processo', '']"
+              routerLinkActive="active">
+              <mat-icon>add</mat-icon>Novo Processo</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mat-elevation-z8" [hidden]="isLoading">
+        <table mat-table [dataSource]="dataSourceProcesso" matSort>
+          <ng-container matColumnDef="nomeProcesso">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+            <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeProcesso }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <div class="example-button-row">
+                <button
+                  mat-raised-button
+                  color="accent"
+                  [routerLink]="['/area', element.codArea, 'processo', element.codProcesso]">
+                  Editar
+                </button>
+              </div>
+            </td>
+          </ng-container>
+    
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+
+  </mat-expansion-panel>
 </mat-card>
     
   

@@ -15,7 +15,13 @@ const routes: Routes = [
       import("./area-form/area-form.module").then(
         (module) => module.AreaFormModule
       ),
-  },
+  }, {
+    path: ":areaId/processo/:id?",
+    loadChildren: () =>
+      import("./processo-form/processo-form.module").then(
+        (module) => module.ProcessoFormModule
+      )
+  }
 ];
 
 

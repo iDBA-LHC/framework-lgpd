@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { AreaService } from 'src/app/services/area.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { emailValidator, cnpjValidator, cpfValidator } from 'src/app/shared/utils/app.validator';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { Area } from 'src/app/models/area/area';
@@ -12,6 +12,8 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Empresa } from 'src/app/models/empresa/empresa';
 import { EmpresaService } from 'src/app/services/empresa.service';
+import { ProcessoService } from 'src/app/services/processo.service';
+import { Processo } from 'src/app/models/processo/processo';
 
 @Component({
   selector: 'app-area-form',
@@ -31,12 +33,18 @@ export class AreaFormComponent implements OnInit {
   listaEmpresas: Empresa[];
   listaEmpresasFiltradas: Observable<Empresa[]>;
 
+  displayedColumns: string[] = ["nomeProcesso", "actions"];
+  dataSourceProcesso = new MatTableDataSource();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private areaService: AreaService,
     private empresaService: EmpresaService,
+    private processService: ProcessoService,
     private snackBar: CustomSnackBarService,
     private router: Router,
     private dialog: MatDialog,
@@ -61,6 +69,10 @@ export class AreaFormComponent implements OnInit {
 
   private pesquisaTodasAreas() {
 
+  }
+
+  applyFilterProcesso(value: string) {
+    this.dataSourceProcesso.filter = value.trim().toLowerCase();
   }
 
   salvarArea() {
@@ -122,6 +134,7 @@ export class AreaFormComponent implements OnInit {
               });
 
               this.pesquisaEmpresas();
+              this.pesquisaProcessos();
             },
             (err) =>{
               if (err.status === 401)
@@ -137,6 +150,25 @@ export class AreaFormComponent implements OnInit {
         } else {
           this.pesquisaEmpresas();
         }
+      }
+    )
+  }
+
+  pesquisaProcessos() {
+    this.processService.listarProcessosPorArea(this.areaId).subscribe(
+      (response) => {
+        this.dataSourceProcesso = new MatTableDataSource<Processo>(response.body);
+        setTimeout(() => {
+          this.dataSourceProcesso.filterPredicate = (
+            data: {
+              nomeProcesso: string
+            },
+            filterValue: string
+          ) => data.nomeProcesso.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+
+          this.dataSourceProcesso.paginator = this.paginator;
+          this.dataSourceProcesso.sort = this.sort;
+        })
       }
     )
   }
