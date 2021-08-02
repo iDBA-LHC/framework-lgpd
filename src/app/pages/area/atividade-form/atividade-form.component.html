@@ -1,0 +1,73 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      
+      <div *ngIf="isLoading" class="overlay-spinner">
+        <div class="center-spinner">
+          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+        </div>
+      </div>
+
+    <div>
+      <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="atividadeForm"
+            (submit)="salvarAtividade()">
+  
+              <mat-card-header>
+                  <mat-card-title>
+                      <h2 *ngIf="!atividadeId">Nova Atividade</h2>
+                      <h2 *ngIf="atividadeId">Editar Atividade</h2>
+                  </mat-card-title>
+              </mat-card-header>
+    
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Nome Atividade</mat-label>
+                  <input
+                      matInput
+                      formControlName="nomeAtividade"
+                      placeholder="Nome"
+                      autocomplete="off"
+                      type="text"/>
+                  <mat-error *ngIf="atividadeForm.controls.nomeAtividade.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field style="width: 50%;" fxFlexOffset="5px">   
+                <mat-label>Metadados</mat-label>
+                <input 
+                  matInput
+                  formControlName="metadados"
+                  placeholder="Metadados"
+                  [matAutocomplete]="autoMetadados"/>
+    
+                <mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selecionaMetadados($event)">
+                  <mat-option *ngFor="let metadados of listaMetadadosFiltrados | async" [value]="metadados">
+                    {{metadados.nomeMetadados}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indAutomatizado" style="width: 50%;">
+                <span class="ng-tns-c15-3 ng-star-inserted">Automatizado</span>
+              </mat-slide-toggle>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Observações</mat-label>
+                <input
+                    matInput
+                    formControlName="obsAtividade"
+                    placeholder="Observações"
+                    autocomplete="off"
+                    type="text"/>
+            </mat-form-field>
+  
+            <mat-card-actions>
+            <button mat-raised-button color="accent">Salvar</button>
+            </mat-card-actions>
+        </form>
+    </div>
+  </div>
+</mat-card>

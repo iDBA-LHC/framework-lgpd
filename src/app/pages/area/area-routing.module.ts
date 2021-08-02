@@ -21,6 +21,18 @@ const routes: Routes = [
       import("./processo-form/processo-form.module").then(
         (module) => module.ProcessoFormModule
       )
+  }, {
+    path: ":areaId/processo/:processoId/atividade/:id?",
+    loadChildren: () =>
+      import("./atividade-form/atividade-form.module").then(
+        (module) => module.AtividadeFormModule
+      )
+  }, {
+    path: ":areaId/processo/:processoId/contrato/:id?",
+    loadChildren: () =>
+      import("./contrato-form/contrato-form.module").then(
+        (module) => module.ContratoFormModule
+      )
   }
 ];
 

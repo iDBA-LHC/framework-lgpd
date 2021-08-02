@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Atividade } from 'src/app/models/atividade/atividade';
+import { Contrato } from 'src/app/models/contrato/contrato';
 import { Processo } from 'src/app/models/processo/processo';
+import { AtividadeService } from 'src/app/services/atividade.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ContratoService } from 'src/app/services/contrato.service';
 import { ProcessoService } from 'src/app/services/processo.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
@@ -20,11 +24,24 @@ export class ProcessoFormComponent implements OnInit {
   areaId: number;
   isLoading = false;
 
+  displayedColmunsAtividade: string[] = ["nomeAtividade", "actions"];
+  dataSourceAtividade = new MatTableDataSource();
+  @ViewChild(MatPaginator, { static: true }) paginatorAtividade: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sortAtividade: MatSort;
+
+  displayedColmunsContrato: string[] = ["objetoContrato", "actions"];
+  dataSourceContrato = new MatTableDataSource();
+  @ViewChild(MatPaginator, { static: true }) paginatorContrato: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sortContrato: MatSort;
+
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private processoService: ProcessoService,
+    private atividadeService: AtividadeService,
+    private contratoService: ContratoService,
     private snackBar: CustomSnackBarService,
     private router: Router,
     private dialog: MatDialog,
@@ -58,6 +75,9 @@ export class ProcessoFormComponent implements OnInit {
                 obsProcesso: retorno.body[0].obsProcesso
               });
 
+              this.pesquisaAtividades();
+              this.pesquisaContratos();
+
               this.isLoading = false;
             }
           )
@@ -67,6 +87,53 @@ export class ProcessoFormComponent implements OnInit {
       }
     )
   }
+
+  private pesquisaAtividades() {
+    this.atividadeService.listaAtivadadesPorProcesso(this.processoId).subscribe(
+      (response) => {
+        this.dataSourceAtividade = new MatTableDataSource<Atividade>(response.body);
+        setTimeout(() => {
+          this.dataSourceAtividade.filterPredicate = (
+            data: {
+              nomeAtividade: string
+            },
+            filterValue: string
+          ) => data.nomeAtividade.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+
+          this.dataSourceAtividade.paginator = this.paginatorAtividade;
+          this.dataSourceAtividade.sort = this.sortAtividade;
+        });
+      }
+    );
+  };
+
+  applyFilterAtividade(value: string) {
+    this.dataSourceAtividade.filter = value.trim().toLowerCase();
+  }
+
+  private pesquisaContratos() {
+    this.contratoService.listaContratosPorProcesso(this.processoId).subscribe(
+      (response) => {
+        this.dataSourceContrato = new MatTableDataSource<Contrato>(response.body);
+        setTimeout(() => {
+          this.dataSourceContrato.filterPredicate =(
+            data: {
+              objetoContrato: string
+            },
+            filterValue: string
+          ) => data.objetoContrato.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+
+          this.dataSourceContrato.paginator = this.paginatorContrato;
+          this.dataSourceContrato.sort = this.sortContrato;
+        })
+      }
+    )
+  };
+
+  applyFilterContrato(value: string) {
+    this.dataSourceContrato.filter = value.trim().toLowerCase();
+  }
+
 
   private salvarProcesso() {
     if (this.processoForm.valid) {

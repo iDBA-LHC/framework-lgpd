@@ -1,0 +1,76 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      
+      <div *ngIf="isLoading" class="overlay-spinner">
+        <div class="center-spinner">
+          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+        </div>
+      </div>
+
+    <div>
+      <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="contratoForm"
+            (submit)="salvarContrato()">
+  
+              <mat-card-header>
+                  <mat-card-title>
+                      <h2 *ngIf="!contratoId">Novo Contrato</h2>
+                      <h2 *ngIf="contratoId">Editar Contrato</h2>
+                  </mat-card-title>
+              </mat-card-header>
+    
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Objeto Contrato</mat-label>
+                  <input
+                      matInput
+                      formControlName="objetoContrato"
+                      placeholder="Objeto Contrato"
+                      autocomplete="off"
+                      type="text"/>
+                  <mat-error *ngIf="contratoForm.controls.objetoContrato.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Endereço Documento</mat-label>
+                <input
+                    matInput
+                    formControlName="enderecoDocumento"
+                    placeholder="Endereço Documento"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="contratoForm.controls.enderecoDocumento.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Tipo Contrato</mat-label>
+                <input
+                    matInput
+                    formControlName="indTipoContrato"
+                    placeholder="Tipo Contrato"
+                    autocomplete="off"
+                    type="number"/>
+                <mat-error *ngIf="contratoForm.controls.indTipoContrato.errors?.required">Nome é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Observações</mat-label>
+                <input
+                    matInput
+                    formControlName="obsContrato"
+                    placeholder="Observações"
+                    autocomplete="off"
+                    type="text"/>
+            </mat-form-field>
+  
+            <mat-card-actions>
+            <button mat-raised-button color="accent">Salvar</button>
+            </mat-card-actions>
+        </form>
+    </div>
+  </div>
+</mat-card>
