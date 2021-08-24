@@ -58,6 +58,11 @@ export class MenuItems  {
                 link: "local-armazenamento",
                 icon: "event_seat",
                 hidden: false
+            }, {
+                label: "Ciclo Monitoramento",
+                link: "ciclo-monitoramento",
+                icon: "event_seat",
+                hidden: false
             }
         ];
     }

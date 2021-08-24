@@ -93,6 +93,13 @@ const routes: Routes = [
             (module) => module.LocalArmazenamentoModule
           ),
         canActivate: [AuthGuard],
+      }, {
+        path: "ciclo-monitoramento",
+        loadChildren: () =>
+          import("./pages/ciclo-monitoramento/ciclo-monitoramento.module").then(
+            (module) => module.CicloMonitoramentoModule
+          ),
+        canActivate: [AuthGuard],
       }
     ],
     canActivate: [AuthGuard],

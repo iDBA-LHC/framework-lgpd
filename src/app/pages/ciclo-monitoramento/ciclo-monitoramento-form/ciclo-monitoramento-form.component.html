@@ -1,0 +1,90 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      
+      <div *ngIf="isLoading" class="overlay-spinner">
+        <div class="center-spinner">
+          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+        </div>
+      </div>
+  
+        <div>
+          <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="cicloMonitoramentoForm"
+            (submit)="salvarCicloMonitoramento()">
+  
+              <mat-card-header>
+                  <mat-card-title>
+                      <h2 *ngIf="!cicloMonitoramentoId">Novo Ciclo Monitoramento</h2>
+                      <h2 *ngIf="cicloMonitoramentoId">Editar Ciclo Monitoramento</h2>
+                  </mat-card-title>
+              </mat-card-header>
+
+              <mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+                <mat-label>Empresa</mat-label>
+                <input 
+                  matInput
+                  formControlName="empresa"
+                  placeholder="Empresa"
+                  [matAutocomplete]="autoEmpresa"/>
+    
+                <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa" (optionSelected) = "selecionaEmpresa($event)">
+                  <mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+                    {{empresa.nomeEmpresa}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="cicloMonitoramentoForm.controls.empresa.errors?.required">Empresa é Obrigatória</mat-error>
+              </mat-form-field> 
+    
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Data Competencia</mat-label>
+                <input
+                    matInput
+                    formControlName="dataCompetencia"
+                    placeholder="Data Competencia"
+                    [matDatepicker]="picker"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="cicloMonitoramentoForm.controls.dataCompetencia.errors?.required">Data Competência é Obrigatória</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Descrição</mat-label>
+                  <input
+                      matInput
+                      formControlName="nomeCicloMonitoramento"
+                      placeholder="Descrição"
+                      autocomplete="off"
+                      type="text"/>
+                  <mat-error *ngIf="cicloMonitoramentoForm.controls.nomeCicloMonitoramento.errors?.required">Descrição é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+                <mat-label>Usuários</mat-label>
+                <mat-select 
+                  matInput
+                  formControlName="usuarios"
+                  placeholder="Usuários"
+                  multiple>
+
+                  <mat-option *ngFor="let usuario of listaUsuariosFiltrados" [value]="usuario">
+                        {{usuario.nomeUsuario}}
+                  </mat-option>
+                </mat-select>
+                
+                <mat-error *ngIf="cicloMonitoramentoForm.controls.usuarios.errors?.required">Usuário é Obrigatório</mat-error>
+              </mat-form-field> 
+  
+              <mat-card-actions>
+                <button mat-raised-button color="accent">Salvar</button>
+              </mat-card-actions>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+    
+  
