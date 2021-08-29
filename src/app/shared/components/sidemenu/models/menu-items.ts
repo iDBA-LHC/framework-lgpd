@@ -3,11 +3,11 @@ import { environment } from 'src/environments/environment';
 import { MenuItemButton } from './buttons/menu-item-button';
 import { OnInit } from '@angular/core';
 
-export class MenuItems  {
+export class MenuItems {
 
     menuItems: MenuItemButton[] = [];
 
-    constructor(private authService: AuthService){
+    constructor(private authService: AuthService) {
         this.menuItems = [
             {
                 label: "Usuário",
@@ -21,7 +21,7 @@ export class MenuItems  {
                 icon: "work",
                 hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
             },
-           {
+            {
                 label: "Area",
                 link: "area",
                 icon: "event_seat",
@@ -61,6 +61,11 @@ export class MenuItems  {
             }, {
                 label: "Ciclo Monitoramento",
                 link: "ciclo-monitoramento",
+                icon: "event_seat",
+                hidden: false
+            }, {
+                label: "Data Flow",
+                link: "data-flow",
                 icon: "event_seat",
                 hidden: false
             }

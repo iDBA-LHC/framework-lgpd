@@ -18,15 +18,15 @@ const routes: Routes = [
           import("./pages/home/home.module").then(
             (module) => module.HomeModule
           ),
-          canActivate: [AuthGuard],
-      },      
+        canActivate: [AuthGuard],
+      },
       {
         path: "usuario",
         loadChildren: () =>
           import("./pages/usuario/usuario.module").then(
             (module) => module.UsuarioModule
           ),
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
       },
       {
         path: "meu-usuario",
@@ -34,7 +34,7 @@ const routes: Routes = [
           import("./pages/usuario/usuario.module").then(
             (module) => module.UsuarioModule
           ),
-        canActivate: [AuthMeuUsuarioGuard],  
+        canActivate: [AuthMeuUsuarioGuard],
       },
       {
         path: "empresa",
@@ -42,7 +42,7 @@ const routes: Routes = [
           import("./pages/empresa/empresa.module").then(
             (module) => module.EmpresaModule
           ),
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
       },
       {
         path: "area",
@@ -50,7 +50,7 @@ const routes: Routes = [
           import("./pages/area/area.module").then(
             (module) => module.AreaModule
           ),
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
       }, {
         path: "base-legal",
         loadChildren: () =>
@@ -100,6 +100,13 @@ const routes: Routes = [
             (module) => module.CicloMonitoramentoModule
           ),
         canActivate: [AuthGuard],
+      }, {
+        path: "data-flow",
+        loadChildren: () =>
+          import("./pages/data-flow/data-flow.module").then(
+            (module) => module.DataFlowModule
+          ),
+        canActivate: [AuthGuard],
       }
     ],
     canActivate: [AuthGuard],
@@ -124,9 +131,9 @@ const routes: Routes = [
 })
 export class AppRoutingModule {
   constructor(private router: Router) {
-      this.router.errorHandler = (error: any) => {
-        console.log(error);
-        this.router.navigate(['/home']);         
-      }
+    this.router.errorHandler = (error: any) => {
+      console.log(error);
+      this.router.navigate(['/home']);
     }
   }
+}
