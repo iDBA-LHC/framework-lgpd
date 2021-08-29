@@ -5,18 +5,17 @@ const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
-      //import("./data-flow/data-flow-list.module").then(
       import("./data-flow-list/data-flow-list.module").then(
         (module) => module.DataFlowListModule
       ),
-  },
-  /* {
+  }, {
     path: ":id?",
     loadChildren: () =>
-      import("./area-form/area-form.module").then(
-        (module) => module.AreaFormModule
+      import("./data-flow-form/data-flow-form.module").then(
+        (module) => module.DataFlowFormModule
       ),
-  }, {
+  }
+  /* , {
     path: ":areaId/processo/:id?",
     loadChildren: () =>
       import("./processo-form/processo-form.module").then(
