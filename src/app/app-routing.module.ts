@@ -1,7 +1,7 @@
-import { AuthGuard } from "./guards/auth.guard";
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule, Router } from "@angular/router";
+import { Router, RouterModule, Routes } from "@angular/router";
 import { AuthMeuUsuarioGuard } from './guards/auth-meu-usuario.guard';
+import { AuthGuard } from "./guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -66,6 +66,13 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       }, {
+        path: "ciclo-monitoramento",
+        loadChildren: () =>
+          import("./pages/ciclo-monitoramento/ciclo-monitoramento.module").then(
+            (module) => module.CicloMonitoramentoModule
+          ),
+        canActivate: [AuthGuard],
+      },{
         path: "forma-coleta",
         loadChildren: () =>
           import("./pages/forma-coleta/forma-coleta.module").then(
@@ -91,6 +98,27 @@ const routes: Routes = [
         loadChildren: () =>
           import("./pages/local-armazenamento/local-armazenamento.module").then(
             (module) => module.LocalArmazenamentoModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
+        path: "data-map",
+        loadChildren: () =>
+          import("./pages/data-map/data-map.module").then(
+            (module) => module.DataMapModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
+        path: "plano-mitigacao",
+        loadChildren: () =>
+          import("./pages/plano-mitigacao/plano-mitigacao.module").then(
+            (module) => module.PlanoMitigacaoModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
+        path: "data-flow",
+        loadChildren: () =>
+          import("./pages/data-flow/data-flow.module").then(
+            (module) => module.DataFlowModule
           ),
         canActivate: [AuthGuard],
       }
