@@ -1,0 +1,37 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      
+      <div *ngIf="isLoading" class="overlay-spinner">
+        <div class="center-spinner">
+          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+        </div>
+      </div>
+  
+        <div>
+          <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="planoMitigacaoForm"
+            (submit)="salvarPlanoMitigacao()">
+  
+              <mat-card-header>
+                  <mat-card-title>
+                      <h2 *ngIf="!planoMitigacaoId">Novo Plano Mitigação</h2>
+                      <h2 *ngIf="planoMitigacaoId">Editar Plano Mitigação</h2>
+                  </mat-card-title>
+              </mat-card-header>
+
+			  <!-- campos -->
+
+              <mat-card-actions>
+                <button mat-raised-button color="accent">Salvar</button>
+              </mat-card-actions>
+          </form>
+        </div>
+      </div>
+</mat-card>
+    
+  
