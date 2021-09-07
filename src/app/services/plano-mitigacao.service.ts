@@ -5,28 +5,28 @@ import { PlanoMitigacao } from '../models/plano-mitigacao/plano-mitigacao';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class PlanoMitigacaoService {
 
-  apiSuffix = "plano_mitigacao/";
-  constructor(private http: HttpClient,
-    private authService: AuthService) { }
+	apiSuffix = "plano_mitigacao/";
+	constructor(private http: HttpClient,
+		private authService: AuthService) { }
 
-  listaTodosPlanoMitigacao() {
-    return this.http.get<PlanoMitigacao []>(`${environment.apiURL}${this.apiSuffix}`, { observe: "response" });
-  }
+	listaTodosPlanoMitigacao() {
+		return this.http.get<PlanoMitigacao[]>(`${environment.apiURL}${this.apiSuffix}`, { observe: "response" });
+	}
 
-  incluirPlanoMitigacao(PlanoMitigacao: PlanoMitigacao) {
-    return this.http.post(`${environment.apiURL}${this.apiSuffix}`, PlanoMitigacao, { observe: "response" });
-  }
+	incluirPlanoMitigacao(PlanoMitigacao: PlanoMitigacao) {
+		return this.http.post(`${environment.apiURL}${this.apiSuffix}`, PlanoMitigacao, { observe: "response" });
+	}
 
-  pesquisaPlanoMitigacao(id: number) {
-    return this.http.get<PlanoMitigacao>(`${environment.apiURL}${this.apiSuffix}${id}`, { observe: "response" });
-  }
+	pesquisaPlanoMitigacao(id: number) {
+		return this.http.get<PlanoMitigacao>(`${environment.apiURL}${this.apiSuffix}${id}`, { observe: "response" });
+	}
 
-  alterarPlanoMitigacao(PlanoMitigacao: PlanoMitigacao) {
-    return this.http.put<PlanoMitigacao>(`${environment.apiURL}${this.apiSuffix}`, PlanoMitigacao, { observe: "response" });
-  }
+	alterarPlanoMitigacao(PlanoMitigacao: PlanoMitigacao) {
+		return this.http.put<PlanoMitigacao>(`${environment.apiURL}${this.apiSuffix}`, PlanoMitigacao, { observe: "response" });
+	}
 }

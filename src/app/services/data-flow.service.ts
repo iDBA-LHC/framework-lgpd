@@ -1,29 +1,36 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from './auth.service';
-import { DataFlow } from '../models/data-flow/data-flow';
+import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { DataFlow } from '../models/data-flow/data-flow';
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
+
 export class DataFlowService {
-  constructor(private http: HttpClient,
-    private authService: AuthService,) { }
 
-  listaTodosDataFlows() {
-    return this.http.get<DataFlow[]>(environment.apiURL + "data_flow", { observe: "response" });
-  }
+	apiSuffix = "data_flow/";
+	constructor(private http: HttpClient,
+		private authService: AuthService) { }
 
-  /* incluirArea(area: Area) {
-    return this.http.post(`${environment.apiURL}area/`, area, { observe: "response" });
-  }
+	listaTodosDataFlows() {
+		return this.http.get<DataFlow[]>(environment.apiURL + "data_flow", { observe: "response" });
+	}
 
-  pesquisaArea(id: number) {
-    return this.http.get<Area>(`${environment.apiURL}area/${id}`, { observe: "response" })
-  }
+	listaTodosDataFlow() {
+		return this.http.get<DataFlow[]>(`${environment.apiURL}${this.apiSuffix}`, { observe: "response" });
+	}
 
-  alterarArea(area: Area) {
-    return this.http.put<Area>(`${environment.apiURL}area/`, area, { observe: "response" });
-  } */
+	incluirDataFlow(DataFlow: DataFlow) {
+		return this.http.post(`${environment.apiURL}${this.apiSuffix}`, DataFlow, { observe: "response" });
+	}
+
+	pesquisaDataFlow(id: number) {
+		return this.http.get<DataFlow>(`${environment.apiURL}${this.apiSuffix}${id}`, { observe: "response" });
+	}
+
+	alterarDataFlow(DataFlow: DataFlow) {
+		return this.http.put<DataFlow>(`${environment.apiURL}${this.apiSuffix}`, DataFlow, { observe: "response" });
+	}
 }
