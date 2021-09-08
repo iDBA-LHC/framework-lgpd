@@ -14,10 +14,6 @@ export class DataFlowService {
 	constructor(private http: HttpClient,
 		private authService: AuthService) { }
 
-	listaTodosDataFlows() {
-		return this.http.get<DataFlow[]>(environment.apiURL + "data_flow", { observe: "response" });
-	}
-
 	listaTodosDataFlow() {
 		return this.http.get<DataFlow[]>(`${environment.apiURL}${this.apiSuffix}`, { observe: "response" });
 	}

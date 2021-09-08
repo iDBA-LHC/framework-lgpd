@@ -40,7 +40,20 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 
   private createForm() {
     this.planoMitigacaoForm = this.formBuilder.group({
-      codDataMap: ["", Validators.required]      
+      codPlanoMitigacao: ["", Validators.required],
+      codDataMapping: ["", Validators.required],
+      desPlanoMitigacao: ["", Validators.required],
+      desObservacao: ["", Validators.required],
+      dataLimite: ["", Validators.required],
+      nomePropoeAjuste: ["", Validators.required],
+      nomeAprovador: ["", Validators.required],
+      dataElaboracao: ["", Validators.required],
+      dataAditivacao: ["", Validators.required],
+      dataRevisao: ["", Validators.required],
+      dataRecusa: ["", Validators.required],
+      desMotivoRecusa: ["", Validators.required],
+      dataStatus: ["", Validators.required],
+
     });
   }
 
@@ -48,12 +61,12 @@ export class PlanoMitigacaoFormComponent implements OnInit {
     this.activatedRoute.params.subscribe(
       (data) => {
         this.planoMitigacaoId = parseInt(data["id?"]);
-        
+
         if (this.planoMitigacaoId) {
           this.PlanoMitigacaoService.pesquisaPlanoMitigacao(this.planoMitigacaoId).subscribe(
             (retorno) => {
               this.planoMitigacaoForm.patchValue({
-                codDataMap: retorno.body[0].codDataMap                
+                codDataMap: retorno.body[0].codDataMap
               });
             },
             (err) => {
@@ -76,7 +89,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
     if (this.planoMitigacaoForm.valid) {
       const PlanoMitigacao: PlanoMitigacao = this.planoMitigacaoForm.getRawValue();
       PlanoMitigacao.codPlanoMitigacao = this.planoMitigacaoId;
-      
+
       if (this.planoMitigacaoId) {
         // Alteração
         this.PlanoMitigacaoService.alterarPlanoMitigacao(PlanoMitigacao).subscribe(

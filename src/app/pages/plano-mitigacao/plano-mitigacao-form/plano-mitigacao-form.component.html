@@ -1,37 +1,138 @@
 <mat-card class="marginContent">
-    <div class="mat-elevation-z8">
-      
-      <div *ngIf="isLoading" class="overlay-spinner">
-        <div class="center-spinner">
-          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
-        </div>
-      </div>
-  
-        <div>
-          <form
-            fxLayout="row wrap"
-            fxLayout="column"
-            fxLayoutAlign="space-between center"
-            fxFlex="100"
-            fxFlex.gt-sm="100"
-            [formGroup]="planoMitigacaoForm"
-            (submit)="salvarPlanoMitigacao()">
-  
-              <mat-card-header>
-                  <mat-card-title>
-                      <h2 *ngIf="!planoMitigacaoId">Novo Plano Mitigação</h2>
-                      <h2 *ngIf="planoMitigacaoId">Editar Plano Mitigação</h2>
-                  </mat-card-title>
-              </mat-card-header>
+  <div class="mat-elevation-z8">
 
-			  <!-- campos -->
-
-              <mat-card-actions>
-                <button mat-raised-button color="accent">Salvar</button>
-              </mat-card-actions>
-          </form>
-        </div>
+    <div *ngIf="isLoading" class="overlay-spinner">
+      <div class="center-spinner">
+        <mat-spinner style="align-self: center; margin: 0 auto;"></mat-spinner>
       </div>
+    </div>
+
+    <div>
+      <form fxLayout="row wrap" fxLayout="column"
+        fxLayoutAlign="space-between center" fxFlex="100" fxFlex.gt-sm="100"
+        [formGroup]="planoMitigacaoForm" (submit)="salvarPlanoMitigacao()">
+
+        <mat-card-header>
+          <mat-card-title>
+            <h2 *ngIf="!planoMitigacaoId">Novo Plano Mitigação</h2>
+            <h2 *ngIf="planoMitigacaoId">Editar Plano Mitigação</h2>
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Código Plano Mitigação</mat-label>
+          <input matInput formControlName="codPlanoMitigacao" placeholder="Código Plano Mitigação" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="planoMitigacaoForm.controls.codPlanoMitigacao.errors?.required">Código Plano Mitigação é
+            Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Código Data Mapping</mat-label>
+          <input matInput formControlName="codDataMapping" placeholder="Código Data Mapping" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="planoMitigacaoForm.controls.codDataMapping.errors?.required">Código Data Mapping é
+            Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Descrição Plano Mitigação</mat-label>
+          <input matInput formControlName="desPlanoMitigacao" placeholder="Descrição Plano Mitigação" autocomplete="off"
+            type="string" />
+          <mat-error *ngIf="planoMitigacaoForm.controls.desPlanoMitigacao.errors?.required">Descrição Plano Mitigação é
+            Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Descrição observação</mat-label>
+          <input matInput formControlName="desObservacao" placeholder="Descrição observação" autocomplete="off"
+            type="string" />
+          <mat-error *ngIf="planoMitigacaoForm.controls.desObservacao.errors?.required">Descrição observação é
+            Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>data limite</mat-label>
+          <input matInput formControlName="dataLimite" placeholder="data limite" [matDatepicker]="picker6" />
+          <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+          <mat-datepicker #picker6></mat-datepicker>
+          <mat-error *ngIf="planoMitigacaoForm.controls.dataLimite.errors?.required">data limite é Obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Nome propõe ajuste</mat-label>
+          <input matInput formControlName="nomePropoeAjuste" placeholder="Nome propõe ajuste" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="planoMitigacaoForm.controls.nomePropoeAjuste.errors?.required">Nome propõe ajuste é
+            Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Nome Aprovador</mat-label>
+          <input matInput formControlName="nomeAprovador" placeholder="Nome Aprovador" autocomplete="off"
+            type="string" />
+          <mat-error *ngIf="planoMitigacaoForm.controls.nomeAprovador.errors?.required">Nome Aprovador é Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>data Elaboração</mat-label>
+          <input matInput formControlName="dataElaboracao" placeholder="data Elaboração" [matDatepicker]="picker5" />
+          <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+          <mat-datepicker #picker5></mat-datepicker>
+          <mat-error *ngIf="planoMitigacaoForm.controls.dataElaboracao.errors?.required">data Elaboração é Obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>data Aditivação</mat-label>
+          <input matInput formControlName="dataAditivacao" placeholder="data Aditivação" [matDatepicker]="picker1" />
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="planoMitigacaoForm.controls.dataAditivacao.errors?.required">data Aditivação é Obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>data Revisao</mat-label>
+          <input matInput formControlName="dataRevisao" placeholder="data Revisao" [matDatepicker]="picker2" />
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+          <mat-error *ngIf="planoMitigacaoForm.controls.dataRevisao.errors?.required">data Revisao é Obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>data Recusa</mat-label>
+          <input matInput formControlName="dataRecusa" placeholder="data Recusa" [matDatepicker]="picker3" />
+          <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+          <mat-datepicker #picker3></mat-datepicker>
+          <mat-error *ngIf="planoMitigacaoForm.controls.dataRecusa.errors?.required">data Recusa é Obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Descrição Motivo Recusa</mat-label>
+          <input matInput formControlName="desMotivoRecusa" placeholder="Descrição Motivo Recusa" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="planoMitigacaoForm.controls.desMotivoRecusa.errors?.required">Descrição Motivo Recusa é
+            Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>data Status</mat-label>
+          <input matInput formControlName="dataStatus" placeholder="data Status" [matDatepicker]="picker4" />
+          <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+          <mat-datepicker #picker4></mat-datepicker>
+          <mat-error *ngIf="planoMitigacaoForm.controls.dataStatus.errors?.required">data Status é Obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-card-actions>
+          <button mat-raised-button color="accent">Salvar</button>
+        </mat-card-actions>
+      </form>
+    </div>
+  </div>
 </mat-card>
-    
-  

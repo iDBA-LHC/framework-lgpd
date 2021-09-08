@@ -32,7 +32,7 @@ export class DataFlowListComponent implements OnInit {
 
   pesquisaDataFlows() {
     this.isLoading = true;
-    this.dataFlowService.listaTodosDataFlows().subscribe((response) => {
+    this.dataFlowService.listaTodosDataFlow().subscribe((response) => {
       this.isLoading = false;
       console.log(response.body)
       this.dataSource = new MatTableDataSource<DataFlow>(response.body);

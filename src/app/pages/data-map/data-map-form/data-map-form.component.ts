@@ -39,8 +39,26 @@ export class DataMapFormComponent implements OnInit {
   }
 
   private createForm() {
-    this.dataMapForm = this.formBuilder.group({      
+    this.dataMapForm = this.formBuilder.group({
 	  codCicloMonitoramento: ["", Validators.required],
+    codDataMap: ["", Validators.required],
+    codAtividade: ["", Validators.required],
+    indTipo: ["", Validators.required],
+    codCicloVida: ["", Validators.required],
+    codBaseLegal: ["", Validators.required],
+    codMetaDados: ["", Validators.required],
+    indPrincipios: ["", Validators.required],
+    indSensivel: ["", Validators.required],
+    indDadosMenores: ["", Validators.required],
+    indNecessitaConsentimento: ["", Validators.required],
+    indTransfInternacional: ["", Validators.required],
+    indAnonimizacao: ["", Validators.required],
+    indRisco: ["", Validators.required],
+    desobservacoes: ["", Validators.required],
+    formaColetas: ["", Validators.required],
+    compartilhamentos: ["", Validators.required],
+    armazenamentos: ["", Validators.required],
+
     });
   }
 
@@ -48,12 +66,12 @@ export class DataMapFormComponent implements OnInit {
     this.activatedRoute.params.subscribe(
       (data) => {
         this.dataMapId = parseInt(data["id?"]);
-        
+
         if (this.dataMapId) {
           this.DataMapService.pesquisaDataMap(this.dataMapId).subscribe(
             (retorno) => {
               this.dataMapForm.patchValue({
-                codDataMap: retorno.body[0].codDataMap                
+                codDataMap: retorno.body[0].codDataMap
               });
             },
             (err) => {
@@ -75,7 +93,7 @@ export class DataMapFormComponent implements OnInit {
   salvarDataMap() {
     if (this.dataMapForm.valid) {
       const DataMap: DataMap = this.dataMapForm.getRawValue();
-      DataMap.codDataMap = this.dataMapId;      
+      DataMap.codDataMap = this.dataMapId;
 
       if (this.dataMapId) {
         // Alteração
@@ -115,5 +133,5 @@ export class DataMapFormComponent implements OnInit {
         )
       }
     }
-  }  
+  }
 }
