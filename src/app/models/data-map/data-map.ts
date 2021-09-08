@@ -18,7 +18,7 @@ export class DataMap {
     indAnonimizacao: number;
     indRisco: number;
     desobservacoes: string;
-    formaColetas: Array<FormaColeta;
-    compartilhamentos: Array<Compartilhamento;
-    armazenamentos: Array<LocalArmazenamento;
+    formaColetas: Array<FormaColeta>;
+    compartilhamentos: Array<Compartilhamento>;
+    armazenamentos: Array<LocalArmazenamento>;
 }
