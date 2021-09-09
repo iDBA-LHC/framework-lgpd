@@ -19,8 +19,8 @@
   
               <mat-card-header>
                   <mat-card-title>
-                      <h2 *ngIf="!cicloMonitoramentoId">Novo Ciclo Monitoramento</h2>
-                      <h2 *ngIf="cicloMonitoramentoId">Editar Ciclo Monitoramento</h2>
+                      <h2 *ngIf="!codCicloMonitoramento">Novo Ciclo Monitoramento</h2>
+                      <h2 *ngIf="codCicloMonitoramento">Editar Ciclo Monitoramento</h2>
                   </mat-card-title>
               </mat-card-header>
 
@@ -65,15 +65,11 @@
 
               <mat-form-field style="width: 50%;" fxFlexOffset="10px">   
                 <mat-label>Usuários</mat-label>
-                <mat-select 
-                  matInput
-                  formControlName="usuarios"
-                  placeholder="Usuários"
-                  multiple>
-
-                  <mat-option *ngFor="let usuario of listaUsuariosFiltrados" [value]="usuario">
-                        {{usuario.nomeUsuario}}
-                  </mat-option>
+                <mat-select matInput formControlName="usuarios" multiple placeholder="Usuários"                                    
+				  [compareWith]="compareUsuarioSelecionado" [(ngModel)]="usuarioSelecionado">
+					<mat-option *ngFor="let usuario of listaUsuariosFiltrados" [value]="usuario">
+						{{usuario.nomeUsuario}}
+					</mat-option>
                 </mat-select>
                 
                 <mat-error *ngIf="cicloMonitoramentoForm.controls.usuarios.errors?.required">Usuário é Obrigatório</mat-error>
