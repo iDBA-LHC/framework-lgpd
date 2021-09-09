@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DocumentoPlano } from 'src/app/models/documento-plano/documento-plano';
 import { PlanoMitigacao } from 'src/app/models/plano-mitigacao/plano-mitigacao';
 import { AuthService } from 'src/app/services/auth.service';
 import { CompartilhamentoService } from 'src/app/services/compartilhamento.service';
+import { DocumentoPlanoService } from 'src/app/services/documento-plano.service';
 import { PlanoMitigacaoService } from 'src/app/services/plano-mitigacao.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
@@ -17,13 +19,19 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class PlanoMitigacaoFormComponent implements OnInit {
 
   planoMitigacaoForm: FormGroup;
-  planoMitigacaoId: number;
+  codPlanoMitigacao: number;
   isLoading = false;
+
+  displayedColumns: string[] = ["desDocumentoPlano", "actions"];
+  dataSourceDocumentoPlano = new MatTableDataSource();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private documentoplanoService: DocumentoPlanoService,
     private snackBar: CustomSnackBarService,
     private router: Router,
     private dialog: MatDialog,
@@ -57,17 +65,22 @@ export class PlanoMitigacaoFormComponent implements OnInit {
     });
   }
 
+  applyFilterProcesso(value: string) {
+    this.dataSourceDocumentoPlano.filter = value.trim().toLowerCase();
+  }
+
   pesquisaPlanoMitigacao() {
     this.activatedRoute.params.subscribe(
       (data) => {
-        this.planoMitigacaoId = parseInt(data["id?"]);
+        this.codPlanoMitigacao = parseInt(data["id?"]);
 
-        if (this.planoMitigacaoId) {
-          this.PlanoMitigacaoService.pesquisaPlanoMitigacao(this.planoMitigacaoId).subscribe(
+        if (this.codPlanoMitigacao) {
+          this.PlanoMitigacaoService.pesquisaPlanoMitigacao(this.codPlanoMitigacao).subscribe(
             (retorno) => {
               this.planoMitigacaoForm.patchValue({
                 codDataMap: retorno.body[0].codDataMap
               });
+              this.pesquisaDocumentoPlano();
             },
             (err) => {
               if (err.status === 401)
@@ -85,12 +98,31 @@ export class PlanoMitigacaoFormComponent implements OnInit {
     )
   }
 
+  pesquisaDocumentoPlano() {
+    this.documentoplanoService.listaTodosDocumentoPlano(this.codPlanoMitigacao).subscribe(
+      (response) => {
+        this.dataSourceDocumentoPlano = new MatTableDataSource<DocumentoPlano>(response.body);
+        setTimeout(() => {
+          this.dataSourceDocumentoPlano.filterPredicate = (
+            data: {
+              nomeDocumentoPlano: string
+            },
+            filterValue: string
+          ) => data.nomeDocumentoPlano.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+
+          this.dataSourceDocumentoPlano.paginator = this.paginator;
+          this.dataSourceDocumentoPlano.sort = this.sort;
+        })
+      }
+    )
+  }
+
   salvarPlanoMitigacao() {
     if (this.planoMitigacaoForm.valid) {
       const PlanoMitigacao: PlanoMitigacao = this.planoMitigacaoForm.getRawValue();
-      PlanoMitigacao.codPlanoMitigacao = this.planoMitigacaoId;
+      PlanoMitigacao.codPlanoMitigacao = this.codPlanoMitigacao;
 
-      if (this.planoMitigacaoId) {
+      if (this.codPlanoMitigacao) {
         // Alteração
         this.PlanoMitigacaoService.alterarPlanoMitigacao(PlanoMitigacao).subscribe(
           (response) => {

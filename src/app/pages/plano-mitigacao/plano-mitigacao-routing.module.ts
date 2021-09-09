@@ -14,6 +14,12 @@ const routes: Routes = [{
     import("./plano-mitigacao-form/plano-mitigacao-form.module").then(
       (module) => module.PlanoMitigacaoFormModule
     )
+}, {
+  path: ":planoMitigacaoId/documento-plano/:id?",
+  loadChildren: () =>
+    import("./documento-plano-form/documento-plano-form.module").then(
+      (module) => module.DocumentoPlanoFormModule
+    )
 }];
 
 @NgModule({
