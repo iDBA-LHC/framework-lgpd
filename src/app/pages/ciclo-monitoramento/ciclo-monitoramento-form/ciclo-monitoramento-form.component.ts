@@ -13,6 +13,7 @@ import { CicloMonitoramentoService } from 'src/app/services/ciclo-monitoramento.
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
+import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 
 @Component({
   selector: 'app-ciclo-monitoramento-form',
@@ -172,6 +173,16 @@ export class CicloMonitoramentoFormComponent implements OnInit {
           (retorno) => {
             this.snackBar.openSnackBar(`O Ciclo Monitoramento ${ciclo.nomeCicloMonitoramento} foi atualizado com sucesso!`,null);
             this.router.navigate(["/ciclo-monitoramento"]);
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvarCicloMonitoramento();}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+            }
           }
         );
       } else {
@@ -181,6 +192,16 @@ export class CicloMonitoramentoFormComponent implements OnInit {
           (response) => {
             this.snackBar.openSnackBar(`O Ciclo Monitoramento ${ciclo.nomeCicloMonitoramento} foi criado com sucesso!`,null);
             this.router.navigate(["/ciclo-monitoramento"]);
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvarCicloMonitoramento();}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+            }
           }
         )
       }      

@@ -1,6 +1,6 @@
-import { FormaColeta } from 'src/app/models/forma-coleta/forma-coleta';
-import { Compartilhamento } from '../compartilhamento/compartilhamento';
-import { LocalArmazenamento } from '../local-armazenamento/local-armazenamento';
+import { Compartilhamento } from "../compartilhamento/compartilhamento";
+import { FormaColeta } from "../forma-coleta/forma-coleta";
+import { LocalArmazenamento } from "../local-armazenamento/local-armazenamento";
 
 export class DataMap {
     codDataMap: number;

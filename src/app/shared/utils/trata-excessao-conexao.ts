@@ -14,8 +14,8 @@ export class TrataExcessaoConexao {
     static TrataExcessao(err, snackBar: CustomSnackBarService)
     {
         if (err.status === 500 || err.hasOwnProperty("statusText"))
-        {
-            snackBar.openSnackBar(err.statusText, null, "Error");
+        {			
+            snackBar.openSnackBar(err.error.msg, null, "Error");
         }
         else{
             snackBar.openSnackBar(err, null, "Error");
