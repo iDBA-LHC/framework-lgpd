@@ -38,8 +38,7 @@ export class CicloMonitoramentoListComponent implements OnInit {
     this.isLoading = true;
     this.cicloMonitoramentoService.listaTodosCicloMonitoramentos().subscribe(
       (response) => {
-        this.isLoading = false;
-        console.log("lista", response.body);
+        this.isLoading = false;        
         this.dataSource = new MatTableDataSource<CicloMonitoramento>(response.body);
         setTimeout(() => {
           this.dataSource.filterPredicate = (

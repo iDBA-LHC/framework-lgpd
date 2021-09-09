@@ -7,12 +7,12 @@ import { map, startWith } from 'rxjs/operators';
 import { CicloMonitoramento } from 'src/app/models/ciclo-monitoramento/ciclo-monitoramento';
 import { Empresa } from 'src/app/models/empresa/empresa';
 import { Usuario } from 'src/app/models/usuario/usuario';
+import { Usuario2 } from 'src/app/models/usuario/usuario2';
 import { AuthService } from 'src/app/services/auth.service';
 import { CicloMonitoramentoService } from 'src/app/services/ciclo-monitoramento.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
-import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 
 @Component({
   selector: 'app-ciclo-monitoramento-form',
@@ -22,7 +22,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class CicloMonitoramentoFormComponent implements OnInit {
 
   cicloMonitoramentoForm: FormGroup;
-  cicloMonitoramentoId: number;
+  codCicloMonitoramento: number;
   cicloMonitoramentoUsuarioCriado: number;
   isLoading = false;
 
@@ -63,14 +63,14 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   private pesquisaCicloMonitoramento() {
     this.activatedRoute.params.subscribe((data) => {
       if (data["id?"]) {
-        this.cicloMonitoramentoId = data["id?"];
-        this.cicloMonitoramentoService.pesquisaCicloMonitoramento(this.cicloMonitoramentoId).subscribe(
+        this.codCicloMonitoramento = parseInt(data["id?"]);
+        this.cicloMonitoramentoService.pesquisaCicloMonitoramento(this.codCicloMonitoramento).subscribe(
           (retorno) => {
-            console.log("Retorno", retorno);
             this.cicloMonitoramentoForm.patchValue({
               nomeCicloMonitoramento: retorno.body[0].nomeCicloMonitoramento,
               codEmpresa: retorno.body[0].codEmpresa,
-              dataCompetencia: retorno.body[0].dataCompetencia
+              dataCompetencia: retorno.body[0].dataCompetencia,
+			  usuarios: retorno.body[0].usuarios
             });
             this.cicloMonitoramentoUsuarioCriado = retorno.body[0].codUsuarioInclusao;
             
@@ -139,10 +139,13 @@ export class CicloMonitoramentoFormComponent implements OnInit {
     this.isLoading = false;
   }
 
-  selecionaUsuario(event) {
-    console.log("Selecao", event.option.value);
+  selecionaUsuario(event) {    
     let usuarioSelecionado: Usuario = event.option.value;
     this.cicloMonitoramentoForm.controls.usuarios.setValue(usuarioSelecionado);
+  }
+
+  compareUsuarioSelecionado(o1: any, o2: any): boolean {	  
+  	return o1.codigoUsuario === o2.codUsuario;
   }
 
   displayUsuario(usuario: Usuario): string {
@@ -152,9 +155,17 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   salvarCicloMonitoramento() {
     if (this.cicloMonitoramentoForm.valid) {
       const ciclo: CicloMonitoramento = this.cicloMonitoramentoForm.getRawValue();
-      ciclo.codCicloMonitoramento = this.cicloMonitoramentoId;
+      ciclo.codCicloMonitoramento = this.codCicloMonitoramento;
 
-      if (this.cicloMonitoramentoId) {
+	  var usuarios2 = new Array();
+	  ciclo.usuarios.forEach(function(e, i){
+		let usuario2: Usuario2 = new Usuario2;
+		usuario2.codUsuario = e.codigoUsuario;
+		usuarios2.push(usuario2);
+	  });
+	  ciclo.usuarios = usuarios2;
+
+      if (this.codCicloMonitoramento) {
         // Alteração
         ciclo.codUsuarioInclusao = this.cicloMonitoramentoUsuarioCriado;
         this.cicloMonitoramentoService.alterarCicloMonitoramento(ciclo).subscribe(
@@ -172,8 +183,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
             this.router.navigate(["/ciclo-monitoramento"]);
           }
         )
-      }
-      console.log("Salvar", ciclo);
+      }      
     }
   }
 }
