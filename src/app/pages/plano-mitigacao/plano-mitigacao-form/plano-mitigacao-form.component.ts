@@ -82,14 +82,26 @@ export class PlanoMitigacaoFormComponent implements OnInit {
       (data) => {
         this.codPlanoMitigacao = parseInt(data["id?"]);
 
+		this.pesquisaDataMaps();
+
         if (this.codPlanoMitigacao) {
           this.PlanoMitigacaoService.pesquisaPlanoMitigacao(this.codPlanoMitigacao).subscribe(
             (retorno) => {
               this.planoMitigacaoForm.patchValue({
-                codDataMapping: retorno.body[0].codDataMapping
-              });
+                codDataMapping: retorno.body[0].codDataMapping,								
+				desPlanoMitigacao: retorno.body[0].desPlanoMitigacao,
+				desObservacao: retorno.body[0].desObservacao,
+				dataLimite: retorno.body[0].dataLimite,
+				nomePropoeAjustes: retorno.body[0].nomePropoeAjustes,
+				nomeAprovador: retorno.body[0].nomeAprovador,
+				dataElaboracao: retorno.body[0].dataElaboracao,
+				dataAditivacao: retorno.body[0].dataAditivacao,
+				dataRevisao: retorno.body[0].dataRevisao,
+				dataRecusa: retorno.body[0].dataRecusa,
+				desMotivoRecusa: retorno.body[0].desMotivoRecusa,
+				dataStatus: retorno.body[0].dataStatus
 
-			  this.pesquisaDataMaps();
+              });
               
 			  this.pesquisaDocumentoPlano();
             },
@@ -104,9 +116,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
                 }
             }
           );
-        } else {
-			this.pesquisaDataMaps();
-		}
+        }
       }
     )
   }
@@ -183,7 +193,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
         if (this.planoMitigacaoForm.controls.codDataMapping.value != 0) {
           let datamap: DataMap = <DataMap>this.listaDataMap.filter(datamap => datamap.codDataMap == this.planoMitigacaoForm.controls.codDataMapping.value)[0];
           if (datamap) {
-            this.planoMitigacaoForm.controls.datamap.setValue(datamap);
+            this.planoMitigacaoForm.controls.dataMapping.setValue(datamap);
           }
         }
 

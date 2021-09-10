@@ -2,15 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BaseLegal } from 'src/app/models/base-legal/base-legal';
+import { CicloDeVida } from 'src/app/models/ciclo-de-vida/ciclo-de-vida';
 import { Compartilhamento } from 'src/app/models/compartilhamento/compartilhamento';
 import { DataMap } from 'src/app/models/data-map/data-map';
 import { FormaColeta } from 'src/app/models/forma-coleta/forma-coleta';
 import { LocalArmazenamento } from 'src/app/models/local-armazenamento/local-armazenamento';
+import { Metadados } from 'src/app/models/metadados/metadados';
 import { AuthService } from 'src/app/services/auth.service';
+import { BaseLegalService } from 'src/app/services/base-legal.service';
+import { CicloDeVidaService } from 'src/app/services/ciclo-de-vida.service';
 import { CompartilhamentoService } from 'src/app/services/compartilhamento.service';
 import { DataMapService } from 'src/app/services/data-map.service';
 import { FormaColetaService } from 'src/app/services/forma-coleta.service';
 import { LocalArmazenamentoService } from 'src/app/services/local-armazenamento.service';
+import { MetadadosService } from 'src/app/services/metadados.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 
@@ -25,6 +31,10 @@ export class DataMapFormComponent implements OnInit {
 	codDataMap: number;
 	isLoading = false;
 
+	listaBaseLegal: BaseLegal[];
+	listaMetadados: Metadados[];
+	listaCicloVida: CicloDeVida[];
+
 	listaFormaColetas: FormaColeta[];
 	listaFormaColetasFiltrados: FormaColeta[];
 
@@ -32,7 +42,7 @@ export class DataMapFormComponent implements OnInit {
 	listaArmazenamentosFiltrados: LocalArmazenamento[];
 
 	listaCompartilhamentos: Compartilhamento[];
-	listaCompartilhamentosFiltrados: Compartilhamento[];	
+	listaCompartilhamentosFiltrados: Compartilhamento[];
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -41,10 +51,13 @@ export class DataMapFormComponent implements OnInit {
 		private snackBar: CustomSnackBarService,
 		private router: Router,
 		private dialog: MatDialog,
-		private DataMapService: DataMapService,
+		private dataMapService: DataMapService,
+		private metadadosService: MetadadosService,
+		private baseLegalService: BaseLegalService,
+		private cicloVidaService: CicloDeVidaService,
 		private compartilhamentoService: CompartilhamentoService,
 		private formaColetaService: FormaColetaService,
-    	private localArmazenamentoService: LocalArmazenamentoService
+		private localArmazenamentoService: LocalArmazenamentoService
 	) { }
 
 	ngOnInit() {
@@ -60,7 +73,10 @@ export class DataMapFormComponent implements OnInit {
 			codAtividade: ["", Validators.required],
 
 			codMetadados: ["", Validators.required],
+			metadados: ["", Validators.required],
+
 			codBaseLegal: ["", Validators.required],
+			baseLegal: ["", Validators.required],
 
 			indPrincipios: ["", Validators.required],
 			indSensivel: ["", Validators.required],
@@ -75,6 +91,7 @@ export class DataMapFormComponent implements OnInit {
 			compartilhamentos: ["", Validators.required],
 			indAnonimizacao: ["", Validators.required],
 
+			cicloVida: ["", Validators.required],
 			codCicloVida: ["", Validators.required],
 			indRisco: ["", Validators.required],
 			desObservacoes: [""]
@@ -88,7 +105,7 @@ export class DataMapFormComponent implements OnInit {
 				this.codDataMap = parseInt(data["id?"]);
 
 				if (this.codDataMap) {
-					this.DataMapService.pesquisaDataMap(this.codDataMap).subscribe(
+					this.dataMapService.pesquisaDataMap(this.codDataMap).subscribe(
 						(retorno) => {
 							this.dataMapForm.patchValue({
 								codDataMap: retorno.body[0].codDataMap,
@@ -136,66 +153,128 @@ export class DataMapFormComponent implements OnInit {
 
 	preencherCombos() {
 
+		this.pesquisaBaselegal();
+		this.pesquisaMetadados();
+		this.pesquisaCicloVida();
 		this.pesquisaFormaColetas();
-
 		this.pesquisaLocalArmazenamento();
-
 		this.pesquisaCompartilhamentos();
-
 	}
 
 	salvarDataMap() {
 
 		//if (this.dataMapForm.valid) {
-			const DataMap: DataMap = this.dataMapForm.getRawValue();
-			DataMap.codDataMap = this.codDataMap;
+		const DataMap: DataMap = this.dataMapForm.getRawValue();
+		DataMap.codDataMap = this.codDataMap;
 
-			DataMap.indPrincipios = (this.dataMapForm.controls.indPrincipios.value ? 1 : 0);
-			DataMap.indSensivel = (this.dataMapForm.controls.indSensivel.value ? 1 : 0);
-			DataMap.indDadosMenores = (this.dataMapForm.controls.indDadosMenores.value ? 1 : 0);
+		DataMap.indPrincipios = (this.dataMapForm.controls.indPrincipios.value ? 1 : 0);
+		DataMap.indSensivel = (this.dataMapForm.controls.indSensivel.value ? 1 : 0);
+		DataMap.indDadosMenores = (this.dataMapForm.controls.indDadosMenores.value ? 1 : 0);
 
-			DataMap.indNecessitaConsentimento = (this.dataMapForm.controls.indNecessitaConsentimento.value ? 1 : 0);
-			DataMap.indTransfInternacional = (this.dataMapForm.controls.indTransfInternacional.value ? 1 : 0);
-			DataMap.indAnonimizacao = (this.dataMapForm.controls.indAnonimizacao.value ? 1 : 0);			
+		DataMap.indNecessitaConsentimento = (this.dataMapForm.controls.indNecessitaConsentimento.value ? 1 : 0);
+		DataMap.indTransfInternacional = (this.dataMapForm.controls.indTransfInternacional.value ? 1 : 0);
+		DataMap.indAnonimizacao = (this.dataMapForm.controls.indAnonimizacao.value ? 1 : 0);
 
-			DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);			
-			DataMap.indTipo = 0;
-			console.log(DataMap);
+		DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);
+		DataMap.indTipo = 0;
+		console.log(DataMap);
 
-			if (this.codDataMap) {
-				// Alteração
-				this.DataMapService.alterarDataMap(DataMap).subscribe(
-					(response) => {
-						this.snackBar.openSnackBar(`O Data Map foi atualizado com sucesso!`, null);
-						this.router.navigate(["/data-map"]);
-					},
-					(err) => {
-						if (err.status === 401) {
-							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
-						}
-						else {
-							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-						}
+		if (this.codDataMap) {
+			// Alteração
+			this.dataMapService.alterarDataMap(DataMap).subscribe(
+				(response) => {
+					this.snackBar.openSnackBar(`O Data Map foi atualizado com sucesso!`, null);
+					this.router.navigate(["/data-map"]);
+				},
+				(err) => {
+					if (err.status === 401) {
+						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
 					}
-				)
-			} else {
-				// Inclusão
-				this.DataMapService.incluirDataMap(DataMap).subscribe(
-					(response) => {
-						this.snackBar.openSnackBar(`O Data Map foi criado com sucesso!`, null);
-						this.router.navigate(["/data-map"]);
-					},
-					(err) => {
-						if (err.status === 401) {
-							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
-						}
-						else {
-							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-						}
+					else {
+						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
 					}
-				)
-			}
+				}
+			)
+		} else {
+			// Inclusão
+			this.dataMapService.incluirDataMap(DataMap).subscribe(
+				(response) => {
+					this.snackBar.openSnackBar(`O Data Map foi criado com sucesso!`, null);
+					this.router.navigate(["/data-map"]);
+				},
+				(err) => {
+					if (err.status === 401) {
+						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
+					}
+					else {
+						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+					}
+				}
+			)
+		}
 		//}
+	}
+
+	private pesquisaMetadados() {
+		this.metadadosService.listaTodosMetadados().subscribe(
+			(retorno) => {
+				this.listaMetadados = retorno.body;
+
+				if (this.dataMapForm.controls.codMetadados.value != 0) {
+					let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == this.dataMapForm.controls.codMetadados.value)[0];
+					if (metadados) {
+						this.dataMapForm.controls.metadados.setValue(metadados);
+					}
+				}
+			}
+		)
+		this.isLoading = false;
+	}
+
+	selecionaMetadados(event) {
+		let selecionado: Metadados = event.option.value;
+		this.dataMapForm.controls.metadados.setValue(selecionado);
+		this.dataMapForm.controls.codMetadados.setValue(selecionado.codMetadados);
+	}
+
+	compareMetadados(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codMetadados === o2.codMetadados;
+	}
+
+	displayMetadados(metadados: Metadados): string {
+		return metadados ? metadados.nomeMetadados : "";
+	}
+
+	private pesquisaBaselegal() {
+		this.baseLegalService.listaTodasBasesLegais().subscribe(
+			(retorno) => {
+				this.listaBaseLegal = retorno.body;
+
+				if (this.dataMapForm.controls.codBaseLegal.value != 0) {
+					let baseLegal: BaseLegal = <BaseLegal>this.listaBaseLegal.filter(baseLegal => baseLegal.codigoBase == this.dataMapForm.controls.codBaseLegal.value)[0];
+					if (baseLegal) {
+						this.dataMapForm.controls.baseLegal.setValue(baseLegal);
+					}
+				}
+			}
+		)
+		this.isLoading = false;
+	}
+
+	selecionaBaseLegal(event) {
+		let selecionado: BaseLegal = event.option.value;
+		this.dataMapForm.controls.baseLegal.setValue(selecionado);
+		this.dataMapForm.controls.codBaseLegal.setValue(selecionado.codigoBase);
+	}
+
+	compareBaseLegal(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codBaseLegal === o2.codBaseLegal;
+	}
+
+	displayBaseLegal(baseLegal: BaseLegal): string {
+		return baseLegal ? baseLegal.nomeBase : "";
 	}
 
 	private pesquisaFormaColetas() {
@@ -227,7 +306,7 @@ export class DataMapFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-	compareArmazenamento(o1: any, o2: any): boolean {	  
+	compareArmazenamento(o1: any, o2: any): boolean {
 		if (o2 != null)
 			return o1.codLocalArmazenamento === o2.codLocalArmazenamento;
 	}
@@ -244,8 +323,39 @@ export class DataMapFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-	compareCompartilhamento(o1: any, o2: any): boolean {	  
+	compareCompartilhamento(o1: any, o2: any): boolean {
 		if (o2 != null)
 			return o1.codCompartilhamento === o2.codCompartilhamento;
+	}
+
+	private pesquisaCicloVida() {
+		this.cicloVidaService.listaTodosCiclosDeVida().subscribe(
+			(retorno) => {
+				this.listaCicloVida = retorno.body;
+
+				if (this.dataMapForm.controls.codCicloVida.value != 0) {
+					let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == this.dataMapForm.controls.codCicloVida.value)[0];
+					if (cicloVida) {
+						this.dataMapForm.controls.cicloVida.setValue(cicloVida);
+					}
+				}
+			}
+		)
+		this.isLoading = false;
+	}
+
+	selecionaCicloVida(event) {
+		let selecionado: CicloDeVida = event.option.value;
+		this.dataMapForm.controls.cicloVida.setValue(selecionado);
+		this.dataMapForm.controls.codCicloVida.setValue(selecionado.codCicloVida);
+	}
+
+	compareCicloVida(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codCicloVida === o2.codCicloVida;
+	}
+
+	displayCicloVida(cicloVida: CicloDeVida): string {
+		return cicloVida ? cicloVida.nomeCicloVida : "";
 	}
 }

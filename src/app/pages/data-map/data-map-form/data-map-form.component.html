@@ -35,22 +35,47 @@
           <mat-error *ngIf="dataMapForm.controls.codAtividade.errors?.required">É Obrigatório
           </mat-error>
         </mat-form-field>
-		
-		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Metadados</mat-label>
-          <input matInput formControlName="codMetadados" placeholder="Código Meta dados" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codMetadados.errors?.required">Código Meta dados é Obrigatório
-          </mat-error>
-        </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Base Legal</mat-label>
-          <input matInput formControlName="codBaseLegal" placeholder="Código Base Legal" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codBaseLegal.errors?.required">Código Base Legal é Obrigatório
-          </mat-error>
-        </mat-form-field>
+
+
+
+
+
+
+
+
+		
+		 <mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+			<mat-label>Metadados</mat-label>
+			<input matInput formControlName="metadados" placeholder="Metadados" [matAutocomplete]="autoMetadados"/>    
+			<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selecionaMetadados($event)">
+				<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
+					{{metadados.nomeMetadados}}
+				</mat-option>
+			</mat-autocomplete>
+			<mat-error *ngIf="dataMapForm.controls.metadados.errors?.required">É Obrigatório</mat-error>
+		</mat-form-field>
+
+		<mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+			<mat-label>Base Legal</mat-label>
+			<input matInput formControlName="baseLegal" placeholder="Base Legal" [matAutocomplete]="autoBaseLegal"/>    
+			<mat-autocomplete #autoBaseLegal="matAutocomplete" [displayWith]="displayBaseLegal" (optionSelected) = "selecionaBaseLegal($event)">
+				<mat-option *ngFor="let baseLegal of listaBaseLegal" [value]="baseLegal">
+					{{baseLegal.nomeBase}}
+				</mat-option>
+			</mat-autocomplete>
+			<mat-error *ngIf="dataMapForm.controls.baseLegal.errors?.required">É Obrigatório</mat-error>
+		</mat-form-field> 
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -115,13 +140,16 @@
           <span class="ng-tns-c15-3 ng-star-inserted">Anonimização</span>
         </mat-slide-toggle>
 
-		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Ciclo Vida</mat-label>
-          <input matInput formControlName="codCicloVida" placeholder="Código Ciclo Vida" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codCicloVida.errors?.required">Código Ciclo Vida é Obrigatório
-          </mat-error>
-        </mat-form-field>
+		<mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+			<mat-label>Ciclo Vida</mat-label>
+			<input matInput formControlName="cicloVida" placeholder="Ciclo Vida" [matAutocomplete]="autoCicloVida"/>    
+			<mat-autocomplete #autoCicloVida="matAutocomplete" [displayWith]="displayCicloVida" (optionSelected) = "selecionaCicloVida($event)">
+				<mat-option *ngFor="let cicloVida of listaCicloVida" [value]="cicloVida">
+					{{cicloVida.nomeCicloVida}}
+				</mat-option>
+			</mat-autocomplete>
+			<mat-error *ngIf="dataMapForm.controls.cicloVida.errors?.required">É Obrigatório</mat-error>
+		</mat-form-field>
 				
 		<mat-radio-group fxFlex style="width: 50%;" fxFlexOffset="5px" formControlName="indRisco">
 			<mat-label>Risco</mat-label>
