@@ -1,37 +1,124 @@
 <mat-card class="marginContent">
-    <div class="mat-elevation-z8">
-      
-      <div *ngIf="isLoading" class="overlay-spinner">
-        <div class="center-spinner">
-          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
-        </div>
-      </div>
-  
-        <div>
-          <form
-            fxLayout="row wrap"
-            fxLayout="column"
-            fxLayoutAlign="space-between center"
-            fxFlex="100"
-            fxFlex.gt-sm="100"
-            [formGroup]="dataFlowForm"
-            (submit)="salvarDataFlow()">
-  
-              <mat-card-header>
-                  <mat-card-title>
-                      <h2 *ngIf="!dataFlowId">Novo Data Flow</h2>
-                      <h2 *ngIf="dataFlowId">Editar Data Flow</h2>
-                  </mat-card-title>
-              </mat-card-header>
+  <div class="mat-elevation-z8">
 
-			  <!-- campo -->
-              
-              <mat-card-actions>
-                <button mat-raised-button color="accent">Salvar</button>
-              </mat-card-actions>
-          </form>
-        </div>
+    <div *ngIf="isLoading" class="overlay-spinner">
+      <div class="center-spinner">
+        <mat-spinner style="align-self: center; margin: 0 auto;"></mat-spinner>
       </div>
+    </div>
+
+    <div>
+      <form fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100" fxFlex.gt-sm="100"
+        [formGroup]="dataFlowForm" (submit)="salvarDataFlow()">
+
+        <mat-card-header>
+          <mat-card-title>
+            <h2 *ngIf="!dataFlowId">Novo Data Flow</h2>
+            <h2 *ngIf="dataFlowId">Editar Data Flow</h2>
+          </mat-card-title>
+        </mat-card-header>
+
+        <!-- campo -->
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Nome Processamento</mat-label>
+          <input matInput formControlName="nomeProcessamento" placeholder="Nome Processamento" autocomplete="off"
+            type="string" />
+          <mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Nome Processamento é Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Código Ciclo Monitoramento</mat-label>
+          <input matInput formControlName="codCicloMonitoramento" placeholder="Código Ciclo Monitoramento"
+            autocomplete="off" type="number" />
+          <mat-error *ngIf="dataFlowForm.controls.codCicloMonitoramento.errors?.required">Código Ciclo Monitoramento é
+            Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Código Atividade</mat-label>
+          <input matInput formControlName="codAtividade" placeholder="Código Atividade" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="dataFlowForm.controls.codAtividade.errors?.required">Código Atividade é Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Código Metadados</mat-label>
+          <input matInput formControlName="codMetadados" placeholder="Código Metadados" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="dataFlowForm.controls.codMetadados.errors?.required">Código Metadados é Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
+          formControlName="indDescarte" style="width: 50%;">
+          <span class="ng-tns-c15-3 ng-star-inserted">Possuí descarte</span>
+        </mat-slide-toggle>
+
+        <mat-radio-group fxFlex style="width: 50%;" fxFlexOffset="5px" formControlName="indRisco">
+          <mat-label>Risco</mat-label>
+          <mat-radio-button value="1">Baixo</mat-radio-button>
+          <mat-radio-button value="2">Moderado</mat-radio-button>
+          <mat-radio-button value="2">Elevado</mat-radio-button>
+          <mat-radio-button value="2">Extremo</mat-radio-button>
+        </mat-radio-group>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Código Ciclo Vida</mat-label>
+          <input matInput formControlName="codCicloVida" placeholder="Código Ciclo Vida" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="dataFlowForm.controls.codCicloVida.errors?.required">Código Ciclo Vida é Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Código Usuário Inclusão</mat-label>
+          <input matInput formControlName="codUsuarioInclusao" placeholder="Código Usuário Inclusão" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="dataFlowForm.controls.codUsuarioInclusao.errors?.required">Código Usuário Inclusão é
+            Obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Usuários</mat-label>
+          <mat-select matInput formControlName="usuarios" multiple placeholder="Usuários"
+            [compareWith]="compareUsuarioSelecionado" [(ngModel)]="usuarioSelecionado">
+            <mat-option *ngFor="let usuario of listaUsuariosFiltrados" [value]="usuario">
+              {{usuario.nomeUsuario}}
+            </mat-option>
+          </mat-select>
+
+          <mat-error *ngIf="dataFlowForm.controls.usuarios.errors?.required">Usuário é Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Local de Armazanamento</mat-label>
+          <mat-select matInput formControlName="armazenamentos" multiple placeholder="selecione..."
+            [compareWith]="compareArmazenamento" [(ngModel)]="armazenamentoSelecionado">
+            <mat-option *ngFor="let armazenamento of listaArmazenamentosFiltrados" [value]="armazenamento">
+              {{armazenamento.nomeLocalArmazenamento}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Compartilhamentos</mat-label>
+          <mat-select matInput formControlName="compartilhamentos" multiple placeholder="selecione..."
+            [compareWith]="compareCompartilhamento" [(ngModel)]="compartilhamentoSelecionado">
+            <mat-option *ngFor="let compartilhamento of listaCompartilhamentosFiltrados" [value]="compartilhamento">
+              {{compartilhamento.nomeCompartilhamento}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-card-actions>
+          <button mat-raised-button color="accent">Salvar</button>
+        </mat-card-actions>
+      </form>
+    </div>
+  </div>
 </mat-card>
-    
-  
