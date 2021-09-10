@@ -14,43 +14,33 @@
 
         <mat-card-header>
           <mat-card-title>
-            <h2 *ngIf="!dataMapId">Novo Data Map</h2>
-            <h2 *ngIf="dataMapId">Editar Data Map</h2>
+            <h2 *ngIf="!codDataMap">Novo Data Map</h2>
+            <h2 *ngIf="codDataMap">Editar Data Map</h2>
           </mat-card-title>
         </mat-card-header>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Código DataMap</mat-label>
-          <input matInput formControlName="codDataMap" placeholder="Código DataMap" autocomplete="off" type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codDataMap.errors?.required">Código DataMap é Obrigatório</mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Ciclo Monitoramento</mat-label>
-          <input matInput formControlName="codCicloMonitoramento" placeholder="Código Ciclo Monitoramento"
-            autocomplete="off" type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codCicloMonitoramento.errors?.required">Código Ciclo Monitoramento é
-            Obrigatório</mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Atividade</mat-label>
-          <input matInput formControlName="codAtividade" placeholder="Código Atividade" autocomplete="off"
+		
+		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Ciclo (pegar automaticamente)</mat-label>
+          <input matInput formControlName="codCicloMonitoramento" placeholder="Ciclo" autocomplete="off"
             type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codAtividade.errors?.required">Código Atividade é Obrigatório
+          <mat-error *ngIf="dataMapForm.controls.codCicloMonitoramento.errors?.required">É Obrigatório
           </mat-error>
         </mat-form-field>
 
-        <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indTipo"
-          style="width: 50%;">
-          <span class="ng-tns-c15-3 ng-star-inserted">Indicador Tipo</span>
-        </mat-slide-toggle>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Ciclo Vida</mat-label>
-          <input matInput formControlName="codCicloVida" placeholder="Código Ciclo Vida" autocomplete="off"
+		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Atividade (varios combos para procurar)</mat-label>
+          <input matInput formControlName="codAtividade" placeholder="Atividade" autocomplete="off"
             type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codCicloVida.errors?.required">Código Ciclo Vida é Obrigatório
+          <mat-error *ngIf="dataMapForm.controls.codAtividade.errors?.required">É Obrigatório
+          </mat-error>
+        </mat-form-field>
+		
+		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Metadados</mat-label>
+          <input matInput formControlName="codMetadados" placeholder="Código Meta dados" autocomplete="off"
+            type="number" />
+          <mat-error *ngIf="dataMapForm.controls.codMetadados.errors?.required">Código Meta dados é Obrigatório
           </mat-error>
         </mat-form-field>
 
@@ -62,77 +52,91 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Metadados</mat-label>
-          <input matInput formControlName="codMetaDados" placeholder="Código Meta dados" autocomplete="off"
+
+
+		<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indPrincipios"
+          style="width: 50%;">
+          <span class="ng-tns-c15-3 ng-star-inserted">Seguem os 10 princípios</span>
+        </mat-slide-toggle>
+
+		<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indSensivel"
+          style="width: 50%;">
+          <span class="ng-tns-c15-3 ng-star-inserted">Dados Sensíveis</span>
+        </mat-slide-toggle>
+
+		<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indDadosMenores"
+          style="width: 50%;">
+          <span class="ng-tns-c15-3 ng-star-inserted">Dados de Menores</span>
+        </mat-slide-toggle>
+
+
+		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Forma de Coleta</mat-label>
+          <mat-select matInput formControlName="formaColetas" multiple placeholder="selecione..."
+			[compareWith]="compareFormaColeta" [(ngModel)]="formaColetaSelecionado">
+			<mat-option *ngFor="let formaColeta of listaFormaColetasFiltrados" [value]="formaColeta">
+				{{formaColeta.nomeFormaColeta}}
+			</mat-option>
+			</mat-select>
+        </mat-form-field>
+
+		<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indNecessitaConsentimento"
+          style="width: 50%;">
+          <span class="ng-tns-c15-3 ng-star-inserted">Necessita Consentimento</span>
+        </mat-slide-toggle>
+
+		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Local de Armazanamento</mat-label>
+          <mat-select matInput formControlName="armazenamentos" multiple placeholder="selecione..."
+			[compareWith]="compareArmazenamento" [(ngModel)]="armazenamentoSelecionado">
+			<mat-option *ngFor="let armazenamento of listaArmazenamentosFiltrados" [value]="armazenamento">
+				{{armazenamento.nomeLocalArmazenamento}}
+			</mat-option>
+			</mat-select>
+        </mat-form-field>
+
+		<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indTransfInternacional"
+          style="width: 50%;">
+          <span class="ng-tns-c15-3 ng-star-inserted">Transferência Internacional</span>
+        </mat-slide-toggle>
+
+		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Compartilhamentos</mat-label>
+          <mat-select matInput formControlName="compartilhamentos" multiple placeholder="selecione..."
+			[compareWith]="compareCompartilhamento" [(ngModel)]="compartilhamentoSelecionado">
+			<mat-option *ngFor="let compartilhamento of listaCompartilhamentosFiltrados" [value]="compartilhamento">
+				{{compartilhamento.nomeCompartilhamento}}
+			</mat-option>
+		</mat-select>
+        </mat-form-field>
+
+		<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indAnonimizacao"
+          style="width: 50%;">
+          <span class="ng-tns-c15-3 ng-star-inserted">Anonimização</span>
+        </mat-slide-toggle>
+
+		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Ciclo Vida</mat-label>
+          <input matInput formControlName="codCicloVida" placeholder="Código Ciclo Vida" autocomplete="off"
             type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codMetaDados.errors?.required">Código Meta dados é Obrigatório
+          <mat-error *ngIf="dataMapForm.controls.codCicloVida.errors?.required">Código Ciclo Vida é Obrigatório
           </mat-error>
         </mat-form-field>
+				
+		<mat-radio-group fxFlex style="width: 50%;" fxFlexOffset="5px" formControlName="indRisco">
+			<mat-label>Risco</mat-label>
+			<mat-radio-button value="1">Baixo</mat-radio-button>
+			<mat-radio-button value="2">Moderado</mat-radio-button>
+			<mat-radio-button value="2">Elevado</mat-radio-button>
+			<mat-radio-button value="2">Extremo</mat-radio-button>
+		</mat-radio-group>
 
         <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Princípios</mat-label>
-          <input matInput formControlName="indPrincipios" placeholder="Indicador Principios" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.indPrincipios.errors?.required">Indicador Principios é Obrigatório
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Sensível</mat-label>
-          <input matInput formControlName="indSensivel" placeholder="Indicador Sensivel" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.indSensivel.errors?.required">Indicador Sensivel é Obrigatório
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Dados Menores</mat-label>
-          <input matInput formControlName="indDadosMenores" placeholder="Código Dados Menores" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.indDadosMenores.errors?.required">Código Dados Menores é Obrigatório
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Necessita Consentimento</mat-label>
-          <input matInput formControlName="indNecessitaConsentimento" placeholder="Código Necessita Consentimento"
-            autocomplete="off" type="number" />
-          <mat-error *ngIf="dataMapForm.controls.indNecessitaConsentimento.errors?.required">Código Necessita
-            Consentimento é Obrigatório</mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Transferência Internacional</mat-label>
-          <input matInput formControlName="indTransfInternacional" placeholder="Código Transferencia Internacional"
-            autocomplete="off" type="number" />
-          <mat-error *ngIf="dataMapForm.controls.indTransfInternacional.errors?.required">Código Transferencia
-            Internacional é Obrigatório</mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Anonimização</mat-label>
-          <input matInput formControlName="indAnonimizacao" placeholder="Indicador Anonimização" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.indAnonimizacao.errors?.required">Indicador Anonimização é Obrigatório
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Risco</mat-label>
-          <input matInput formControlName="indRisco" placeholder="Indicador Risco" autocomplete="off" type="number" />
-          <mat-error *ngIf="dataMapForm.controls.indRisco.errors?.required">Indicador Risco é Obrigatório</mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Observações</mat-label>
-          <input matInput formControlName="desobservacoes" placeholder="Descrição Observações" autocomplete="off"
-            type="string" />
-          <mat-error *ngIf="dataMapForm.controls.desobservacoes.errors?.required">Descrição Observações é Obrigatório
-          </mat-error>
-        </mat-form-field>
-
-        <!-- campo -->
+			<mat-label>Observações</mat-label>
+			<textarea matInput formControlName="desObservacoes" placeholder="Observações" autocomplete="off"
+				type="textField" resizeToFitContent="true" rows="5">
+			</textarea>					
+		</mat-form-field>
 
         <mat-card-actions>
           <button mat-raised-button color="accent">Salvar</button>

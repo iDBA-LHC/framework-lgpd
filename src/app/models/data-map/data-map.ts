@@ -6,19 +6,25 @@ export class DataMap {
     codDataMap: number;
     codCicloMonitoramento: number;
     codAtividade: number;
-    indTipo: number;
-    codCicloVida: number;
+    indTipo: number; // nao sei que campo é esse
+    
+	codMetadados: number;
     codBaseLegal: number;
-    codMetaDados: number;
+    
     indPrincipios: number;
     indSensivel: number;
     indDadosMenores: number;
+
+	formaColetas: Array<FormaColeta>;
     indNecessitaConsentimento: number;
-    indTransfInternacional: number;
+    
+	armazenamentos: Array<LocalArmazenamento>;
+	indTransfInternacional: number;
+
+	compartilhamentos: Array<Compartilhamento>;
     indAnonimizacao: number;
+	
+	codCicloVida: number;
     indRisco: number;
-    desobservacoes: string;
-    formaColetas: Array<FormaColeta>;
-    compartilhamentos: Array<Compartilhamento>;
-    armazenamentos: Array<LocalArmazenamento>;
+    desObservacoes: string;	
 }

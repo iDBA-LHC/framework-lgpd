@@ -4,7 +4,7 @@ export class PlanoMitigacao {
     desPlanoMitigacao: string;
     desObservacao: string;
     dataLimite: Date;
-    nomePropoeAjuste: string;
+    nomePropoeAjustes: string;
     nomeAprovador: string;
     dataElaboracao: Date;
     dataAditivacao: Date;

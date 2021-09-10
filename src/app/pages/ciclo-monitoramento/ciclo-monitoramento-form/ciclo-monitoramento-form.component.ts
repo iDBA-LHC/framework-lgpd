@@ -146,7 +146,8 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   }
 
   compareUsuarioSelecionado(o1: any, o2: any): boolean {	  
-  	return o1.codigoUsuario === o2.codUsuario;
+	if (o2 != null)
+  		return o1.codigoUsuario === o2.codUsuario;
   }
 
   displayUsuario(usuario: Usuario): string {
