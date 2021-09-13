@@ -73,7 +73,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
     });
   }
 
-  applyFilterProcesso(value: string) {
+  applyFilterDocumentoPlano(value: string) {
     this.dataSourceDocumentoPlano.filter = value.trim().toLowerCase();
   }
 

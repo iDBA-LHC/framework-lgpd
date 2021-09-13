@@ -19,10 +19,8 @@
           </mat-card-title>
         </mat-card-header>
 
-        <!-- campo -->
-
         <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Descição Documento Plano</mat-label>
+          <mat-label>Descrição</mat-label>
           <input matInput formControlName="desDocumentoPlano" placeholder="Descição Documento Plano" autocomplete="off"
             type="string" />
           <mat-error *ngIf="documentoPlanoForm.controls.desDocumentoPlano.errors?.required">Descição Documento Plano é Obrigatório
@@ -30,7 +28,7 @@
         </mat-form-field>
 
         <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Descrição endereço plano</mat-label>
+          <mat-label>Endereço</mat-label>
           <input matInput formControlName="desEnderecoPlano" placeholder="Descrição endereço plano" autocomplete="off"
             type="string" />
           <mat-error *ngIf="documentoPlanoForm.controls.desEnderecoPlano.errors?.required">Descrição endereço plano é Obrigatório

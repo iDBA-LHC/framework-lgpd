@@ -1,4 +1,3 @@
-import { PlanoMitigacao } from 'src/app/models/plano-mitigacao/plano-mitigacao';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -11,12 +10,12 @@ import { AuthService } from './auth.service';
 
 export class DocumentoPlanoService {
 
-  apiSuffix = "plano_mitigacao/";
+  apiSuffix = "documento_plano/";
   constructor(private http: HttpClient,
     private authService: AuthService) { }
 
   listaTodosDocumentoPlano(codPlanoMitigacao: number) {
-    return this.http.get<DocumentoPlano []>(`${environment.apiURL}${this.apiSuffix}${codPlanoMitigacao}/documento_plano`, { observe: "response" });
+    return this.http.get<DocumentoPlano []>(`${environment.apiURL}plano_mitigacao/${codPlanoMitigacao}/documento_plano`, { observe: "response" });
   }
 
   incluirDocumentoPlano(documentoPlano: DocumentoPlano) {

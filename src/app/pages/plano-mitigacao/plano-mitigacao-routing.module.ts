@@ -15,7 +15,7 @@ const routes: Routes = [{
       (module) => module.PlanoMitigacaoFormModule
     )
 }, {
-  path: ":planoMitigacaoId/documento-plano/:id?",
+  path: ":codPlanoMitigacao/documento-plano/:id?",
   loadChildren: () =>
     import("./documento-plano-form/documento-plano-form.module").then(
       (module) => module.DocumentoPlanoFormModule

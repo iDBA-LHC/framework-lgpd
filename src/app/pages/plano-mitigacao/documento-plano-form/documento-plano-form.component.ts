@@ -17,7 +17,8 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class DocumentoPlanoFormComponent implements OnInit {
 
   documentoPlanoForm: FormGroup;
-  documentoPlanoId: number;
+  codDocumentoPlano: number;
+  codPlanoMitigacao: number;
   isLoading = false;
 
   constructor(
@@ -39,9 +40,7 @@ export class DocumentoPlanoFormComponent implements OnInit {
   }
 
   private createForm() {
-    this.documentoPlanoForm = this.formBuilder.group({
-      codDocumentoPlano: ["", Validators.required],
-      codPlanoMitigacao: ["", Validators.required],
+    this.documentoPlanoForm = this.formBuilder.group({      
       desDocumentoPlano: ["", Validators.required],
       desEnderecoPlano: ["", Validators.required],
     });
@@ -50,13 +49,15 @@ export class DocumentoPlanoFormComponent implements OnInit {
   pesquisaDocumentoPlano() {
     this.activatedRoute.params.subscribe(
       (data) => {
-        this.documentoPlanoId = parseInt(data["id?"]);
+        this.codPlanoMitigacao = parseInt(data["codPlanoMitigacao"]);
+		this.codDocumentoPlano = parseInt(data["id?"]);
 
-        if (this.documentoPlanoId) {
-          this.DocumentoPlanoService.pesquisaDocumentoPlano(this.documentoPlanoId).subscribe(
+        if (this.codDocumentoPlano) {
+          this.DocumentoPlanoService.pesquisaDocumentoPlano(this.codDocumentoPlano).subscribe(
             (retorno) => {
               this.documentoPlanoForm.patchValue({
-                codDataMap: retorno.body[0].codDataMap
+                desDocumentoPlano: retorno.body[0].desDocumentoPlano,
+				desEnderecoPlano: retorno.body[0].desEnderecoPlano
               });
             },
             (err) => {
@@ -78,14 +79,15 @@ export class DocumentoPlanoFormComponent implements OnInit {
   salvarDocumentoPlano() {
     if (this.documentoPlanoForm.valid) {
       const DocumentoPlano: DocumentoPlano = this.documentoPlanoForm.getRawValue();
-      DocumentoPlano.codDocumentoPlano = this.documentoPlanoId;
+      DocumentoPlano.codDocumentoPlano = this.codDocumentoPlano;
+	  DocumentoPlano.codPlanoMitigacao = this.codPlanoMitigacao;
 
-      if (this.documentoPlanoId) {
+      if (this.codDocumentoPlano) {
         // Alteração
         this.DocumentoPlanoService.alterarDocumentoPlano(DocumentoPlano).subscribe(
           (response) => {
-            this.snackBar.openSnackBar(`O Plano de Mitigação foi atualizado com sucesso!`,null);
-              this.router.navigate(["/documento-plano"]);
+            this.snackBar.openSnackBar(`O Documento Plano foi atualizado com sucesso!`,null);
+              this.router.navigate(["/plano-mitigacao", this.codPlanoMitigacao]);
           },
           (err) => {
             if (err.status === 401)
@@ -102,8 +104,8 @@ export class DocumentoPlanoFormComponent implements OnInit {
         // Inclusão
         this.DocumentoPlanoService.incluirDocumentoPlano(DocumentoPlano).subscribe(
           (response) => {
-            this.snackBar.openSnackBar(`O Plano de Mitigação foi criado com sucesso!`,null);
-            this.router.navigate(["/documento-plano"]);
+            this.snackBar.openSnackBar(`O Documento Plano foi criado com sucesso!`,null);
+            this.router.navigate(["/plano-mitigacao", this.codPlanoMitigacao]);
           },
           (err) => {
             if (err.status === 401)
