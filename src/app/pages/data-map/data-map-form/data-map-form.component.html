@@ -19,7 +19,7 @@
           </mat-card-title>
         </mat-card-header>
 
-		
+
 		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
           <mat-label>Ciclo (pegar automaticamente)</mat-label>
           <input matInput formControlName="codCicloMonitoramento" placeholder="Ciclo" autocomplete="off"
@@ -28,12 +28,15 @@
           </mat-error>
         </mat-form-field>
 
-		<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Atividade (varios combos para procurar)</mat-label>
-          <input matInput formControlName="codAtividade" placeholder="Atividade" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataMapForm.controls.codAtividade.errors?.required">É Obrigatório
-          </mat-error>
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Atividade</mat-label>
+          <input matInput formControlName="atividade" placeholder="Atividade" [matAutocomplete]="autoAtividade"/>
+          <mat-autocomplete #autoAtividade="matAutocomplete" [displayWith]="displayAtividade" (optionSelected) = "selecionaAtividade($event)">
+            <mat-option *ngFor="let atividade of listaAtividade" [value]="atividade">
+              {{atividade.nomeAtividade}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="dataMapForm.controls.atividade.errors?.required">Atividades é Obrigatório</mat-error>
         </mat-form-field>
 
 
@@ -44,10 +47,10 @@
 
 
 
-		
-		 <mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+
+		 <mat-form-field style="width: 50%;" fxFlexOffset="10px">
 			<mat-label>Metadados</mat-label>
-			<input matInput formControlName="metadados" placeholder="Metadados" [matAutocomplete]="autoMetadados"/>    
+			<input matInput formControlName="metadados" placeholder="Metadados" [matAutocomplete]="autoMetadados"/>
 			<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selecionaMetadados($event)">
 				<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
 					{{metadados.nomeMetadados}}
@@ -56,16 +59,16 @@
 			<mat-error *ngIf="dataMapForm.controls.metadados.errors?.required">É Obrigatório</mat-error>
 		</mat-form-field>
 
-		<mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+		<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 			<mat-label>Base Legal</mat-label>
-			<input matInput formControlName="baseLegal" placeholder="Base Legal" [matAutocomplete]="autoBaseLegal"/>    
+			<input matInput formControlName="baseLegal" placeholder="Base Legal" [matAutocomplete]="autoBaseLegal"/>
 			<mat-autocomplete #autoBaseLegal="matAutocomplete" [displayWith]="displayBaseLegal" (optionSelected) = "selecionaBaseLegal($event)">
 				<mat-option *ngFor="let baseLegal of listaBaseLegal" [value]="baseLegal">
 					{{baseLegal.nomeBase}}
 				</mat-option>
 			</mat-autocomplete>
 			<mat-error *ngIf="dataMapForm.controls.baseLegal.errors?.required">É Obrigatório</mat-error>
-		</mat-form-field> 
+		</mat-form-field>
 
 
 
@@ -140,9 +143,9 @@
           <span class="ng-tns-c15-3 ng-star-inserted">Anonimização</span>
         </mat-slide-toggle>
 
-		<mat-form-field style="width: 50%;" fxFlexOffset="10px">   
+		<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 			<mat-label>Ciclo Vida</mat-label>
-			<input matInput formControlName="cicloVida" placeholder="Ciclo Vida" [matAutocomplete]="autoCicloVida"/>    
+			<input matInput formControlName="cicloVida" placeholder="Ciclo Vida" [matAutocomplete]="autoCicloVida"/>
 			<mat-autocomplete #autoCicloVida="matAutocomplete" [displayWith]="displayCicloVida" (optionSelected) = "selecionaCicloVida($event)">
 				<mat-option *ngFor="let cicloVida of listaCicloVida" [value]="cicloVida">
 					{{cicloVida.nomeCicloVida}}
@@ -150,7 +153,7 @@
 			</mat-autocomplete>
 			<mat-error *ngIf="dataMapForm.controls.cicloVida.errors?.required">É Obrigatório</mat-error>
 		</mat-form-field>
-				
+
 		<mat-radio-group fxFlex style="width: 50%;" fxFlexOffset="5px" formControlName="indRisco">
 			<mat-label>Risco</mat-label>
 			<mat-radio-button value="1">Baixo</mat-radio-button>
@@ -163,7 +166,7 @@
 			<mat-label>Observações</mat-label>
 			<textarea matInput formControlName="desObservacoes" placeholder="Observações" autocomplete="off"
 				type="textField" resizeToFitContent="true" rows="5">
-			</textarea>					
+			</textarea>
 		</mat-form-field>
 
         <mat-card-actions>

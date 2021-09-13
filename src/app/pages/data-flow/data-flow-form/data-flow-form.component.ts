@@ -14,6 +14,12 @@ import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-ba
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { Usuario } from 'src/app/models/usuario/usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { Atividade } from 'src/app/models/atividade/atividade';
+import { Metadados } from 'src/app/models/metadados/metadados';
+import { MetadadosService } from 'src/app/services/metadados.service';
+import { AtividadeService } from 'src/app/services/atividade.service';
+import { CicloDeVida } from 'src/app/models/ciclo-de-vida/ciclo-de-vida';
+import { CicloDeVidaService } from 'src/app/services/ciclo-de-vida.service';
 
 @Component({
   selector: 'app-data-flow-form',
@@ -26,6 +32,10 @@ export class DataFlowFormComponent implements OnInit {
   codDataFlow: number;
   isLoading = false;
 
+  listaAtividade: Atividade[];
+
+  listaMetadados: Metadados[];
+
   listaArmazenamentos: LocalArmazenamento[];
   listaArmazenamentosFiltrados: LocalArmazenamento[];
 
@@ -35,17 +45,22 @@ export class DataFlowFormComponent implements OnInit {
   listaUsuarios: Usuario[];
   listaUsuariosFiltrados: Usuario[];
 
+  listaCicloVida: CicloDeVida[];
+
   constructor(
+    private atividadeService: AtividadeService,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private snackBar: CustomSnackBarService,
     private router: Router,
+    private metadadosService: MetadadosService,
     private dialog: MatDialog,
     private DataFlowService: DataFlowService,
     private usuarioService: UsuarioService,
     private compartilhamentoService: CompartilhamentoService,
     private localArmazenamentoService: LocalArmazenamentoService,
+    private cicloVidaService: CicloDeVidaService,
   ) { }
 
   ngOnInit() {
@@ -59,11 +74,15 @@ export class DataFlowFormComponent implements OnInit {
     this.dataFlowForm = this.formBuilder.group({
       nomeProcessamento: ["", Validators.required],
       codCicloMonitoramento: ["", Validators.required],
+
       codAtividade: ["", Validators.required],
+      atividade: ["", Validators.required],
       codMetadados: ["", Validators.required],
+      metadados: ["", Validators.required],
       indDescarte: ["", Validators.required],
       indRisco: ["", Validators.required],
-      codCicloVida: ["", Validators.required],
+      cicloVida: ["", Validators.required],
+			codCicloVida: ["", Validators.required],
       codUsuarioInclusao: ["", Validators.required],
       armazenamentos: ["", Validators.required],
       compartilhamentos: ["", Validators.required],
@@ -127,6 +146,12 @@ export class DataFlowFormComponent implements OnInit {
     this.pesquisaLocalArmazenamento();
 
     this.pesquisaCompartilhamentos();
+
+    this.pesquisaCicloVida();
+
+    this.pesquisaAtividade();
+
+    this.pesquisaMetadados();
 
   }
 
@@ -242,5 +267,88 @@ export class DataFlowFormComponent implements OnInit {
   displayUsuario(usuario: Usuario): string {
     return usuario ? usuario.nomeUsuario : "";
   }
+
+  displayAtividade(atividade: Atividade): string {
+		return atividade ? atividade.nomeAtividade : "";
+	}
+
+  displayMetadados(metadados: Metadados): string {
+		return metadados ? metadados.nomeMetadados : "";
+	}
+
+  selecionaAtividade(event) {
+		let selecionado: Atividade = event.option.value;
+		this.dataFlowForm.controls.atividade.setValue(selecionado);
+		this.dataFlowForm.controls.codAtividade.setValue(selecionado.codAtividade);
+	}
+
+  selecionaMetadados(event) {
+		let selecionado: Metadados = event.option.value;
+		this.dataFlowForm.controls.metadados.setValue(selecionado);
+		this.dataFlowForm.controls.codMetadados.setValue(selecionado.codMetadados);
+	}
+
+  private pesquisaAtividade() {
+		this.atividadeService.listaAtivadadesPorProcesso(1).subscribe(
+			(retorno) => {
+				this.listaAtividade = retorno.body;
+
+				if (this.dataFlowForm.controls.codAtividade.value != 0) {
+					let atividade: Atividade = <Atividade>this.listaAtividade.filter(atividade => atividade.codAtividade == this.dataFlowForm.controls.codAtividade.value)[0];
+					if (atividade) {
+						this.dataFlowForm.controls.atividade.setValue(atividade);
+					}
+				}
+			}
+		)
+		this.isLoading = false;
+	}
+
+  private pesquisaMetadados() {
+		this.metadadosService.listaTodosMetadados().subscribe(
+			(retorno) => {
+				this.listaMetadados = retorno.body;
+
+				if (this.dataFlowForm.controls.codMetadados.value != 0) {
+					let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == this.dataFlowForm.controls.codMetadados.value)[0];
+					if (metadados) {
+						this.dataFlowForm.controls.metadados.setValue(metadados);
+					}
+				}
+			}
+		)
+		this.isLoading = false;
+	}
+
+  private pesquisaCicloVida() {
+		this.cicloVidaService.listaTodosCiclosDeVida().subscribe(
+			(retorno) => {
+				this.listaCicloVida = retorno.body;
+
+				if (this.dataFlowForm.controls.codCicloVida.value != 0) {
+					let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == this.dataFlowForm.controls.codCicloVida.value)[0];
+					if (cicloVida) {
+						this.dataFlowForm.controls.cicloVida.setValue(cicloVida);
+					}
+				}
+			}
+		)
+		this.isLoading = false;
+	}
+
+	selecionaCicloVida(event) {
+		let selecionado: CicloDeVida = event.option.value;
+		this.dataFlowForm.controls.cicloVida.setValue(selecionado);
+		this.dataFlowForm.controls.codCicloVida.setValue(selecionado.codCicloVida);
+	}
+
+	compareCicloVida(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codCicloVida === o2.codCicloVida;
+	}
+
+	displayCicloVida(cicloVida: CicloDeVida): string {
+		return cicloVida ? cicloVida.nomeCicloVida : "";
+	}
 
 }

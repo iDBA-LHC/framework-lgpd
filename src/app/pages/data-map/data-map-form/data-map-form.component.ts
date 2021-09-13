@@ -1,3 +1,5 @@
+import { AtividadeService } from './../../../services/atividade.service';
+import { Atividade } from './../../../models/atividade/atividade';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
@@ -31,7 +33,8 @@ export class DataMapFormComponent implements OnInit {
 	codDataMap: number;
 	isLoading = false;
 
-	listaBaseLegal: BaseLegal[];
+  listaAtividade: Atividade[];
+  listaBaseLegal: BaseLegal[];
 	listaMetadados: Metadados[];
 	listaCicloVida: CicloDeVida[];
 
@@ -53,6 +56,7 @@ export class DataMapFormComponent implements OnInit {
 		private dialog: MatDialog,
 		private dataMapService: DataMapService,
 		private metadadosService: MetadadosService,
+    private atividadeService: AtividadeService,
 		private baseLegalService: BaseLegalService,
 		private cicloVidaService: CicloDeVidaService,
 		private compartilhamentoService: CompartilhamentoService,
@@ -70,7 +74,9 @@ export class DataMapFormComponent implements OnInit {
 	private createForm() {
 		this.dataMapForm = this.formBuilder.group({
 			codCicloMonitoramento: ["", Validators.required],
+
 			codAtividade: ["", Validators.required],
+      atividade: ["", Validators.required],
 
 			codMetadados: ["", Validators.required],
 			metadados: ["", Validators.required],
@@ -155,6 +161,7 @@ export class DataMapFormComponent implements OnInit {
 
 		this.pesquisaBaselegal();
 		this.pesquisaMetadados();
+    this.pesquisaAtividade();
 		this.pesquisaCicloVida();
 		this.pesquisaFormaColetas();
 		this.pesquisaLocalArmazenamento();
@@ -246,6 +253,32 @@ export class DataMapFormComponent implements OnInit {
 		return metadados ? metadados.nomeMetadados : "";
 	}
 
+  	private pesquisaAtividade() {
+		this.atividadeService.listaAtivadadesPorProcesso(1).subscribe(
+			(retorno) => {
+				this.listaAtividade = retorno.body;
+
+				if (this.dataMapForm.controls.codAtividade.value != 0) {
+					let atividade: Atividade = <Atividade>this.listaAtividade.filter(atividade => atividade.codAtividade == this.dataMapForm.controls.codAtividade.value)[0];
+					if (atividade) {
+						this.dataMapForm.controls.atividade.setValue(atividade);
+					}
+				}
+			}
+		)
+		this.isLoading = false;
+	}
+
+  displayAtividade(atividade: Atividade): string {
+		return atividade ? atividade.nomeAtividade : "";
+	}
+
+  selecionaAtividade(event) {
+		let selecionado: Atividade = event.option.value;
+		this.dataMapForm.controls.atividade.setValue(selecionado);
+		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);
+	}
+
 	private pesquisaBaselegal() {
 		this.baseLegalService.listaTodasBasesLegais().subscribe(
 			(retorno) => {
@@ -282,7 +315,7 @@ export class DataMapFormComponent implements OnInit {
 			(retorno) => {
 				this.listaFormaColetasFiltrados = retorno.body;
 
-				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;        
+				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
 				//this.listaFormaColetasFiltrados = <FormaColeta []>this.listaFormaColetas.filter(model => model.codigoEmpresa == codigoEmpresa);
 			}
 		)
@@ -299,7 +332,7 @@ export class DataMapFormComponent implements OnInit {
 			(retorno) => {
 				this.listaArmazenamentosFiltrados = retorno.body;
 
-				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;        
+				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
 				//this.listaArmazenamentosFiltrados = <LocalArmazenamento []>this.listaArmazenamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
 			}
 		)
@@ -316,7 +349,7 @@ export class DataMapFormComponent implements OnInit {
 			(retorno) => {
 				this.listaCompartilhamentosFiltrados = retorno.body;
 
-				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;        
+				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
 				//this.listaCompartilhamentosFiltrados = <Compartilhamento []>this.listaCompartilhamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
 			}
 		)

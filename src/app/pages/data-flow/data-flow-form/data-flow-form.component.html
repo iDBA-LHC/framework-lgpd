@@ -37,21 +37,27 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Código Atividade</mat-label>
-          <input matInput formControlName="codAtividade" placeholder="Código Atividade" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataFlowForm.controls.codAtividade.errors?.required">Código Atividade é Obrigatório
-          </mat-error>
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Atividade</mat-label>
+          <input matInput formControlName="atividade" placeholder="Atividade" [matAutocomplete]="autoAtividade"/>
+          <mat-autocomplete #autoAtividade="matAutocomplete" [displayWith]="displayAtividade" (optionSelected) = "selecionaAtividade($event)">
+            <mat-option *ngFor="let atividade of listaAtividade" [value]="atividade">
+              {{atividade.nomeAtividade}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="dataFlowForm.controls.atividade.errors?.required">Atividades é Obrigatório</mat-error>
         </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Código Metadados</mat-label>
-          <input matInput formControlName="codMetadados" placeholder="Código Metadados" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataFlowForm.controls.codMetadados.errors?.required">Código Metadados é Obrigatório
-          </mat-error>
-        </mat-form-field>
+		 <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+			<mat-label>Metadados</mat-label>
+			<input matInput formControlName="metadados" placeholder="Metadados" [matAutocomplete]="autoMetadados"/>
+			<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selecionaMetadados($event)">
+				<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
+					{{metadados.nomeMetadados}}
+				</mat-option>
+			</mat-autocomplete>
+			<mat-error *ngIf="dataFlowForm.controls.metadados.errors?.required">É Obrigatório</mat-error>
+		</mat-form-field>
 
         <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
           formControlName="indDescarte" style="width: 50%;">
@@ -66,21 +72,15 @@
           <mat-radio-button value="2">Extremo</mat-radio-button>
         </mat-radio-group>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Código Ciclo Vida</mat-label>
-          <input matInput formControlName="codCicloVida" placeholder="Código Ciclo Vida" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataFlowForm.controls.codCicloVida.errors?.required">Código Ciclo Vida é Obrigatório
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Código Usuário Inclusão</mat-label>
-          <input matInput formControlName="codUsuarioInclusao" placeholder="Código Usuário Inclusão" autocomplete="off"
-            type="number" />
-          <mat-error *ngIf="dataFlowForm.controls.codUsuarioInclusao.errors?.required">Código Usuário Inclusão é
-            Obrigatório
-          </mat-error>
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Ciclo Vida</mat-label>
+          <input matInput formControlName="cicloVida" placeholder="Ciclo Vida" [matAutocomplete]="autoCicloVida"/>
+          <mat-autocomplete #autoCicloVida="matAutocomplete" [displayWith]="displayCicloVida" (optionSelected) = "selecionaCicloVida($event)">
+            <mat-option *ngFor="let cicloVida of listaCicloVida" [value]="cicloVida">
+              {{cicloVida.nomeCicloVida}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="dataFlowForm.controls.cicloVida.errors?.required">É Obrigatório</mat-error>
         </mat-form-field>
 
         <mat-form-field style="width: 50%;" fxFlexOffset="10px">
