@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { DataFlow } from 'src/app/models/data-flow/data-flow';
+import { AuthService } from 'src/app/services/auth.service';
 import { DataFlowService } from 'src/app/services/data-flow.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
-import { AuthService } from 'src/app/services/auth.service';
-import { DataFlow } from 'src/app/models/data-flow/data-flow';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 
 @Component({
@@ -34,7 +34,7 @@ export class DataFlowListComponent implements OnInit {
     this.isLoading = true;
     this.dataFlowService.listaTodosDataFlow().subscribe((response) => {
       this.isLoading = false;
-      console.log(response.body)
+      
       this.dataSource = new MatTableDataSource<DataFlow>(response.body);
       setTimeout(() => {
         this.dataSource.filterPredicate = (

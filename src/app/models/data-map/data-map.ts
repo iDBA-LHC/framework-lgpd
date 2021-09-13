@@ -6,7 +6,9 @@ export class DataMap {
     codDataMap: number;
     codCicloMonitoramento: number;
     codAtividade: number;
-    indTipo: number; // nao sei que campo é esse
+
+	// 0 - DataMap / 1 - DataAnalisysMap
+    indTipo: number;
     
 	codMetadados: number;
     codBaseLegal: number;

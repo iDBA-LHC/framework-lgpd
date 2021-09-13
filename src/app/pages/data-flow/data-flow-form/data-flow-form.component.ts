@@ -1,307 +1,308 @@
-import { CicloMonitoramentoService } from 'src/app/services/ciclo-monitoramento.service';
-import { Usuario2 } from './../../../models/usuario/usuario2';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { Atividade } from 'src/app/models/atividade/atividade';
+import { CicloDeVida } from 'src/app/models/ciclo-de-vida/ciclo-de-vida';
 import { Compartilhamento } from 'src/app/models/compartilhamento/compartilhamento';
 import { DataFlow } from 'src/app/models/data-flow/data-flow';
+import { Empresa } from 'src/app/models/empresa/empresa';
 import { LocalArmazenamento } from 'src/app/models/local-armazenamento/local-armazenamento';
+import { Metadados } from 'src/app/models/metadados/metadados';
+import { Usuario } from 'src/app/models/usuario/usuario';
+import { AtividadeService } from 'src/app/services/atividade.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { CicloDeVidaService } from 'src/app/services/ciclo-de-vida.service';
+import { CicloMonitoramentoService } from 'src/app/services/ciclo-monitoramento.service';
 import { CompartilhamentoService } from 'src/app/services/compartilhamento.service';
 import { DataFlowService } from 'src/app/services/data-flow.service';
+import { EmpresaService } from 'src/app/services/empresa.service';
 import { LocalArmazenamentoService } from 'src/app/services/local-armazenamento.service';
+import { MetadadosService } from 'src/app/services/metadados.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
-import { Usuario } from 'src/app/models/usuario/usuario';
-import { UsuarioService } from 'src/app/services/usuario.service';
-import { Atividade } from 'src/app/models/atividade/atividade';
-import { Metadados } from 'src/app/models/metadados/metadados';
-import { MetadadosService } from 'src/app/services/metadados.service';
-import { AtividadeService } from 'src/app/services/atividade.service';
-import { CicloDeVida } from 'src/app/models/ciclo-de-vida/ciclo-de-vida';
-import { CicloDeVidaService } from 'src/app/services/ciclo-de-vida.service';
-import { Empresa } from 'src/app/models/empresa/empresa';
-import { Observable } from 'rxjs';
-import { EmpresaService } from 'src/app/services/empresa.service';
-import { map, startWith } from 'rxjs/operators';
+import { Usuario2 } from './../../../models/usuario/usuario2';
 
 @Component({
-  selector: 'app-data-flow-form',
-  templateUrl: './data-flow-form.component.html',
-  styleUrls: ['./data-flow-form.component.css']
+	selector: 'app-data-flow-form',
+	templateUrl: './data-flow-form.component.html',
+	styleUrls: ['./data-flow-form.component.css']
 })
 export class DataFlowFormComponent implements OnInit {
 
-  dataFlowForm: FormGroup;
-  codDataFlow: number;
-  isLoading = false;
+	dataFlowForm: FormGroup;
+	codDataFlow: number;
+	isLoading = false;
 
-  listaAtividade: Atividade[];
+	listaAtividade: Atividade[];
 
-  listaMetadados: Metadados[];
+	listaMetadados: Metadados[];
 
-  listaArmazenamentos: LocalArmazenamento[];
-  listaArmazenamentosFiltrados: LocalArmazenamento[];
+	listaArmazenamentos: LocalArmazenamento[];
+	listaArmazenamentosFiltrados: LocalArmazenamento[];
 
-  listaCompartilhamentos: Compartilhamento[];
-  listaCompartilhamentosFiltrados: Compartilhamento[];
+	listaCompartilhamentos: Compartilhamento[];
+	listaCompartilhamentosFiltrados: Compartilhamento[];
 
-  listaUsuarios: Usuario[];
-  listaUsuariosFiltrados: Usuario[];
+	listaUsuarios: Usuario[];
+	listaUsuariosFiltrados: Usuario[];
 
-  listaCicloVida: CicloDeVida[];
+	listaCicloVida: CicloDeVida[];
 
-  listaEmpresas: Empresa[];
-  listaEmpresasFiltradas: Observable<Empresa[]>;
-  codCicloMonitoramento: number;
+	listaEmpresas: Empresa[];
+	listaEmpresasFiltradas: Observable<Empresa[]>;
+	codCicloMonitoramento: number;
 
-  constructor(
-    private atividadeService: AtividadeService,
-    private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private snackBar: CustomSnackBarService,
-    private router: Router,
-    private metadadosService: MetadadosService,
-    private dialog: MatDialog,
-    private DataFlowService: DataFlowService,
-    private usuarioService: UsuarioService,
-    private compartilhamentoService: CompartilhamentoService,
-    private localArmazenamentoService: LocalArmazenamentoService,
-    private cicloVidaService: CicloDeVidaService,
-    private empresaService: EmpresaService,
-    private cicloMonitoramentoService: CicloMonitoramentoService,
-  ) { }
+	constructor(
+		private atividadeService: AtividadeService,
+		private activatedRoute: ActivatedRoute,
+		private formBuilder: FormBuilder,
+		private authService: AuthService,
+		private snackBar: CustomSnackBarService,
+		private router: Router,
+		private metadadosService: MetadadosService,
+		private dialog: MatDialog,
+		private DataFlowService: DataFlowService,
+		private usuarioService: UsuarioService,
+		private compartilhamentoService: CompartilhamentoService,
+		private localArmazenamentoService: LocalArmazenamentoService,
+		private cicloVidaService: CicloDeVidaService,
+		private empresaService: EmpresaService,
+		private cicloMonitoramentoService: CicloMonitoramentoService
+	) { }
 
-  ngOnInit() {
-    //this.isLoading = true;
+	ngOnInit() {
+		//this.isLoading = true;
 
-    this.createForm();
-    this.pesquisaDataFlow();
-  }
+		this.createForm();
+		this.pesquisaDataFlow();
+	}
 
-  private createForm() {
-    this.dataFlowForm = this.formBuilder.group({
-      nomeProcessamento: ["", Validators.required],
-      codAtividade: ["", Validators.required],
-      atividade: ["", Validators.required],
-      codMetadados: ["", Validators.required],
-      metadados: ["", Validators.required],
-      indDescarte: ["", Validators.required],
-      indRisco: ["", Validators.required],
-      cicloVida: ["", Validators.required],
+	private createForm() {
+		this.dataFlowForm = this.formBuilder.group({
+			codEmpresa: [0, Validators.required],
+			empresa: ["", Validators.required],
+
+			nomeProcessamento: ["", Validators.required],
+			codAtividade: ["", Validators.required],
+			atividade: ["", Validators.required],
+
+			codMetadados: ["", Validators.required],
+			metadados: ["", Validators.required],
+
+			indDescarte: ["", Validators.required],
+			indRisco: ["", Validators.required],
+
 			codCicloVida: ["", Validators.required],
-      codUsuarioInclusao: ["", Validators.required],
-      armazenamentos: ["", Validators.required],
-      compartilhamentos: ["", Validators.required],
-      usuarios: ["", Validators.required],
-      codEmpresa: [0, Validators.required],
-      empresa: ["", Validators.required],
-    });
-  }
+			cicloVida: ["", Validators.required],
 
-  pesquisaDataFlow() {
-    this.activatedRoute.params.subscribe(
-      (data) => {
-        this.codDataFlow = parseInt(data["id?"]);
+			usuarios: ["", Validators.required],
+			armazenamentos: ["", Validators.required],
+			compartilhamentos: ["", Validators.required]
 
-        if (this.codDataFlow) {
-          this.DataFlowService.pesquisaDataFlow(this.codDataFlow).subscribe(
-            (retorno) => {
-              this.dataFlowForm.patchValue({
-                codDataFlow: retorno.body[0].codDataFlow,
+		});
+	}
 
-                nomeProcessamento: retorno.body[0].nomeProcessamento,
+	pesquisaDataFlow() {
+		this.activatedRoute.params.subscribe(
+			(data) => {
+				this.codDataFlow = parseInt(data["id?"]);
 
-                codAtividade: retorno.body[0].codAtividade,
+				if (this.codDataFlow) {
+					this.DataFlowService.pesquisaDataFlow(this.codDataFlow).subscribe(
+						(retorno) => {
+							this.dataFlowForm.patchValue({
+								codDataFlow: retorno.body[0].codDataFlow,
+								nomeProcessamento: retorno.body[0].nomeProcessamento,
 
-                codMetadados: retorno.body[0].codMetadados,
+								codAtividade: retorno.body[0].codAtividade,
+								codMetadados: retorno.body[0].codMetadados,
 
-                indDescarte: retorno.body[0].indDescarte,
+								indDescarte: retorno.body[0].indDescarte,
+								indRisco: retorno.body[0].indRisco,
 
-                indRisco: retorno.body[0].indRisco,
+								codCicloVida: retorno.body[0].codCicloVida,
 
-                codCicloVida: retorno.body[0].codCicloVida,
+								usuarios: retorno.body[0].usuarios,
+								armazenamentos: retorno.body[0].armazenamentos,
+								compartilhamentos: retorno.body[0].compartilhamentos								
+							});
 
-                codUsuarioInclusao: retorno.body[0].codUsuarioInclusao,
+							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento,
 
-                armazenamentos: retorno.body[0].armazenamentos,
+							this.preencherCombos();
+						},
+						(err) => {
+							if (err.status === 401) {
+								TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.pesquisaDataFlow(); }));
+							}
+							else {
+								TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+							}
+						}
+					);
+				} else {
+					this.preencherCombos();					
+				}
+			}
+		)
+	}
 
-                compartilhamentos: retorno.body[0].compartilhamentos,
-              });
+	preencherCombos() {
 
-              this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento,
+		this.pesquisaEmpresas();
 
-              this.preencherCombos();
-              this.pesquisaEmpresas();
-            },
-            (err) => {
-              if (err.status === 401) {
-                TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.pesquisaDataFlow(); }));
-              }
-              else {
-                TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-              }
-            }
-          );
-        } else {
-          this.preencherCombos();
-          this.pesquisaEmpresas();
-        }
-      }
-    )
-  }
+		this.pesquisaLocalArmazenamento();
 
-  preencherCombos() {
+		this.pesquisaCompartilhamentos();
 
-    this.pesquisaLocalArmazenamento();
+		this.pesquisaCicloVida();
 
-    this.pesquisaCompartilhamentos();
+		this.pesquisaAtividade();
 
-    this.pesquisaCicloVida();
+		this.pesquisaMetadados();
 
-    this.pesquisaAtividade();
+	}
 
-    this.pesquisaMetadados();
+	salvarDataFlow() {
+		if (this.dataFlowForm.valid) {
+			const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
+			DataFlow.codDataFlow = this.codDataFlow;
 
-  }
+			DataFlow.indRisco = (this.dataFlowForm.controls.indRisco.value ? 1 : 0);
+			DataFlow.indDescarte = (this.dataFlowForm.controls.indDescarte.value ? 1 : 0);
 
-  salvarDataFlow() {
-    if (this.dataFlowForm.valid) {
-      const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
-      DataFlow.codDataFlow = this.codDataFlow;
+			var usuarios2 = new Array();
+			DataFlow.usuarios.forEach(function (e, i) {
+				let usuario2: Usuario2 = new Usuario2;
+				usuario2.codUsuario = e.codigoUsuario;
+				usuarios2.push(usuario2);
+			});
+			DataFlow.usuarios = usuarios2;
+			DataFlow.codCicloMonitoramento = this.codCicloMonitoramento;
+			DataFlow.codUsuarioInclusao = this.authService.loggedUserId;
 
-      DataFlow.indRisco = (this.dataFlowForm.controls.indRisco.value ? 1 : 0);
-      DataFlow.indDescarte = (this.dataFlowForm.controls.indDescarte.value ? 1 : 0);
+			if (this.codDataFlow) {
+				// Alteração
+				this.DataFlowService.alterarDataFlow(DataFlow).subscribe(
+					(response) => {
+						this.snackBar.openSnackBar(`O Data Map foi atualizado com sucesso!`, null);
+						this.router.navigate(["/data-flow"]);
+					},
+					(err) => {
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataFlow(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
+					}
+				)
+			} else {
+				// Inclusão
+				this.DataFlowService.incluirDataFlow(DataFlow).subscribe(
+					(response) => {
+						this.snackBar.openSnackBar(`O Data Map foi criado com sucesso!`, null);
+						this.router.navigate(["/data-flow"]);
+					},
+					(err) => {
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataFlow(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
+					}
+				)
+			}
+		}
+	}
 
-      var usuarios2 = new Array();
-      DataFlow.usuarios.forEach(function (e, i) {
-        let usuario2: Usuario2 = new Usuario2;
-        usuario2.codUsuario = e.codigoUsuario;
-        usuarios2.push(usuario2);
-      });
-      DataFlow.usuarios = usuarios2;
-      DataFlow.codCicloMonitoramento = this.codCicloMonitoramento;
+	private pesquisaLocalArmazenamento() {
+		this.localArmazenamentoService.listaTodosLocaisArmazenamento().subscribe(
+			(retorno) => {
+				this.listaArmazenamentosFiltrados = retorno.body;
 
-      if (this.codDataFlow) {
-        // Alteração
-        this.DataFlowService.alterarDataFlow(DataFlow).subscribe(
-          (response) => {
-            this.snackBar.openSnackBar(`O Data Map foi atualizado com sucesso!`, null);
-            this.router.navigate(["/data-flow"]);
-          },
-          (err) => {
-            if (err.status === 401) {
-              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataFlow(); }));
-            }
-            else {
-              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-            }
-          }
-        )
-      } else {
-        // Inclusão
-        this.DataFlowService.incluirDataFlow(DataFlow).subscribe(
-          (response) => {
-            this.snackBar.openSnackBar(`O Data Map foi criado com sucesso!`, null);
-            this.router.navigate(["/data-flow"]);
-          },
-          (err) => {
-            if (err.status === 401) {
-              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataFlow(); }));
-            }
-            else {
-              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-            }
-          }
-        )
-      }
-    }
-  }
+				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
+				//this.listaArmazenamentosFiltrados = <LocalArmazenamento []>this.listaArmazenamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
+			}
+		)
+		this.isLoading = false;
+	}
 
-  private pesquisaLocalArmazenamento() {
-    this.localArmazenamentoService.listaTodosLocaisArmazenamento().subscribe(
-      (retorno) => {
-        this.listaArmazenamentosFiltrados = retorno.body;
+	compareArmazenamento(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codLocalArmazenamento === o2.codLocalArmazenamento;
+	}
 
-        //let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
-        //this.listaArmazenamentosFiltrados = <LocalArmazenamento []>this.listaArmazenamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
-      }
-    )
-    this.isLoading = false;
-  }
+	private pesquisaCompartilhamentos() {
+		this.compartilhamentoService.listarTodosCompartilhamentos().subscribe(
+			(retorno) => {
+				this.listaCompartilhamentosFiltrados = retorno.body;
 
-  compareArmazenamento(o1: any, o2: any): boolean {
-    if (o2 != null)
-      return o1.codLocalArmazenamento === o2.codLocalArmazenamento;
-  }
+				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
+				//this.listaCompartilhamentosFiltrados = <Compartilhamento []>this.listaCompartilhamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
+			}
+		)
+		this.isLoading = false;
+	}
 
-  private pesquisaCompartilhamentos() {
-    this.compartilhamentoService.listarTodosCompartilhamentos().subscribe(
-      (retorno) => {
-        this.listaCompartilhamentosFiltrados = retorno.body;
+	compareCompartilhamento(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codCompartilhamento === o2.codCompartilhamento;
+	}
 
-        //let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
-        //this.listaCompartilhamentosFiltrados = <Compartilhamento []>this.listaCompartilhamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
-      }
-    )
-    this.isLoading = false;
-  }
+	compareUsuarioSelecionado(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codigoUsuario === o2.codUsuario;
+	}
 
-  compareCompartilhamento(o1: any, o2: any): boolean {
-    if (o2 != null)
-      return o1.codCompartilhamento === o2.codCompartilhamento;
-  }
+	private pesquisaUsuarios() {
+		this.usuarioService.listaTodosUsuarios().subscribe(
+			(retorno) => {
+				this.listaUsuarios = retorno.body;
 
-  compareUsuarioSelecionado(o1: any, o2: any): boolean {
-    if (o2 != null)
-      return o1.codigoUsuario === o2.codUsuario;
-  }
+				let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
 
-  private pesquisaUsuarios() {
-    this.usuarioService.listaTodosUsuarios().subscribe(
-      (retorno) => {
-        this.listaUsuarios = retorno.body;
+				this.listaUsuariosFiltrados = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa);
+			}
+		)
+		this.isLoading = false;
+	}
 
-        let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
+	selecionaUsuario(event) {
+		let usuarioSelecionado: Usuario = event.option.value;
+		this.dataFlowForm.controls.usuarios.setValue(usuarioSelecionado);
+	}
 
-        this.listaUsuariosFiltrados = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa);
-      }
-    )
-    this.isLoading = false;
-  }
+	displayUsuario(usuario: Usuario): string {
+		return usuario ? usuario.nomeUsuario : "";
+	}
 
-  selecionaUsuario(event) {
-    let usuarioSelecionado: Usuario = event.option.value;
-    this.dataFlowForm.controls.usuarios.setValue(usuarioSelecionado);
-  }
-
-  displayUsuario(usuario: Usuario): string {
-    return usuario ? usuario.nomeUsuario : "";
-  }
-
-  displayAtividade(atividade: Atividade): string {
+	displayAtividade(atividade: Atividade): string {
 		return atividade ? atividade.nomeAtividade : "";
 	}
 
-  displayMetadados(metadados: Metadados): string {
+	displayMetadados(metadados: Metadados): string {
 		return metadados ? metadados.nomeMetadados : "";
 	}
 
-  selecionaAtividade(event) {
+	selecionaAtividade(event) {
 		let selecionado: Atividade = event.option.value;
 		this.dataFlowForm.controls.atividade.setValue(selecionado);
 		this.dataFlowForm.controls.codAtividade.setValue(selecionado.codAtividade);
 	}
 
-  selecionaMetadados(event) {
+	selecionaMetadados(event) {
 		let selecionado: Metadados = event.option.value;
 		this.dataFlowForm.controls.metadados.setValue(selecionado);
 		this.dataFlowForm.controls.codMetadados.setValue(selecionado.codMetadados);
 	}
 
-  private pesquisaAtividade() {
+	private pesquisaAtividade() {
 		this.atividadeService.listaAtivadadesPorProcesso(1).subscribe(
 			(retorno) => {
 				this.listaAtividade = retorno.body;
@@ -317,7 +318,7 @@ export class DataFlowFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-  private pesquisaMetadados() {
+	private pesquisaMetadados() {
 		this.metadadosService.listaTodosMetadados().subscribe(
 			(retorno) => {
 				this.listaMetadados = retorno.body;
@@ -333,7 +334,7 @@ export class DataFlowFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-  private pesquisaCicloVida() {
+	private pesquisaCicloVida() {
 		this.cicloVidaService.listaTodosCiclosDeVida().subscribe(
 			(retorno) => {
 				this.listaCicloVida = retorno.body;
@@ -364,58 +365,57 @@ export class DataFlowFormComponent implements OnInit {
 		return cicloVida ? cicloVida.nomeCicloVida : "";
 	}
 
-  private pesquisaEmpresas() {
-    this.empresaService.listaTodasEmpresas().subscribe(
-      (retorno) => {
-        this.listaEmpresas = retorno.body;
+	private pesquisaEmpresas() {
+		this.empresaService.listaTodasEmpresas().subscribe(
+			(retorno) => {
+				this.listaEmpresas = retorno.body;
 
-        let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
-        if (codEmpresa != 0) {
-          let empresaSel: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == codEmpresa)[0];
-          if (empresaSel)
-            this.dataFlowForm.controls.empresa.setValue(empresaSel);
-        }
+				let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
+				if (codEmpresa != 0) {
+					let empresaSel: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == codEmpresa)[0];
+					if (empresaSel)
+						this.dataFlowForm.controls.empresa.setValue(empresaSel);
+				}
 
-        this.listaEmpresasFiltradas = this.dataFlowForm.controls.empresa.valueChanges
-        .pipe(
-          startWith(''),
-          map(value => typeof value === 'string' ? value : value.nomeEmpresa),
-          map(name => {
-            return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
-          }));
+				this.listaEmpresasFiltradas = this.dataFlowForm.controls.empresa.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => typeof value === 'string' ? value : value.nomeEmpresa),
+						map(name => {
+							return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
+						}));
 
-        this.pesquisaUsuarios();
-      }
-    )
-  }
+				this.pesquisaUsuarios();
+			}
+		)
+	}
 
-  private filtraEmpresa(value: string): Empresa[] {
-    const filterValue = value.toLowerCase();
+	private filtraEmpresa(value: string): Empresa[] {
+		const filterValue = value.toLowerCase();
+		return this.listaEmpresas.filter(item => item.nomeEmpresa.trim().toLowerCase().includes(filterValue));
+	}
 
-    return this.listaEmpresas.filter(item => item.nomeEmpresa.trim().toLowerCase().includes(filterValue));
-  }
+	selecionaEmpresa(event) {
+		let empresaSelecionada: Empresa = event.option.value;
+		this.dataFlowForm.controls.empresa.setValue(empresaSelecionada);
+		this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
 
-  selecionaEmpresa(event) {
-    let empresaSelecionada: Empresa = event.option.value;
-    this.dataFlowForm.controls.empresa.setValue(empresaSelecionada);
-    this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
+		this.isLoading = true;
+		this.pesquisaUsuarios();
+		this.buscarUltimoCicloMonitoramento();
+	}
 
-    this.isLoading = true;
-    this.pesquisaUsuarios();
-    this.buscarUltimoCicloMonitoramento();
-  }
+	displayEmpresa(empresa: Empresa): string {
+		return empresa ? empresa.nomeEmpresa : "";
+	}
 
-  displayEmpresa(empresa: Empresa): string {
-    return empresa ? empresa.nomeEmpresa : "";
-  }
-
-  private buscarUltimoCicloMonitoramento() {
-    this.cicloMonitoramentoService.buscarUltimoCicloMonitoramento().subscribe(
-      (retorno) => {
-        this.codCicloMonitoramento = retorno.body.codCicloMonitoramento;
-      }
-    )
-    this.isLoading = false;
-  }
+	private buscarUltimoCicloMonitoramento() {
+		this.cicloMonitoramentoService.buscarUltimoCicloMonitoramento().subscribe(
+			(retorno) => {
+				this.codCicloMonitoramento = retorno.body.codCicloMonitoramento;
+			}
+		)
+		this.isLoading = false;
+	}
 
 }
