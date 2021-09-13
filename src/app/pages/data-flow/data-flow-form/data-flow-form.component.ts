@@ -20,6 +20,10 @@ import { MetadadosService } from 'src/app/services/metadados.service';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { CicloDeVida } from 'src/app/models/ciclo-de-vida/ciclo-de-vida';
 import { CicloDeVidaService } from 'src/app/services/ciclo-de-vida.service';
+import { Empresa } from 'src/app/models/empresa/empresa';
+import { Observable } from 'rxjs';
+import { EmpresaService } from 'src/app/services/empresa.service';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-data-flow-form',
@@ -47,6 +51,9 @@ export class DataFlowFormComponent implements OnInit {
 
   listaCicloVida: CicloDeVida[];
 
+  listaEmpresas: Empresa[];
+  listaEmpresasFiltradas: Observable<Empresa[]>;
+
   constructor(
     private atividadeService: AtividadeService,
     private activatedRoute: ActivatedRoute,
@@ -61,6 +68,7 @@ export class DataFlowFormComponent implements OnInit {
     private compartilhamentoService: CompartilhamentoService,
     private localArmazenamentoService: LocalArmazenamentoService,
     private cicloVidaService: CicloDeVidaService,
+    private empresaService: EmpresaService,
   ) { }
 
   ngOnInit() {
@@ -87,6 +95,8 @@ export class DataFlowFormComponent implements OnInit {
       armazenamentos: ["", Validators.required],
       compartilhamentos: ["", Validators.required],
       usuarios: ["", Validators.required],
+      codEmpresa: [0, ],
+      empresa: ["", Validators.required],
       //codCicloMonitoramento: ["", Validators.required],
     });
   }
@@ -124,6 +134,7 @@ export class DataFlowFormComponent implements OnInit {
               });
 
               this.preencherCombos();
+              this.pesquisaEmpresas();
             },
             (err) => {
               if (err.status === 401) {
@@ -136,6 +147,7 @@ export class DataFlowFormComponent implements OnInit {
           );
         } else {
           this.preencherCombos();
+          this.pesquisaEmpresas();
         }
       }
     )
@@ -350,5 +362,49 @@ export class DataFlowFormComponent implements OnInit {
 	displayCicloVida(cicloVida: CicloDeVida): string {
 		return cicloVida ? cicloVida.nomeCicloVida : "";
 	}
+
+  private pesquisaEmpresas() {
+    this.empresaService.listaTodasEmpresas().subscribe(
+      (retorno) => {
+        this.listaEmpresas = retorno.body;
+
+        let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
+        if (codEmpresa != 0) {
+          let empresaSel: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == codEmpresa)[0];
+          if (empresaSel)
+            this.dataFlowForm.controls.empresa.setValue(empresaSel);
+        }
+
+        this.listaEmpresasFiltradas = this.dataFlowForm.controls.empresa.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => typeof value === 'string' ? value : value.nomeEmpresa),
+          map(name => {
+            return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
+          }));
+
+        this.pesquisaUsuarios();
+      }
+    )
+  }
+
+  private filtraEmpresa(value: string): Empresa[] {
+    const filterValue = value.toLowerCase();
+
+    return this.listaEmpresas.filter(item => item.nomeEmpresa.trim().toLowerCase().includes(filterValue));
+  }
+
+  selecionaEmpresa(event) {
+    let empresaSelecionada: Empresa = event.option.value;
+    this.dataFlowForm.controls.empresa.setValue(empresaSelecionada);
+    this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
+
+    this.isLoading = true;
+    this.pesquisaUsuarios();
+  }
+
+  displayEmpresa(empresa: Empresa): string {
+    return empresa ? empresa.nomeEmpresa : "";
+  }
 
 }
