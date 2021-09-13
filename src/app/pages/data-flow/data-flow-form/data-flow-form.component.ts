@@ -1,3 +1,4 @@
+import { CicloMonitoramentoService } from 'src/app/services/ciclo-monitoramento.service';
 import { Usuario2 } from './../../../models/usuario/usuario2';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -53,6 +54,7 @@ export class DataFlowFormComponent implements OnInit {
 
   listaEmpresas: Empresa[];
   listaEmpresasFiltradas: Observable<Empresa[]>;
+  codCicloMonitoramento: number;
 
   constructor(
     private atividadeService: AtividadeService,
@@ -69,6 +71,7 @@ export class DataFlowFormComponent implements OnInit {
     private localArmazenamentoService: LocalArmazenamentoService,
     private cicloVidaService: CicloDeVidaService,
     private empresaService: EmpresaService,
+    private cicloMonitoramentoService: CicloMonitoramentoService,
   ) { }
 
   ngOnInit() {
@@ -81,8 +84,6 @@ export class DataFlowFormComponent implements OnInit {
   private createForm() {
     this.dataFlowForm = this.formBuilder.group({
       nomeProcessamento: ["", Validators.required],
-      codCicloMonitoramento: ["", Validators.required],
-
       codAtividade: ["", Validators.required],
       atividade: ["", Validators.required],
       codMetadados: ["", Validators.required],
@@ -95,9 +96,8 @@ export class DataFlowFormComponent implements OnInit {
       armazenamentos: ["", Validators.required],
       compartilhamentos: ["", Validators.required],
       usuarios: ["", Validators.required],
-      codEmpresa: [0, ],
+      codEmpresa: [0, Validators.required],
       empresa: ["", Validators.required],
-      //codCicloMonitoramento: ["", Validators.required],
     });
   }
 
@@ -113,8 +113,6 @@ export class DataFlowFormComponent implements OnInit {
                 codDataFlow: retorno.body[0].codDataFlow,
 
                 nomeProcessamento: retorno.body[0].nomeProcessamento,
-
-                codCicloMonitoramento: retorno.body[0].codCicloMonitoramento,
 
                 codAtividade: retorno.body[0].codAtividade,
 
@@ -132,6 +130,8 @@ export class DataFlowFormComponent implements OnInit {
 
                 compartilhamentos: retorno.body[0].compartilhamentos,
               });
+
+              this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento,
 
               this.preencherCombos();
               this.pesquisaEmpresas();
@@ -182,6 +182,7 @@ export class DataFlowFormComponent implements OnInit {
         usuarios2.push(usuario2);
       });
       DataFlow.usuarios = usuarios2;
+      DataFlow.codCicloMonitoramento = this.codCicloMonitoramento;
 
       if (this.codDataFlow) {
         // Alteração
@@ -401,10 +402,20 @@ export class DataFlowFormComponent implements OnInit {
 
     this.isLoading = true;
     this.pesquisaUsuarios();
+    this.buscarUltimoCicloMonitoramento();
   }
 
   displayEmpresa(empresa: Empresa): string {
     return empresa ? empresa.nomeEmpresa : "";
+  }
+
+  private buscarUltimoCicloMonitoramento() {
+    this.cicloMonitoramentoService.buscarUltimoCicloMonitoramento().subscribe(
+      (retorno) => {
+        this.codCicloMonitoramento = retorno.body.codCicloMonitoramento;
+      }
+    )
+    this.isLoading = false;
   }
 
 }

@@ -44,15 +44,6 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Código Ciclo Monitoramento</mat-label>
-          <input matInput formControlName="codCicloMonitoramento" placeholder="Código Ciclo Monitoramento"
-            autocomplete="off" type="number" />
-          <mat-error *ngIf="dataFlowForm.controls.codCicloMonitoramento.errors?.required">Código Ciclo Monitoramento é
-            Obrigatório
-          </mat-error>
-        </mat-form-field>
-
         <mat-form-field style="width: 50%;" fxFlexOffset="10px">
           <mat-label>Atividade</mat-label>
           <input matInput formControlName="atividade" placeholder="Atividade" [matAutocomplete]="autoAtividade"/>

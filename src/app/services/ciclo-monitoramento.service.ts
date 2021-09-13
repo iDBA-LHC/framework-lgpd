@@ -29,4 +29,8 @@ export class CicloMonitoramentoService {
 	alterarCicloMonitoramento(CicloMonitoramento: CicloMonitoramento) {
 		return this.http.put<CicloMonitoramento>(`${environment.apiURL}${this.apiSuffix}`, CicloMonitoramento, { observe: "response" });
 	}
+
+  buscarUltimoCicloMonitoramento() {
+		return this.http.get<CicloMonitoramento>(`${environment.apiURL}${this.apiSuffix}lastone`, { observe: "response" });
+	}
 }
