@@ -19,14 +19,14 @@ const routes: Routes = [
             (module) => module.HomeModule
           ),
           canActivate: [AuthGuard],
-      },      
+      },
       {
         path: "usuario",
         loadChildren: () =>
           import("./pages/usuario/usuario.module").then(
             (module) => module.UsuarioModule
           ),
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
       },
       {
         path: "meu-usuario",
@@ -34,7 +34,7 @@ const routes: Routes = [
           import("./pages/usuario/usuario.module").then(
             (module) => module.UsuarioModule
           ),
-        canActivate: [AuthMeuUsuarioGuard],  
+        canActivate: [AuthMeuUsuarioGuard],
       },
       {
         path: "empresa",
@@ -42,7 +42,7 @@ const routes: Routes = [
           import("./pages/empresa/empresa.module").then(
             (module) => module.EmpresaModule
           ),
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
       },
       {
         path: "area",
@@ -50,7 +50,7 @@ const routes: Routes = [
           import("./pages/area/area.module").then(
             (module) => module.AreaModule
           ),
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
       }, {
         path: "base-legal",
         loadChildren: () =>
@@ -108,6 +108,13 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       }, {
+        path: "data-analisys-map",
+        loadChildren: () =>
+          import("./pages/data-map/data-map.module").then(
+            (module) => module.DataMapModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
         path: "plano-mitigacao",
         loadChildren: () =>
           import("./pages/plano-mitigacao/plano-mitigacao.module").then(
@@ -147,7 +154,7 @@ export class AppRoutingModule {
   constructor(private router: Router) {
       this.router.errorHandler = (error: any) => {
         console.log(error);
-        this.router.navigate(['/home']);         
+        this.router.navigate(['/home']);
       }
     }
   }

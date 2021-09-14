@@ -72,6 +72,11 @@ export class MenuItems {
 			link: "data-flow",
 			icon: "account_tree",
 			hidden: false
-        }];
+    }, {
+			label: "Data Analisys Map",
+			link: "data-analisys-map",
+			icon: "travel_explore",
+			hidden: false
+    }];
 	}
 }
