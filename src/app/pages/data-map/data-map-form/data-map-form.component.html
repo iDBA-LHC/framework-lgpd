@@ -19,7 +19,7 @@
           </mat-card-title>
         </mat-card-header>
 
-		<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+	    	<mat-form-field style="width: 50%;" fxFlexOffset="10px">
           <mat-label>Empresa</mat-label>
           <input
             matInput
@@ -34,6 +34,40 @@
           </mat-autocomplete>
           <mat-error *ngIf="dataMapForm.controls.empresa.errors?.required">Empresa é Obrigatória</mat-error>
         </mat-form-field>
+
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Área</mat-label>
+          <input
+            matInput
+            formControlName="area"
+            placeholder="Area"
+            [matAutocomplete]="autoArea"/>
+
+          <mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea" (optionSelected) = "selecionaArea($event)">
+            <mat-option *ngFor="let area of listaAreasFiltradas | async" [value]="area">
+              {{area.nomeArea}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="dataMapForm.controls.area.errors?.required">Area é Obrigatória</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Processo</mat-label>
+          <input
+            matInput
+            formControlName="processo"
+            placeholder="Processo"
+            [matAutocomplete]="autoProcesso"/>
+
+          <mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso" (optionSelected) = "selecionaProcesso($event)">
+            <mat-option *ngFor="let processo of listaProcessosFiltradas | async" [value]="processo">
+              {{processo.nomeProcesso}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="dataMapForm.controls.processo.errors?.required">Processo é Obrigatória</mat-error>
+        </mat-form-field>
+
 
         <mat-form-field style="width: 50%;" fxFlexOffset="10px">
           <mat-label>Atividade</mat-label>

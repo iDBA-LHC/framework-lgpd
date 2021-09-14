@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { Area } from 'src/app/models/area/area';
 import { Atividade } from 'src/app/models/atividade/atividade';
 import { CicloDeVida } from 'src/app/models/ciclo-de-vida/ciclo-de-vida';
 import { Compartilhamento } from 'src/app/models/compartilhamento/compartilhamento';
@@ -11,7 +12,9 @@ import { DataFlow } from 'src/app/models/data-flow/data-flow';
 import { Empresa } from 'src/app/models/empresa/empresa';
 import { LocalArmazenamento } from 'src/app/models/local-armazenamento/local-armazenamento';
 import { Metadados } from 'src/app/models/metadados/metadados';
+import { Processo } from 'src/app/models/processo/processo';
 import { Usuario } from 'src/app/models/usuario/usuario';
+import { AreaService } from 'src/app/services/area.service';
 import { AtividadeService } from 'src/app/services/atividade.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CicloDeVidaService } from 'src/app/services/ciclo-de-vida.service';
@@ -21,6 +24,7 @@ import { DataFlowService } from 'src/app/services/data-flow.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { LocalArmazenamentoService } from 'src/app/services/local-armazenamento.service';
 import { MetadadosService } from 'src/app/services/metadados.service';
+import { ProcessoService } from 'src/app/services/processo.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
@@ -56,6 +60,12 @@ export class DataFlowFormComponent implements OnInit {
 	listaEmpresasFiltradas: Observable<Empresa[]>;
 	codCicloMonitoramento: number;
 
+  listaAreas: Area[];
+	listaAreasFiltradas: Observable<Area[]>;
+
+  listaProcessos: Processo[];
+	listaProcessosFiltradas: Observable<Processo[]>;
+
 	constructor(
 		private atividadeService: AtividadeService,
 		private activatedRoute: ActivatedRoute,
@@ -71,7 +81,9 @@ export class DataFlowFormComponent implements OnInit {
 		private localArmazenamentoService: LocalArmazenamentoService,
 		private cicloVidaService: CicloDeVidaService,
 		private empresaService: EmpresaService,
-		private cicloMonitoramentoService: CicloMonitoramentoService
+		private cicloMonitoramentoService: CicloMonitoramentoService,
+    private areaService: AreaService,
+    private processoService: ProcessoService,
 	) { }
 
 	ngOnInit() {
@@ -83,6 +95,13 @@ export class DataFlowFormComponent implements OnInit {
 
 	private createForm() {
 		this.dataFlowForm = this.formBuilder.group({
+
+      codProcesso: ["", Validators.required],
+			processo: ["", Validators.required],
+
+      codArea: ["", Validators.required],
+			area: ["", Validators.required],
+
 			codEmpresa: [0, Validators.required],
 			empresa: ["", Validators.required],
 
@@ -128,7 +147,7 @@ export class DataFlowFormComponent implements OnInit {
 
 								usuarios: retorno.body[0].usuarios,
 								armazenamentos: retorno.body[0].armazenamentos,
-								compartilhamentos: retorno.body[0].compartilhamentos								
+								compartilhamentos: retorno.body[0].compartilhamentos
 							});
 
 							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento,
@@ -145,7 +164,7 @@ export class DataFlowFormComponent implements OnInit {
 						}
 					);
 				} else {
-					this.preencherCombos();					
+					this.preencherCombos();
 				}
 			}
 		)
@@ -161,9 +180,9 @@ export class DataFlowFormComponent implements OnInit {
 
 		this.pesquisaCicloVida();
 
-		this.pesquisaAtividade();
-
 		this.pesquisaMetadados();
+
+    this.pesquisaArea();
 
 	}
 
@@ -302,10 +321,12 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.codMetadados.setValue(selecionado.codMetadados);
 	}
 
-	private pesquisaAtividade() {
-		this.atividadeService.listaAtivadadesPorProcesso(1).subscribe(
-			(retorno) => {
-				this.listaAtividade = retorno.body;
+  private pesquisaAtividade(codProcesso: number) {
+    this.isLoading = true;
+    this.atividadeService.listaAtivadadesPorProcesso(codProcesso).subscribe(
+      (retorno) => {
+        this.isLoading = false;
+        this.listaAtividade = retorno.body;
 
 				if (this.dataFlowForm.controls.codAtividade.value != 0) {
 					let atividade: Atividade = <Atividade>this.listaAtividade.filter(atividade => atividade.codAtividade == this.dataFlowForm.controls.codAtividade.value)[0];
@@ -416,6 +437,88 @@ export class DataFlowFormComponent implements OnInit {
 			}
 		)
 		this.isLoading = false;
+	}
+
+  private pesquisaArea() {
+		this.areaService.listaTodasAreas().subscribe(
+			(retorno) => {
+				this.listaAreas = retorno.body;
+
+				let codArea = this.dataFlowForm.controls.codArea.value;
+				if (codArea != 0) {
+					let areaSel: Area = <Area>this.listaAreas.filter(area => area.codArea == codArea)[0];
+					if (areaSel)
+						this.dataFlowForm.controls.area.setValue(areaSel);
+				}
+
+				this.listaAreasFiltradas = this.dataFlowForm.controls.area.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => typeof value === 'string' ? value : value.nomeArea),
+						map(name => {
+							return name ? this.filtraArea(name) : this.listaAreas.slice();
+						}));
+			}
+		)
+	}
+
+	private filtraArea(value: string): Area[] {
+		const filterValue = value.toLowerCase();
+		return this.listaAreas.filter(item => item.nomeArea.trim().toLowerCase().includes(filterValue));
+	}
+
+	selecionaArea(event) {
+		let areaSelecionada: Area = event.option.value;
+		this.dataFlowForm.controls.area.setValue(areaSelecionada);
+		this.dataFlowForm.controls.codArea.setValue(areaSelecionada.codArea);
+
+    this.pesquisaProcesso(areaSelecionada.codArea);
+	}
+
+	displayArea(area: Area): string {
+		return area ? area.nomeArea : "";
+	}
+
+  private pesquisaProcesso(codArea: number) {
+    this.isLoading = true;
+    this.processoService.listarProcessosPorArea(codArea).subscribe(
+      (retorno) => {
+        this.isLoading = false;
+        this.listaProcessos = retorno.body;
+
+				let codProcesso = this.dataFlowForm.controls.codProcesso.value;
+				if (codProcesso != 0) {
+					let processoSel: Processo = <Processo>this.listaProcessos.filter(processo => processo.codProcesso == codProcesso)[0];
+					if (processoSel)
+						this.dataFlowForm.controls.processo.setValue(processoSel);
+				}
+
+				this.listaProcessosFiltradas = this.dataFlowForm.controls.processo.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => typeof value === 'string' ? value : value.nomeProcesso),
+						map(name => {
+							return name ? this.filtraProcesso(name) : this.listaProcessos.slice();
+						}));
+			}
+		)
+	}
+
+	private filtraProcesso(value: string): Processo[] {
+		const filterValue = value.toLowerCase();
+		return this.listaProcessos.filter(item => item.nomeProcesso.trim().toLowerCase().includes(filterValue));
+	}
+
+	selecionaProcesso(event) {
+		let processoSelecionada: Processo = event.option.value;
+		this.dataFlowForm.controls.processo.setValue(processoSelecionada);
+		this.dataFlowForm.controls.codProcesso.setValue(processoSelecionada.codProcesso);
+
+    this.pesquisaAtividade(processoSelecionada.codProcesso);
+	}
+
+	displayProcesso(processo: Processo): string {
+		return processo ? processo.nomeProcesso : "";
 	}
 
 }

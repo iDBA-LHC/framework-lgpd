@@ -34,13 +34,39 @@
           <mat-error *ngIf="dataFlowForm.controls.empresa.errors?.required">Empresa é Obrigatória</mat-error>
         </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Nome Processamento</mat-label>
-          <input matInput formControlName="nomeProcessamento" placeholder="Nome Processamento" autocomplete="off"
-            type="string" />
-          <mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Nome Processamento é Obrigatório
-          </mat-error>
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Area</mat-label>
+          <input
+            matInput
+            formControlName="area"
+            placeholder="Area"
+            [matAutocomplete]="autoArea"/>
+
+          <mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea" (optionSelected) = "selecionaArea($event)">
+            <mat-option *ngFor="let area of listaAreasFiltradas | async" [value]="area">
+              {{area.nomeArea}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="dataFlowForm.controls.area.errors?.required">Area é Obrigatória</mat-error>
         </mat-form-field>
+
+
+        <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+          <mat-label>Processo</mat-label>
+          <input
+            matInput
+            formControlName="processo"
+            placeholder="Processo"
+            [matAutocomplete]="autoProcesso"/>
+
+          <mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso" (optionSelected) = "selecionaProcesso($event)">
+            <mat-option *ngFor="let processo of listaProcessosFiltradas | async" [value]="processo">
+              {{processo.nomeProcesso}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="dataFlowForm.controls.processo.errors?.required">Processo é Obrigatória</mat-error>
+        </mat-form-field>
+
 
         <mat-form-field style="width: 50%;" fxFlexOffset="10px">
           <mat-label>Atividade</mat-label>
@@ -51,6 +77,14 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="dataFlowForm.controls.atividade.errors?.required">Atividades é Obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Nome Processamento</mat-label>
+          <input matInput formControlName="nomeProcessamento" placeholder="Nome Processamento" autocomplete="off"
+            type="string" />
+          <mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Nome Processamento é Obrigatório
+          </mat-error>
         </mat-form-field>
 
 		 <mat-form-field style="width: 50%;" fxFlexOffset="10px">
