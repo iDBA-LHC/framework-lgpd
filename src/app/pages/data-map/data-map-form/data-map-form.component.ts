@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { is } from 'date-fns/locale';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Area } from 'src/app/models/area/area';
@@ -96,16 +95,16 @@ export class DataMapFormComponent implements OnInit {
   }
 
   private createForm() {
-    this.dataMapForm = this.formBuilder.group({
-
-      codProcesso: ["", Validators.required],
-      processo: ["", Validators.required],
-
-      codArea: ["", Validators.required],
-      area: ["", Validators.required],
+    this.dataMapForm = this.formBuilder.group({      
 
       codEmpresa: [0, Validators.required],
       empresa: ["", Validators.required],
+
+	  codArea: ["", Validators.required],
+      area: ["", Validators.required],
+
+	  codProcesso: ["", Validators.required],
+      processo: ["", Validators.required],
 
       codAtividade: ["", Validators.required],
       atividade: ["", Validators.required],
@@ -148,9 +147,13 @@ export class DataMapFormComponent implements OnInit {
               this.dataMapForm.patchValue({
                 codDataMap: retorno.body[0].codDataMap,
                 codCicloMonitoramento: retorno.body[0].codCicloMonitoramento,
-                codAtividade: retorno.body[0].codAtividade,
-
+                				
+				codEmpresa: retorno.body[0].codEmpresa,
+				codArea: retorno.body[0].codArea,
+				codProcesso: retorno.body[0].codProcesso,				
+				codAtividade: retorno.body[0].codAtividade,
                 codMetadados: retorno.body[0].codMetadados,
+				
                 codBaseLegal: retorno.body[0].codBaseLegal,
 
                 indPrincipios: retorno.body[0].indPrincipios,

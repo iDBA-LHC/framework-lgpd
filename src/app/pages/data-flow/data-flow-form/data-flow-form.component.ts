@@ -60,10 +60,10 @@ export class DataFlowFormComponent implements OnInit {
 	listaEmpresasFiltradas: Observable<Empresa[]>;
 	codCicloMonitoramento: number;
 
-  listaAreas: Area[];
+  	listaAreas: Area[];
 	listaAreasFiltradas: Observable<Area[]>;
 
-  listaProcessos: Processo[];
+  	listaProcessos: Processo[];
 	listaProcessosFiltradas: Observable<Processo[]>;
 
 	constructor(
@@ -96,16 +96,17 @@ export class DataFlowFormComponent implements OnInit {
 	private createForm() {
 		this.dataFlowForm = this.formBuilder.group({
 
-      codProcesso: ["", Validators.required],
-			processo: ["", Validators.required],
-
-      codArea: ["", Validators.required],
-			area: ["", Validators.required],
-
+			nomeProcessamento: ["", Validators.required],
+			
 			codEmpresa: [0, Validators.required],
 			empresa: ["", Validators.required],
 
-			nomeProcessamento: ["", Validators.required],
+      		codArea: ["", Validators.required],
+			area: ["", Validators.required],
+
+			codProcesso: ["", Validators.required],
+			processo: ["", Validators.required],			
+			
 			codAtividade: ["", Validators.required],
 			atividade: ["", Validators.required],
 
@@ -137,6 +138,9 @@ export class DataFlowFormComponent implements OnInit {
 								codDataFlow: retorno.body[0].codDataFlow,
 								nomeProcessamento: retorno.body[0].nomeProcessamento,
 
+								codEmpresa: retorno.body[0].codEmpresa,
+								codArea: retorno.body[0].codArea,
+								codProcesso: retorno.body[0].codProcesso,	
 								codAtividade: retorno.body[0].codAtividade,
 								codMetadados: retorno.body[0].codMetadados,
 
@@ -420,7 +424,7 @@ export class DataFlowFormComponent implements OnInit {
 		let empresaSelecionada: Empresa = event.option.value;
 		this.dataFlowForm.controls.empresa.setValue(empresaSelecionada);
 		this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
-
+		
 		this.isLoading = true;
 		this.pesquisaUsuarios();
 		this.buscarUltimoCicloMonitoramento();

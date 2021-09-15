@@ -22,7 +22,10 @@ export class DataMap {
   	codCicloVida: number;
     indRisco: number;
     desObservacoes: string;
+
     nomeCicloMonitoramento: string;
+	dataCompetencia: Date;
+	
     nomeAtividade: string;
     codProcesso: number;
     nomeProcesso: number;
