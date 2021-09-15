@@ -14,7 +14,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class DataFlowListComponent implements OnInit {
 
   isLoading = false;
-  displayedColumns: string[] = ["nomeEmpresa", "codArea", "nomeProcessamento", "nomeAtividade", "dataCompetencia", "actions"];
+  displayedColumns: string[] = ["nomeEmpresa", "nomeArea", "nomeProcesso", "nomeAtividade", "dataCompetencia", "actions"];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -39,10 +39,18 @@ export class DataFlowListComponent implements OnInit {
       setTimeout(() => {
         this.dataSource.filterPredicate = (
           data: {
-            nomeProcessamento: string,
+            nomeEmpresa: string,
+            nomeArea: string,
+            nomeProcesso: string,
+            nomeAtividade: string,
+            dataCompetencia: Date,
           },
           filterValue: string
-        ) => data.nomeProcessamento.toString().trim().toLowerCase().indexOf(filterValue) !== -1
+        ) => data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+             data.nomeArea.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+             data.nomeProcesso.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+             data.nomeAtividade.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+             data.dataCompetencia.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

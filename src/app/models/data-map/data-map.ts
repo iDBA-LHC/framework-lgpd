@@ -6,27 +6,28 @@ export class DataMap {
     codDataMap: number;
     codCicloMonitoramento: number;
     codAtividade: number;
-
 	// 0 - DataMap / 1 - DataAnalisysMap
     indTipo: number;
-    
-	codMetadados: number;
+  	codMetadados: number;
     codBaseLegal: number;
-    
     indPrincipios: number;
     indSensivel: number;
     indDadosMenores: number;
-
-	formaColetas: Array<FormaColeta>;
+  	formaColetas: Array<FormaColeta>;
     indNecessitaConsentimento: number;
-    
-	armazenamentos: Array<LocalArmazenamento>;
-	indTransfInternacional: number;
-
-	compartilhamentos: Array<Compartilhamento>;
+  	armazenamentos: Array<LocalArmazenamento>;
+  	indTransfInternacional: number;
+  	compartilhamentos: Array<Compartilhamento>;
     indAnonimizacao: number;
-	
-	codCicloVida: number;
+  	codCicloVida: number;
     indRisco: number;
-    desObservacoes: string;	
+    desObservacoes: string;
+    nomeCicloMonitoramento: string;
+    nomeAtividade: string;
+    codProcesso: number;
+    nomeProcesso: number;
+    codArea: number;
+    nomeArea: string;
+    codEmpresa: number;
+    nomeEmpresa: string;
 }

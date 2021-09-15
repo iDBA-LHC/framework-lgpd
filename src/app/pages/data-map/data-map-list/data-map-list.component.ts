@@ -17,7 +17,7 @@ export class DataMapListComponent implements OnInit {
 
   isLoading = false;
 
-  displayedColumns: string[] = ["nomeEmpresa", "codArea", "nomeProcesso", "nomeAtividade", "dataCompetencia", "actions"];
+  displayedColumns: string[] = ["nomeEmpresa", "nomeArea", "nomeProcesso", "nomeAtividade", "dataCompetencia", "actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -45,10 +45,18 @@ export class DataMapListComponent implements OnInit {
         setTimeout(() => {
             this.dataSource.filterPredicate = (
                 data: {
-                    codDataMap: string
+                  nomeEmpresa: string,
+                  nomeArea: string,
+                  nomeProcesso: string,
+                  nomeAtividade: string,
+                  dataCompetencia: Date,
                 },
                 filterValue: string
-            ) => data.codDataMap.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+            ) =>  data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+                  data.nomeArea.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+                  data.nomeProcesso.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+                  data.nomeAtividade.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+                  data.dataCompetencia.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;

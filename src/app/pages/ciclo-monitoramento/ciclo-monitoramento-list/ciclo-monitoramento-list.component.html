@@ -31,9 +31,9 @@
     <div class="mat-elevation-z8" [hidden]="isLoading">
       <table mat-table [dataSource]="dataSource" matSort>
 
-        <ng-container matColumnDef="codEmpresa">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código Empresa</th>
-          <td mat-cell *matCellDef="let element; let i = index">{{ element.codEmpresa }}</td>
+        <ng-container matColumnDef="nomeEmpresa">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome Empresa</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeEmpresa }}</td>
         </ng-container>
 
         <ng-container matColumnDef="nomeCicloMonitoramento">

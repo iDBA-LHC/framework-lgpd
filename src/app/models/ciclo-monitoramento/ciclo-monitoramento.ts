@@ -7,4 +7,5 @@ export class CicloMonitoramento {
 	dataCompetencia: Date;
 	codUsuarioInclusao: number;
 	usuarios: Array<Usuario>;
+  nomeEmpresa: string;
 }

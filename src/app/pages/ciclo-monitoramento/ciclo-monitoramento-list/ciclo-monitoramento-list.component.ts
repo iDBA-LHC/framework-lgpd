@@ -15,7 +15,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class CicloMonitoramentoListComponent implements OnInit {
   isLoading = false;
 
-  displayedColumns: string[] = ["codEmpresa", "nomeCicloMonitoramento", "dataCompetencia", "actions"];
+  displayedColumns: string[] = ["nomeEmpresa", "nomeCicloMonitoramento", "dataCompetencia", "actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -45,12 +45,12 @@ export class CicloMonitoramentoListComponent implements OnInit {
             data: {
               nomeCicloMonitoramento: string,
               dataCompetencia: string,
-              codEmpresa: string,
+              nomeEmpresa: string,
             },
             filterValue: string
           ) => data.nomeCicloMonitoramento.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
                data.dataCompetencia.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-               data.codEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ;
+               data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ;
 
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
