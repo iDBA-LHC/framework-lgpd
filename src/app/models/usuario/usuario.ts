@@ -1,5 +1,6 @@
 export class Usuario {
     codigoUsuario: number;
+	codUsuario: number; // tosco
     nomeUsuario: string;
     emailUsuario: string;
     codigoArea: number;

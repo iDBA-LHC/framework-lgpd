@@ -156,6 +156,10 @@ export class DataFlowFormComponent implements OnInit {
 							});
 
 							this.preencherCombos();
+
+							this.pesquisaArea(retorno.body[0].codEmpresa);
+							this.pesquisaProcesso(retorno.body[0].codArea);
+							this.pesquisaAtividade(retorno.body[0].codProcesso);
 						},
 						(err) => {
 							if (err.status === 401) {
@@ -184,7 +188,9 @@ export class DataFlowFormComponent implements OnInit {
 	}
 
 	salvarDataFlow() {
+
 		if (this.dataFlowForm.valid) {
+			
 			const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
 			DataFlow.codDataFlow = this.codDataFlow;
 
@@ -194,17 +200,19 @@ export class DataFlowFormComponent implements OnInit {
 			var usuarios2 = new Array();
 			DataFlow.usuarios.forEach(function (e, i) {
 				let usuario2: Usuario2 = new Usuario2;
-				usuario2.codUsuario = e.codigoUsuario;
+				usuario2.codUsuario = e.codigoUsuario == null ? e.codUsuario : e.codigoUsuario;
 				usuarios2.push(usuario2);
 			});
 			DataFlow.usuarios = usuarios2;
 			DataFlow.codUsuarioInclusao = this.authService.loggedUserId;
 
+			console.log()
+
 			if (this.codDataFlow) {
 				// Alteração
 				this.DataFlowService.alterarDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O Data Map foi atualizado com sucesso!`, null);
+						this.snackBar.openSnackBar(`O data flow foi atualizado com sucesso!`, null);
 						this.router.navigate(["/data-flow"]);
 					},
 					(err) => {
@@ -220,7 +228,7 @@ export class DataFlowFormComponent implements OnInit {
 				// Inclusão
 				this.DataFlowService.incluirDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O Data Map foi criado com sucesso!`, null);
+						this.snackBar.openSnackBar(`O data flow foi criado com sucesso!`, null);
 						this.router.navigate(["/data-flow"]);
 					},
 					(err) => {
@@ -279,9 +287,7 @@ export class DataFlowFormComponent implements OnInit {
 		this.usuarioService.listaTodosUsuarios().subscribe(
 			(retorno) => {
 				this.listaUsuarios = retorno.body;
-
 				let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
-
 				this.listaUsuariosFiltrados = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa);
 			}
 		)

@@ -174,6 +174,10 @@ export class DataMapFormComponent implements OnInit {
 							});
 
 							this.preencherCombos();
+
+							this.pesquisaArea(retorno.body[0].codEmpresa);
+							this.pesquisaProcesso(retorno.body[0].codArea);
+							this.pesquisaAtividade(retorno.body[0].codProcesso);
 						},
 						(err) => {
 							if (err.status === 401) {
@@ -206,58 +210,56 @@ export class DataMapFormComponent implements OnInit {
 
 	salvarDataMap() {
 
-		const DataMap: DataMap = this.dataMapForm.getRawValue();
+		if (this.dataMapForm.valid) {
+			
+			const DataMap: DataMap = this.dataMapForm.getRawValue();
+			DataMap.codDataMap = this.codDataMap;		
 
-		//if (this.dataMapForm.valid) {
+			DataMap.indPrincipios = (this.dataMapForm.controls.indPrincipios.value ? 1 : 0);
+			DataMap.indSensivel = (this.dataMapForm.controls.indSensivel.value ? 1 : 0);
+			DataMap.indDadosMenores = (this.dataMapForm.controls.indDadosMenores.value ? 1 : 0);
 
-		DataMap.codDataMap = this.codDataMap;
-		DataMap.codCicloMonitoramento = this.codCicloMonitoramento;
+			DataMap.indNecessitaConsentimento = (this.dataMapForm.controls.indNecessitaConsentimento.value ? 1 : 0);
+			DataMap.indTransfInternacional = (this.dataMapForm.controls.indTransfInternacional.value ? 1 : 0);
+			DataMap.indAnonimizacao = (this.dataMapForm.controls.indAnonimizacao.value ? 1 : 0);
 
-		DataMap.indPrincipios = (this.dataMapForm.controls.indPrincipios.value ? 1 : 0);
-		DataMap.indSensivel = (this.dataMapForm.controls.indSensivel.value ? 1 : 0);
-		DataMap.indDadosMenores = (this.dataMapForm.controls.indDadosMenores.value ? 1 : 0);
+			DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);
+			DataMap.indTipo = 0;
 
-		DataMap.indNecessitaConsentimento = (this.dataMapForm.controls.indNecessitaConsentimento.value ? 1 : 0);
-		DataMap.indTransfInternacional = (this.dataMapForm.controls.indTransfInternacional.value ? 1 : 0);
-		DataMap.indAnonimizacao = (this.dataMapForm.controls.indAnonimizacao.value ? 1 : 0);
-
-		DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);
-		DataMap.indTipo = 0;
-
-		if (this.codDataMap) {
-			// Alteração
-			this.dataMapService.alterarDataMap(DataMap).subscribe(
-				(response) => {
-					this.snackBar.openSnackBar(`O Data Map foi atualizado com sucesso!`, null);
-					this.router.navigate(["/data-map"]);
-				},
-				(err) => {
-					if (err.status === 401) {
-						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
+			if (this.codDataMap) {
+				// Alteração
+				this.dataMapService.alterarDataMap(DataMap).subscribe(
+					(response) => {
+						this.snackBar.openSnackBar(`O data map foi atualizado com sucesso!`, null);
+						this.router.navigate(["/data-map"]);
+					},
+					(err) => {
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
 					}
-					else {
-						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+				)
+			} else {
+				// Inclusão
+				this.dataMapService.incluirDataMap(DataMap).subscribe(
+					(response) => {
+						this.snackBar.openSnackBar(`O data map foi criado com sucesso!`, null);
+						this.router.navigate(["/data-map"]);
+					},
+					(err) => {
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
 					}
-				}
-			)
-		} else {
-			// Inclusão
-			this.dataMapService.incluirDataMap(DataMap).subscribe(
-				(response) => {
-					this.snackBar.openSnackBar(`O Data Map foi criado com sucesso!`, null);
-					this.router.navigate(["/data-map"]);
-				},
-				(err) => {
-					if (err.status === 401) {
-						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
-					}
-					else {
-						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-					}
-				}
-			)
+				)
+			}
 		}
-		//}
 	}
 
 	private pesquisaMetadados() {

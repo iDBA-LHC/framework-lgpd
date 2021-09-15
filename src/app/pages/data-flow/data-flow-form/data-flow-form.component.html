@@ -28,15 +28,14 @@
 							{{empresa.nomeEmpresa}}
 						</mat-option>
 					</mat-autocomplete>
-					<mat-error *ngIf="dataFlowForm.controls.empresa.errors?.required">Empresa é Obrigatória</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.empresa.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Ciclo de Monitoramento</mat-label>
 					<input matInput formControlName="codCicloMonitoramento" placeholder="Ciclo de Monitoramento"
 						autocomplete="off" type="string" readonly />
-					<mat-error *ngIf="dataFlowForm.controls.codCicloMonitoramento.errors?.required">Campo é obrigatório
-					</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.codCicloMonitoramento.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
@@ -49,7 +48,7 @@
 							{{area.nomeArea}}
 						</mat-option>
 					</mat-autocomplete>
-					<mat-error *ngIf="dataFlowForm.controls.area.errors?.required">Area é Obrigatória</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.area.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 
@@ -64,9 +63,8 @@
 							{{processo.nomeProcesso}}
 						</mat-option>
 					</mat-autocomplete>
-					<mat-error *ngIf="dataFlowForm.controls.processo.errors?.required">Processo é Obrigatória
-					</mat-error>
-				</mat-form-field>				
+					<mat-error *ngIf="dataFlowForm.controls.processo.errors?.required">Campo obrigatório</mat-error>
+				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Atividade</mat-label>
@@ -78,8 +76,7 @@
 							{{atividade.nomeAtividade}}
 						</mat-option>
 					</mat-autocomplete>
-					<mat-error *ngIf="dataFlowForm.controls.atividade.errors?.required">Atividades é Obrigatório
-					</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.atividade.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
@@ -92,16 +89,14 @@
 							{{metadados.nomeMetadados}}
 						</mat-option>
 					</mat-autocomplete>
-					<mat-error *ngIf="dataFlowForm.controls.metadados.errors?.required">É Obrigatório</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.metadados.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Nome Processamento</mat-label>
 					<input matInput formControlName="nomeProcessamento" placeholder="Nome Processamento"
 						autocomplete="off" type="string" />
-					<mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Nome Processamento é
-						Obrigatório
-					</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
@@ -109,14 +104,15 @@
 					<span class="ng-tns-c15-3 ng-star-inserted">Possuí descarte</span>
 				</mat-slide-toggle>
 
-				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px" 
+				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px"
 					formControlName="indRisco">
 					<mat-label>Risco:</mat-label>
 					<mat-radio-button value="1">Baixo</mat-radio-button>
 					<mat-radio-button value="2">Moderado</mat-radio-button>
 					<mat-radio-button value="3">Elevado</mat-radio-button>
-					<mat-radio-button value="4">Extremo</mat-radio-button>
-				</mat-radio-group>
+					<mat-radio-button value="4">Extremo</mat-radio-button>					
+					<mat-error *ngIf="dataFlowForm.controls.indRisco.errors?.required">Campo obrigatório</mat-error>
+				</mat-radio-group>				
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="30px">
 					<mat-label>Ciclo Vida</mat-label>
@@ -128,7 +124,7 @@
 							{{cicloVida.nomeCicloVida}}
 						</mat-option>
 					</mat-autocomplete>
-					<mat-error *ngIf="dataFlowForm.controls.cicloVida.errors?.required">É Obrigatório</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.cicloVida.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
@@ -139,8 +135,7 @@
 							{{usuario.nomeUsuario}}
 						</mat-option>
 					</mat-select>
-
-					<mat-error *ngIf="dataFlowForm.controls.usuarios.errors?.required">Usuário é Obrigatório</mat-error>
+					<mat-error *ngIf="dataFlowForm.controls.usuarios.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
@@ -151,6 +146,7 @@
 							{{armazenamento.nomeLocalArmazenamento}}
 						</mat-option>
 					</mat-select>
+					<mat-error *ngIf="dataFlowForm.controls.armazenamentos.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
@@ -162,6 +158,7 @@
 							{{compartilhamento.nomeCompartilhamento}}
 						</mat-option>
 					</mat-select>
+					<mat-error *ngIf="dataFlowForm.controls.compartilhamentos.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-card-actions>
