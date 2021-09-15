@@ -193,14 +193,15 @@ export class DataMapFormComponent implements OnInit {
 
 	preencherCombos() {
 
+		this.pesquisaEmpresas();
+
 		this.pesquisaBaselegal();
 		this.pesquisaMetadados();
 		this.pesquisaCicloVida();
+
 		this.pesquisaFormaColetas();
 		this.pesquisaLocalArmazenamento();
 		this.pesquisaCompartilhamentos();
-		this.pesquisaEmpresas();
-		this.pesquisaArea();
 	}
 
 	salvarDataMap() {
@@ -466,6 +467,8 @@ export class DataMapFormComponent implements OnInit {
 		this.isLoading = true;
 
 		this.buscarUltimoCicloMonitoramento(empresaSelecionada.codigoEmpresa);
+
+		this.pesquisaArea(empresaSelecionada.codigoEmpresa);
 	}
 
 	displayEmpresa(empresa: Empresa): string {
@@ -486,8 +489,8 @@ export class DataMapFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-	private pesquisaArea() {
-		this.areaService.listaTodasAreas().subscribe(
+	private pesquisaArea(codEmpresa:number) {
+		this.areaService.listaAreasPorEmpresa(codEmpresa).subscribe(
 			(retorno) => {
 				this.listaAreas = retorno.body;
 

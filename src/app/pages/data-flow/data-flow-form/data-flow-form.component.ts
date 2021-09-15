@@ -178,15 +178,9 @@ export class DataFlowFormComponent implements OnInit {
 		this.pesquisaEmpresas();
 
 		this.pesquisaLocalArmazenamento();
-
 		this.pesquisaCompartilhamentos();
-
 		this.pesquisaCicloVida();
-
 		this.pesquisaMetadados();
-
-		this.pesquisaArea();
-
 	}
 
 	salvarDataFlow() {
@@ -424,8 +418,12 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
 
 		this.isLoading = true;
+
 		this.pesquisaUsuarios();
+
 		this.buscarUltimoCicloMonitoramento(empresaSelecionada.codigoEmpresa);
+
+		this.pesquisaArea(empresaSelecionada.codigoEmpresa);
 	}
 
 	displayEmpresa(empresa: Empresa): string {
@@ -446,8 +444,8 @@ export class DataFlowFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-	private pesquisaArea() {
-		this.areaService.listaTodasAreas().subscribe(
+	private pesquisaArea(codEmpresa:number) {
+		this.areaService.listaAreasPorEmpresa(codEmpresa).subscribe(
 			(retorno) => {
 				this.listaAreas = retorno.body;
 
