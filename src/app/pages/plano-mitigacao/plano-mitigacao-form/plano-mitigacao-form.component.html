@@ -13,8 +13,8 @@
 
 				<mat-card-header>
 					<mat-card-title>
-						<h2 *ngIf="!codPlanoMitigacao">Novo Plano Mitigação</h2>
-						<h2 *ngIf="codPlanoMitigacao">Editar Plano Mitigação</h2>
+						<h2 *ngIf="!codPlanoMitigacao">Novo Plano de Mitigação</h2>
+						<h2 *ngIf="codPlanoMitigacao">Editar Plano de Mitigação</h2>
 					</mat-card-title>
 				</mat-card-header>
 
@@ -33,7 +33,7 @@
 
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Descrição</mat-label>
+					<mat-label>Nome</mat-label>
 					<input matInput formControlName="desPlanoMitigacao" placeholder="Descrição Plano Mitigação"
 						autocomplete="off" type="string" />
 					<mat-error *ngIf="planoMitigacaoForm.controls.desPlanoMitigacao.errors?.required">Descrição Plano
@@ -131,7 +131,7 @@
 	<mat-expansion-panel *ngIf="codPlanoMitigacao" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
-				Documento Plano
+				Documentos
 			</mat-panel-title>
 		</mat-expansion-panel-header>
 
@@ -141,7 +141,7 @@
 				<div fxFlex>
 					<mat-form-field fxFlex="30">
 						<input matInput (keyup)="applyFilterDocumentoPlano($event.target.value)"
-							placeholder="Buscar Documento Plano" />
+							placeholder="Buscar documento" />
 					</mat-form-field>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px">
@@ -149,7 +149,7 @@
 						<a mat-raised-button color="accent"
 							[routerLink]="['/plano-mitigacao', codPlanoMitigacao, 'documento-plano', '']"
 							routerLinkActive="active">
-							<mat-icon>add</mat-icon>Novo Documento Plano
+							<mat-icon>add</mat-icon>Novo Documento
 						</a>
 					</div>
 				</div>

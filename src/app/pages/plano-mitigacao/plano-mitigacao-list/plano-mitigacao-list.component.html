@@ -31,13 +31,9 @@
 
     <div class="mat-elevation-z8" [hidden]="isLoading">
       <table mat-table [dataSource]="dataSource" matSort>
-        <ng-container matColumnDef="codPlanoMitigacao">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
-          <td mat-cell *matCellDef="let element; let i = index">{{ element.codPlanoMitigacao }}</td>
-        </ng-container>
-
+        
 		<ng-container matColumnDef="desPlanoMitigacao">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
           <td mat-cell *matCellDef="let element; let i = index">{{ element.desPlanoMitigacao }}</td>
         </ng-container>
   

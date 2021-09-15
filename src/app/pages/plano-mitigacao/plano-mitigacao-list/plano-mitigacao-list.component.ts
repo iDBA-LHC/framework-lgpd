@@ -17,7 +17,7 @@ export class PlanoMitigacaoListComponent implements OnInit {
 
   isLoading = false;
 
-  displayedColumns: string[] = ["codPlanoMitigacao", "desPlanoMitigacao", "actions"];
+  displayedColumns: string[] = ["desPlanoMitigacao", "actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

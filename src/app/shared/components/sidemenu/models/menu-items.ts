@@ -18,7 +18,7 @@ export class MenuItems {
 			icon: "work",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
 		}, {
-			label: "Area",
+			label: "Área",
 			link: "area",
 			icon: "event_seat",
 			hidden: false,
@@ -38,7 +38,7 @@ export class MenuItems {
 			icon: "settings_backup_restore",
 			hidden: false,
 		}, {
-			label: "Forma Coleta",
+			label: "Forma de Coleta",
 			link: "forma-coleta",
 			icon: "wifi_protected_setup",
 			hidden: false,
@@ -58,25 +58,25 @@ export class MenuItems {
 			icon: "inventory_2",
 			hidden: false
 		}, {
+			label: "Data Flow",
+			link: "data-flow",
+			icon: "account_tree",
+			hidden: false
+    	}, {
 			label: "Data Map",
 			link: "data-map",
 			icon: "travel_explore",
 			hidden: false
 		}, {
-			label: "Plano Mitigação",
-			link: "plano-mitigacao",
-			icon: "control_camera",
-			hidden: false
-		}, {
-			label: "Data Flow",
-			link: "data-flow",
-			icon: "account_tree",
-			hidden: false
-    }, {
 			label: "Data Analisys Map",
 			link: "data-analisys-map",
 			icon: "travel_explore",
 			hidden: false
-    }];
+    	}, {
+			label: "Plano de Mitigação",
+			link: "plano-mitigacao",
+			icon: "control_camera",
+			hidden: false
+		} ];
 	}
 }

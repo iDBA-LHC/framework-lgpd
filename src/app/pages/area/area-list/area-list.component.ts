@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { AreaService } from 'src/app/services/area.service';
-import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
-import { ExportPdfService } from 'src/app/services/export-pdf.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Area } from 'src/app/models/area/area';
+import { AreaService } from 'src/app/services/area.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { ExportPdfService } from 'src/app/services/export-pdf.service';
+import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 
 @Component({
@@ -16,7 +16,7 @@ export class AreaListComponent implements OnInit {
 
   isLoading = false;
 
-  displayedColumns: string[] = ["nomeArea", "nomeEmpresa", "nomeResponsavel", "actions"];
+  displayedColumns: string[] = ["nomeEmpresa", "nomeArea", "nomeResponsavel", "actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

@@ -19,13 +19,13 @@
   
               <mat-card-header>
                   <mat-card-title>
-                      <h2 *ngIf="!localArmazenamentoId">Novo Local Armazenamento</h2>
-                      <h2 *ngIf="localArmazenamentoId">Editar Local Armazenamento</h2>
+                      <h2 *ngIf="!localArmazenamentoId">Novo Local de Armazenamento</h2>
+                      <h2 *ngIf="localArmazenamentoId">Editar Local de Armazenamento</h2>
                   </mat-card-title>
               </mat-card-header>
     
               <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-                  <mat-label>Nome Local Armazenamento</mat-label>
+                  <mat-label>Nome</mat-label>
                   <input
                       matInput
                       formControlName="nomeLocalArmazenamento"
@@ -48,7 +48,7 @@
               </mat-slide-toggle>
 
               <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-                <mat-label>Nome Provedor Nuvem</mat-label>
+                <mat-label>Provedor Nuvem</mat-label>
                 <input
                     matInput
                     formControlName="nomeProvedorNuvem"

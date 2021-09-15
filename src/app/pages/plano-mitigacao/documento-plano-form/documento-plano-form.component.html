@@ -14,25 +14,23 @@
 
         <mat-card-header>
           <mat-card-title>
-            <h2 *ngIf="!documentoPlanoId">Novo Documento Plano</h2>
-            <h2 *ngIf="documentoPlanoId">Editar Documento Plano</h2>
+            <h2 *ngIf="!documentoPlanoId">Novo Documento</h2>
+            <h2 *ngIf="documentoPlanoId">Editar Documento</h2>
           </mat-card-title>
         </mat-card-header>
 
         <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Descrição</mat-label>
-          <input matInput formControlName="desDocumentoPlano" placeholder="Descição Documento Plano" autocomplete="off"
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="desDocumentoPlano" placeholder="Descrição documento" autocomplete="off"
             type="string" />
-          <mat-error *ngIf="documentoPlanoForm.controls.desDocumentoPlano.errors?.required">Descição Documento Plano é Obrigatório
-          </mat-error>
+          <mat-error *ngIf="documentoPlanoForm.controls.desDocumentoPlano.errors?.required">Campo obrigatório</mat-error>
         </mat-form-field>
 
         <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
           <mat-label>Endereço</mat-label>
-          <input matInput formControlName="desEnderecoPlano" placeholder="Descrição endereço plano" autocomplete="off"
+          <input matInput formControlName="desEnderecoPlano" placeholder="Descrição endereço" autocomplete="off"
             type="string" />
-          <mat-error *ngIf="documentoPlanoForm.controls.desEnderecoPlano.errors?.required">Descrição endereço plano é Obrigatório
-          </mat-error>
+          <mat-error *ngIf="documentoPlanoForm.controls.desEnderecoPlano.errors?.required">Campo obrigatório</mat-error>
         </mat-form-field>
 
         <mat-card-actions>

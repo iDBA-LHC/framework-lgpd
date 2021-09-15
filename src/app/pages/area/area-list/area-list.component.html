@@ -5,7 +5,7 @@
           <input
             matInput
             (keyup)="applyFilter($event.target.value)"
-            placeholder="Buscar Area"/>
+            placeholder="Buscar área"/>
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="5px">
@@ -15,7 +15,7 @@
             color="accent"
             [routerLink]="['/area', '']"
             routerLinkActive="active">
-            <mat-icon>add</mat-icon>Nova Area</a>
+            <mat-icon>add</mat-icon>Nova Área</a>
         </div>
       </div>
     </div>
@@ -30,19 +30,19 @@
   
     <div class="mat-elevation-z8" [hidden]="isLoading">
       <table mat-table [dataSource]="dataSource" matSort>
+	  	<ng-container matColumnDef="nomeEmpresa">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeEmpresa }}</td>
+        </ng-container>
+		
         <ng-container matColumnDef="nomeArea">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
           <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeArea }}</td>
         </ng-container>
 
         <ng-container matColumnDef="nomeResponsavel">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Responsável</th>
           <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeResponsavel }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="nomeEmpresa">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
-          <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeEmpresa }}</td>
         </ng-container>
         
         <ng-container matColumnDef="actions">
