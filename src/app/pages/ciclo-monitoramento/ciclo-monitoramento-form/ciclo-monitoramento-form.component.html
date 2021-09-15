@@ -48,7 +48,7 @@
                     placeholder="Data Competencia"
                     [matDatepicker]="picker"/>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-datepicker #picker startView="year" (monthSelected)="closeDatePicker($event, picker)"></mat-datepicker>
                 <mat-error *ngIf="cicloMonitoramentoForm.controls.dataCompetencia.errors?.required">Data Competência é Obrigatória</mat-error>
               </mat-form-field>
 

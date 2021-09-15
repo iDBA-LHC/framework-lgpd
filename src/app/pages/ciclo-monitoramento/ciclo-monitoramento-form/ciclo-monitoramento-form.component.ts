@@ -32,6 +32,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
 
   listaUsuarios: Usuario[];
   listaUsuariosFiltrados: Usuario[];
+	datep: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -48,7 +49,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     this.createForm();
-    this.pesquisaCicloMonitoramento();
+    this.pesquisaCicloMonitoramento();	
   }
 
   private createForm() {
@@ -59,6 +60,13 @@ export class CicloMonitoramentoFormComponent implements OnInit {
       dataCompetencia: ["", Validators.required],
       usuarios: ["", Validators.required],
     });
+  }
+
+  closeDatePicker(eventData: any, picker:any) {
+	
+	this.cicloMonitoramentoForm.controls.dataCompetencia.setValue(eventData);
+	
+    picker.close();    
   }
 
   private pesquisaCicloMonitoramento() {
@@ -209,3 +217,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
     }
   }
 }
+function ViewChild(arg0: string) {
+	throw new Error('Function not implemented.');
+}
+

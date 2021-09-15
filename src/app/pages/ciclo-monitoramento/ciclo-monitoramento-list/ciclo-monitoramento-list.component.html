@@ -43,7 +43,7 @@
 
         <ng-container matColumnDef="dataCompetencia">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Competência</th>
-          <td mat-cell *matCellDef="let element; let i = index">{{ element.dataCompetencia | date:'dd/MM/yyyy' }}</td>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.dataCompetencia | date:'MM/yyyy' }}</td>
         </ng-container>
 
 
