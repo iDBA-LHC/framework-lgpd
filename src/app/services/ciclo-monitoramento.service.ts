@@ -30,7 +30,7 @@ export class CicloMonitoramentoService {
 		return this.http.put<CicloMonitoramento>(`${environment.apiURL}${this.apiSuffix}`, CicloMonitoramento, { observe: "response" });
 	}
 
-  buscarUltimoCicloMonitoramento() {
-		return this.http.get<CicloMonitoramento>(`${environment.apiURL}${this.apiSuffix}lastone`, { observe: "response" });
+  	buscarUltimoCicloMonitoramento(codigoEmpresa: number) {
+		return this.http.get<CicloMonitoramento>(`${environment.apiURL}${this.apiSuffix}lastone/${codigoEmpresa}`, { observe: "response" });
 	}
 }
