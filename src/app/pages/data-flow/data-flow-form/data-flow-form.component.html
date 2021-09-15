@@ -109,15 +109,16 @@
 					<span class="ng-tns-c15-3 ng-star-inserted">Possuí descarte</span>
 				</mat-slide-toggle>
 
-				<mat-radio-group fxFlex style="width: 50%;" fxFlexOffset="5px" formControlName="indRisco">
-					<mat-label>Risco</mat-label>
+				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px" 
+					formControlName="indRisco">
+					<mat-label>Risco:</mat-label>
 					<mat-radio-button value="1">Baixo</mat-radio-button>
 					<mat-radio-button value="2">Moderado</mat-radio-button>
-					<mat-radio-button value="2">Elevado</mat-radio-button>
-					<mat-radio-button value="2">Extremo</mat-radio-button>
+					<mat-radio-button value="3">Elevado</mat-radio-button>
+					<mat-radio-button value="4">Extremo</mat-radio-button>
 				</mat-radio-group>
 
-				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+				<mat-form-field style="width: 50%;" fxFlexOffset="30px">
 					<mat-label>Ciclo Vida</mat-label>
 					<input matInput formControlName="cicloVida" placeholder="Ciclo Vida"
 						[matAutocomplete]="autoCicloVida" />

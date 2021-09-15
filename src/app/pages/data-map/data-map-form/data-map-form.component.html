@@ -184,15 +184,16 @@
 					<mat-error *ngIf="dataMapForm.controls.cicloVida.errors?.required">É Obrigatório</mat-error>
 				</mat-form-field>
 
-				<mat-radio-group fxFlex style="width: 50%;" fxFlexOffset="5px" formControlName="indRisco">
-					<mat-label>Risco</mat-label>
+				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="10px"
+					formControlName="indRisco">
+					<mat-label>Risco:</mat-label>
 					<mat-radio-button value="1">Baixo</mat-radio-button>
 					<mat-radio-button value="2">Moderado</mat-radio-button>
 					<mat-radio-button value="3">Elevado</mat-radio-button>
 					<mat-radio-button value="4">Extremo</mat-radio-button>
 				</mat-radio-group>
 
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
 					<mat-label>Observações</mat-label>
 					<textarea matInput formControlName="desObservacoes" placeholder="Observações" autocomplete="off"
 						type="textField" resizeToFitContent="true" rows="5">
