@@ -53,8 +53,6 @@ export class MetadadosFormComponent implements OnInit {
         if (this.metadadosCodigo) {
           this.metadadosService.pesquisaMetadados(this.metadadosCodigo).subscribe(
             (retorno) => {
-              console.log("Metadados", retorno.body);
-              
               this.metadadosForm.patchValue({
                 nomeMetadados: retorno.body[0].nomeMetadados,
                 valoresMetadados: retorno.body[0].valoresMetadados,

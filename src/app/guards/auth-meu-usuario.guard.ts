@@ -1,15 +1,12 @@
-import { CustomSnackBarService } from "../shared/components/custom-snack-bar/custom-snack-bar.service";
-import { AuthService } from "../services/auth.service";
+import { Injectable } from "@angular/core";
 import {
-  CanActivate,
-  Router,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  ActivatedRoute,
+	ActivatedRoute, ActivatedRouteSnapshot, CanActivate,
+	Router, RouterStateSnapshot
 } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, take } from "rxjs/operators";
-import { Injectable } from "@angular/core";
+import { AuthService } from "../services/auth.service";
+import { CustomSnackBarService } from "../shared/components/custom-snack-bar/custom-snack-bar.service";
 
 @Injectable()
 export class AuthMeuUsuarioGuard implements CanActivate {
@@ -31,12 +28,12 @@ export class AuthMeuUsuarioGuard implements CanActivate {
       })
     );*/
 
-    console.log(next.queryParams);
-    /*params.subscribe((data) => {
+    /*
+	console.log(next.queryParams);
+    params.subscribe((data) => {
       console.log(data);
       console.log(data["id?"]);
     });*/
-
 
     return this.authService.isLoggedIn.pipe(
       take(1),
