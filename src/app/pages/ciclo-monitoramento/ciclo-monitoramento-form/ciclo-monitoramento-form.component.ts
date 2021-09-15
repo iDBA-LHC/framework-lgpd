@@ -32,8 +32,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
 
   listaUsuarios: Usuario[];
   listaUsuariosFiltrados: Usuario[];
-	datep: any;
-
+	
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
