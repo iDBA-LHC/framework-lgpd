@@ -316,6 +316,11 @@ export class DataMapFormComponent implements OnInit {
 		let selecionado: Atividade = event.option.value;
 		this.dataMapForm.controls.atividade.setValue(selecionado);
 		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);
+		
+		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
+		if (metadados) {
+			this.dataMapForm.controls.metadados.setValue(metadados);
+		}
 	}
 
 	private pesquisaBaselegal() {

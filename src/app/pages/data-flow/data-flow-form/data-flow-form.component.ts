@@ -309,6 +309,11 @@ export class DataFlowFormComponent implements OnInit {
 		let selecionado: Atividade = event.option.value;
 		this.dataFlowForm.controls.atividade.setValue(selecionado);
 		this.dataFlowForm.controls.codAtividade.setValue(selecionado.codAtividade);
+
+		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
+		if (metadados) {
+			this.dataFlowForm.controls.metadados.setValue(metadados);
+		}
 	}
 
 	selecionaMetadados(event) {

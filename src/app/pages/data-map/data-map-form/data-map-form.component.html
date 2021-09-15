@@ -82,19 +82,10 @@
 					</mat-error>
 				</mat-form-field>
 
-
-
-
-
-
-
-
-
-
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Metadados</mat-label>
 					<input matInput formControlName="metadados" placeholder="Metadados"
-						[matAutocomplete]="autoMetadados" />
+						[matAutocomplete]="autoMetadados" readonly />
 					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados"
 						(optionSelected)="selecionaMetadados($event)">
 						<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
@@ -103,6 +94,7 @@
 					</mat-autocomplete>
 					<mat-error *ngIf="dataMapForm.controls.metadados.errors?.required">É Obrigatório</mat-error>
 				</mat-form-field>
+
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Base Legal</mat-label>
@@ -116,18 +108,6 @@
 					</mat-autocomplete>
 					<mat-error *ngIf="dataMapForm.controls.baseLegal.errors?.required">É Obrigatório</mat-error>
 				</mat-form-field>
-
-
-
-
-
-
-
-
-
-
-
-
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
 					formControlName="indPrincipios" style="width: 50%;">

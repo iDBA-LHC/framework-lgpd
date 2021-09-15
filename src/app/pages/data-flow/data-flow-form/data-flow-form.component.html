@@ -66,8 +66,7 @@
 					</mat-autocomplete>
 					<mat-error *ngIf="dataFlowForm.controls.processo.errors?.required">Processo é Obrigatória
 					</mat-error>
-				</mat-form-field>
-
+				</mat-form-field>				
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Atividade</mat-label>
@@ -83,19 +82,10 @@
 					</mat-error>
 				</mat-form-field>
 
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Nome Processamento</mat-label>
-					<input matInput formControlName="nomeProcessamento" placeholder="Nome Processamento"
-						autocomplete="off" type="string" />
-					<mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Nome Processamento é
-						Obrigatório
-					</mat-error>
-				</mat-form-field>
-
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Metadados</mat-label>
 					<input matInput formControlName="metadados" placeholder="Metadados"
-						[matAutocomplete]="autoMetadados" />
+						[matAutocomplete]="autoMetadados" readonly />
 					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados"
 						(optionSelected)="selecionaMetadados($event)">
 						<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
@@ -103,6 +93,15 @@
 						</mat-option>
 					</mat-autocomplete>
 					<mat-error *ngIf="dataFlowForm.controls.metadados.errors?.required">É Obrigatório</mat-error>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Nome Processamento</mat-label>
+					<input matInput formControlName="nomeProcessamento" placeholder="Nome Processamento"
+						autocomplete="off" type="string" />
+					<mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Nome Processamento é
+						Obrigatório
+					</mat-error>
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
