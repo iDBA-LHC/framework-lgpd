@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-  
+
     <div
       *ngIf="isLoading"
       fxLayout="row"
@@ -27,13 +27,26 @@
       fxLayoutGap="gappx">
       <mat-spinner></mat-spinner>
     </div>
-  
+
     <div class="mat-elevation-z8" [hidden]="isLoading">
       <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="codEmpresa">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código Empresa</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.codEmpresa }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="nomeCicloMonitoramento">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
           <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeCicloMonitoramento }}</td>
         </ng-container>
+
+        <ng-container matColumnDef="dataCompetencia">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Competência</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.dataCompetencia }}</td>
+        </ng-container>
+
+
 
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
@@ -48,11 +61,11 @@
             </div>
           </td>
         </ng-container>
-  
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>
   </mat-card>
-  
+
 

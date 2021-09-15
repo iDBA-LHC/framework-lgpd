@@ -14,7 +14,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class DataFlowListComponent implements OnInit {
 
   isLoading = false;
-  displayedColumns: string[] = ["nomeProcessamento", "actions"];
+  displayedColumns: string[] = ["nomeEmpresa", "codArea", "nomeProcessamento", "nomeAtividade", "dataCompetencia", "actions"];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -34,7 +34,7 @@ export class DataFlowListComponent implements OnInit {
     this.isLoading = true;
     this.dataFlowService.listaTodosDataFlow().subscribe((response) => {
       this.isLoading = false;
-      
+
       this.dataSource = new MatTableDataSource<DataFlow>(response.body);
       setTimeout(() => {
         this.dataSource.filterPredicate = (

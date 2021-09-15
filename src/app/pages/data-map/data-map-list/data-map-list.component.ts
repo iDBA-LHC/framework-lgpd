@@ -17,7 +17,7 @@ export class DataMapListComponent implements OnInit {
 
   isLoading = false;
 
-  displayedColumns: string[] = ["codDataMap", "actions"];
+  displayedColumns: string[] = ["nomeEmpresa", "codArea", "nomeProcesso", "nomeAtividade", "dataCompetencia", "actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -41,7 +41,7 @@ export class DataMapListComponent implements OnInit {
       (response) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource<DataMap>(response.body);
-        
+
         setTimeout(() => {
             this.dataSource.filterPredicate = (
                 data: {
