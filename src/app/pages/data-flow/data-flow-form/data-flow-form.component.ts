@@ -1,3 +1,4 @@
+import { Processo } from './../../../models/processo/processo';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
@@ -95,6 +96,8 @@ export class DataFlowFormComponent implements OnInit {
 	private createForm() {
 		this.dataFlowForm = this.formBuilder.group({
 
+      dataCompetencia: [""],
+
 			nomeProcessamento: ["", Validators.required],
 
 			codEmpresa: [0, Validators.required],
@@ -154,7 +157,6 @@ export class DataFlowFormComponent implements OnInit {
 								armazenamentos: retorno.body[0].armazenamentos,
 								compartilhamentos: retorno.body[0].compartilhamentos
 							});
-
 							this.preencherCombos();
 
 							this.pesquisaArea(retorno.body[0].codEmpresa);
@@ -189,8 +191,8 @@ export class DataFlowFormComponent implements OnInit {
 
 	salvarDataFlow() {
 
-		if (this.dataFlowForm.valid) {
-			
+		//if (this.dataFlowForm.valid) {
+
 			const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
 			DataFlow.codDataFlow = this.codDataFlow;
 
@@ -205,8 +207,6 @@ export class DataFlowFormComponent implements OnInit {
 			});
 			DataFlow.usuarios = usuarios2;
 			DataFlow.codUsuarioInclusao = this.authService.loggedUserId;
-
-			console.log()
 
 			if (this.codDataFlow) {
 				// Alteração
@@ -241,7 +241,7 @@ export class DataFlowFormComponent implements OnInit {
 					}
 				)
 			}
-		}
+		//}
 	}
 
 	private pesquisaLocalArmazenamento() {
@@ -318,6 +318,7 @@ export class DataFlowFormComponent implements OnInit {
 
 		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
 		if (metadados) {
+      this.dataFlowForm.controls.codMetadados.setValue(metadados.codMetadados);
 			this.dataFlowForm.controls.metadados.setValue(metadados);
 		}
 	}
@@ -428,13 +429,17 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.empresa.setValue(empresaSelecionada);
 		this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
 
-		this.isLoading = true;
+    this.dataFlowForm.controls.area.setValue(null);
+    this.dataFlowForm.controls.processo.setValue(null);
+    this.dataFlowForm.controls.atividade.setValue(null);
 
 		this.pesquisaUsuarios();
 
 		this.buscarUltimoCicloMonitoramento(empresaSelecionada.codigoEmpresa);
 
 		this.pesquisaArea(empresaSelecionada.codigoEmpresa);
+
+    //this.isLoading = true;
 	}
 
 	displayEmpresa(empresa: Empresa): string {
@@ -446,6 +451,7 @@ export class DataFlowFormComponent implements OnInit {
 			(retorno) => {
 				if (retorno.body != null) {
 					this.dataFlowForm.controls.codCicloMonitoramento.setValue(retorno.body.codCicloMonitoramento);
+          //this.dataFlowForm.controls.dataCompetencia.setValue(retorno.body.dataCompetencia);
 				} else {
 					this.dataFlowForm.controls.codCicloMonitoramento.setValue(null);
 					TrataExcessaoConexao.TrataExcessao('Não existem ciclos de monitoramento para a empresa selecionada!', this.snackBar);
@@ -487,6 +493,9 @@ export class DataFlowFormComponent implements OnInit {
 		let areaSelecionada: Area = event.option.value;
 		this.dataFlowForm.controls.area.setValue(areaSelecionada);
 		this.dataFlowForm.controls.codArea.setValue(areaSelecionada.codArea);
+
+    this.dataFlowForm.controls.codProcesso.setValue(null);
+    this.dataFlowForm.controls.processo.setValue(null);
 
 		this.pesquisaProcesso(areaSelecionada.codArea);
 	}
@@ -530,11 +539,21 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.processo.setValue(processoSelecionada);
 		this.dataFlowForm.controls.codProcesso.setValue(processoSelecionada.codProcesso);
 
+    this.dataFlowForm.controls.codAtividade.setValue(null);
+    this.dataFlowForm.controls.atividade.setValue(null);
+
 		this.pesquisaAtividade(processoSelecionada.codProcesso);
 	}
 
 	displayProcesso(processo: Processo): string {
 		return processo ? processo.nomeProcesso : "";
 	}
+
+  closeDatePicker(eventData: any, picker:any) {
+
+    this.dataFlowForm.controls.dataCompetencia.setValue(eventData);
+
+      picker.close();
+    }
 
 }

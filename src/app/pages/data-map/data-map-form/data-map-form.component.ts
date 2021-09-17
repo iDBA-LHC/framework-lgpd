@@ -96,6 +96,8 @@ export class DataMapFormComponent implements OnInit {
 	private createForm() {
 		this.dataMapForm = this.formBuilder.group({
 
+      dataCompetencia: [""],
+
 			codEmpresa: [0, Validators.required],
 			empresa: ["", Validators.required],
 			codCicloMonitoramento: ["", Validators.required],
@@ -211,9 +213,9 @@ export class DataMapFormComponent implements OnInit {
 	salvarDataMap() {
 
 		if (this.dataMapForm.valid) {
-			
+
 			const DataMap: DataMap = this.dataMapForm.getRawValue();
-			DataMap.codDataMap = this.codDataMap;		
+			DataMap.codDataMap = this.codDataMap;
 
 			DataMap.indPrincipios = (this.dataMapForm.controls.indPrincipios.value ? 1 : 0);
 			DataMap.indSensivel = (this.dataMapForm.controls.indSensivel.value ? 1 : 0);
@@ -318,7 +320,7 @@ export class DataMapFormComponent implements OnInit {
 		let selecionado: Atividade = event.option.value;
 		this.dataMapForm.controls.atividade.setValue(selecionado);
 		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);
-		
+
 		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
 		if (metadados) {
 			this.dataMapForm.controls.metadados.setValue(metadados);
@@ -577,4 +579,11 @@ export class DataMapFormComponent implements OnInit {
 	displayProcesso(processo: Processo): string {
 		return processo ? processo.nomeProcesso : "";
 	}
+
+  closeDatePicker(eventData: any, picker:any) {
+
+    this.dataMapForm.controls.dataCompetencia.setValue(eventData);
+
+      picker.close();
+    }
 }
