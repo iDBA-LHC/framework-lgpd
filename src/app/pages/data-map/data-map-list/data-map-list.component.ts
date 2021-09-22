@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Router } from '@angular/router';
 import { DataMap } from 'src/app/models/data-map/data-map';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataMapService } from 'src/app/services/data-map.service';
@@ -28,7 +29,8 @@ export class DataMapListComponent implements OnInit {
     private snackBar: CustomSnackBarService,
     private dialog: MatDialog,
     private exportPdfService: ExportPdfService,
-    private authService: AuthService
+    private authService: AuthService,
+	private router: Router
   ) { }
 
   ngOnInit() {
@@ -37,7 +39,13 @@ export class DataMapListComponent implements OnInit {
 
   private pesquisaDataMap() {
     this.isLoading = true;
-    this.DataMapService.listaTodosDataMap().subscribe(
+
+	var indTipo = 0;
+	if (this.router.url.includes('data-analisys-map')) {
+		indTipo = 1;
+	}		
+
+    this.DataMapService.listaTodosDataMap(indTipo).subscribe(
       (response) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource<DataMap>(response.body);

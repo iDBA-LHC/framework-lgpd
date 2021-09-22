@@ -222,7 +222,7 @@ export class DataMapFormComponent implements OnInit {
 
   salvarDataMap() {
 
-    if (this.dataMapForm.valid) {
+    //if (this.dataMapForm.valid) {
 
       const DataMap: DataMap = this.dataMapForm.getRawValue();
       DataMap.codDataMap = this.codDataMap;
@@ -236,7 +236,7 @@ export class DataMapFormComponent implements OnInit {
       DataMap.indAnonimizacao = (this.dataMapForm.controls.indAnonimizacao.value ? 1 : 0);
 
       DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);
-      DataMap.indTipo = 0;
+      DataMap.indTipo = 1;
 
       if (this.codDataMap) {
         // Alteração
@@ -271,7 +271,7 @@ export class DataMapFormComponent implements OnInit {
           }
         )
       }
-    }
+    //}
   }
 
   private pesquisaMetadados() {

@@ -53,7 +53,7 @@
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Área</mat-label>
 					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea"
-						[readonly]="codDataMap" />
+						 />
 
 					<mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea"
 						(optionSelected)="selecionaArea($event)">
@@ -68,7 +68,7 @@
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Processo</mat-label>
 					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso"
-						[readonly]="codDataMap" />
+						 />
 
 					<mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso"
 						(optionSelected)="selecionaProcesso($event)">
@@ -83,7 +83,7 @@
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Atividade</mat-label>
 					<input matInput formControlName="atividade" placeholder="Atividade"
-						[matAutocomplete]="autoAtividade" [readonly]="codDataMap" />
+						[matAutocomplete]="autoAtividade"  />
 					<mat-autocomplete #autoAtividade="matAutocomplete" [displayWith]="displayAtividade"
 						(optionSelected)="selecionaAtividade($event)">
 						<mat-option *ngFor="let atividade of listaAtividade" [value]="atividade">

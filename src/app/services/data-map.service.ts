@@ -14,8 +14,8 @@ export class DataMapService {
 	constructor(private http: HttpClient,
 		private authService: AuthService) { }
 
-	listaTodosDataMap() {
-		return this.http.get<DataMap[]>(`${environment.apiURL}${this.apiSuffix}`, { observe: "response" });
+	listaTodosDataMap(indTipo: number) {
+		return this.http.get<DataMap[]>(`${environment.apiURL}${this.apiSuffix}tipo?indTipo=${indTipo}`, { observe: "response" });
 	}
 
 	incluirDataMap(DataMap: DataMap) {
