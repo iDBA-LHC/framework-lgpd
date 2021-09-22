@@ -88,20 +88,19 @@ export class DataFlowFormComponent implements OnInit {
 	ngOnInit() {
 		//this.isLoading = true;
 
-		this.createForm();
+		this.createForm();		
 		this.pesquisaDataFlow();
 	}
 
 	private createForm() {
 		this.dataFlowForm = this.formBuilder.group({
 
-      dataCompetencia: [""],
-
 			nomeProcessamento: ["", Validators.required],
 
 			codEmpresa: [0, Validators.required],
 			empresa: ["", Validators.required],
 			codCicloMonitoramento: ["", Validators.required],
+			dataCompetencia: [""],
 
 			codArea: ["", Validators.required],
 			area: ["", Validators.required],
@@ -115,7 +114,7 @@ export class DataFlowFormComponent implements OnInit {
 			codMetadados: ["", Validators.required],
 			metadados: ["", Validators.required],
 
-			indDescarte: ["", Validators.required],
+			indDescarte: [""],
 			indRisco: ["", Validators.required],
 
 			codCicloVida: ["", Validators.required],
@@ -190,12 +189,12 @@ export class DataFlowFormComponent implements OnInit {
 
 	salvarDataFlow() {
 
-		//if (this.dataFlowForm.valid) {
+		if (this.dataFlowForm.valid) {
 
 			const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
 			DataFlow.codDataFlow = this.codDataFlow;
 
-			DataFlow.indRisco = (this.dataFlowForm.controls.indRisco.value ? 1 : 0);
+			DataFlow.indRisco = parseInt(this.dataFlowForm.controls.indRisco.value);
 			DataFlow.indDescarte = (this.dataFlowForm.controls.indDescarte.value ? 1 : 0);
 
 			var usuarios2 = new Array();
@@ -240,7 +239,7 @@ export class DataFlowFormComponent implements OnInit {
 					}
 				)
 			}
-		//}
+		}
 	}
 
 	private pesquisaLocalArmazenamento() {
@@ -317,7 +316,7 @@ export class DataFlowFormComponent implements OnInit {
 
 		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
 		if (metadados) {
-      this.dataFlowForm.controls.codMetadados.setValue(metadados.codMetadados);
+      		this.dataFlowForm.controls.codMetadados.setValue(metadados.codMetadados);
 			this.dataFlowForm.controls.metadados.setValue(metadados);
 		}
 	}
