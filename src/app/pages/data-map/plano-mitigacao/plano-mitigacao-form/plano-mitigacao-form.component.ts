@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { DataMap } from 'src/app/models/data-map/data-map';
 import { DocumentoPlano } from 'src/app/models/documento-plano/documento-plano';
 import { PlanoMitigacao } from 'src/app/models/plano-mitigacao/plano-mitigacao';
@@ -83,8 +82,6 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 			(data) => {
 				this.codPlanoMitigacao = parseInt(data["id?"]);
 				this.codDataMap = parseInt(data["codDataMap"]);
-
-				this.pesquisaDataMaps();
 
 				if (this.codPlanoMitigacao) {
 					this.PlanoMitigacaoService.pesquisaPlanoMitigacao(this.codPlanoMitigacao).subscribe(
@@ -183,46 +180,5 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				)
 			}
 		}
-	}
-
-	pesquisaDataMaps() {
-		this.datamapService.listaTodosDataMap().subscribe(
-			(retorno) => {
-				this.listaDataMap = retorno.body;
-
-				if (this.planoMitigacaoForm.controls.codDataMapping.value != 0) {
-					let datamap: DataMap = <DataMap>this.listaDataMap.filter(datamap => datamap.codDataMap == this.planoMitigacaoForm.controls.codDataMapping.value)[0];
-					if (datamap) {
-						this.planoMitigacaoForm.controls.dataMapping.setValue(datamap);
-					}
-				}
-
-				this.listaDataMapFiltrados = this.planoMitigacaoForm.controls.codDataMapping.valueChanges
-					.pipe(
-						startWith(''),
-						map(value => typeof value === 'string' ? value : value.desObservacoes),
-						map(name => {
-							return name ? this.filtraDataMap(name) : this.listaDataMap.slice();
-						}));
-
-				this.isLoading = false;
-			}
-		)
-	}
-
-	private filtraDataMap(value: string): DataMap[] {
-		const filterValue = value.toLowerCase();
-
-		return this.listaDataMap.filter(item => item.desObservacoes.trim().toLowerCase().includes(filterValue));
-	}
-
-	selecionaDataMap(event) {
-		let datamapSelecionado: DataMap = event.option.value;
-		this.planoMitigacaoForm.controls.dataMapping.setValue(datamapSelecionado);
-		this.planoMitigacaoForm.controls.codDataMapping.setValue(datamapSelecionado.codDataMap);
-	}
-
-	displayDataMap(comp: DataMap): string {
-		return comp && comp.desObservacoes ? comp.desObservacoes : '';
 	}
 }
