@@ -8,14 +8,8 @@
 		</div>
 
 		<div>
-			<form
-            fxLayout="row wrap"
-            fxLayout="column"
-            fxLayoutAlign="space-between center"
-            fxFlex="100"
-            fxFlex.gt-sm="100"
-            [formGroup]="dataMapForm"
-            (submit)="salvarDataMap()">
+			<form fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100"
+				fxFlex.gt-sm="100" [formGroup]="dataMapForm" (submit)="salvarDataMap()">
 
 				<mat-card-header>
 					<mat-card-title>
@@ -41,21 +35,25 @@
 					<mat-label>Ciclo de Monitoramento</mat-label>
 					<input matInput formControlName="codCicloMonitoramento" placeholder="Ciclo de Monitoramento"
 						autocomplete="off" type="string" readonly />
-					<mat-error *ngIf="dataMapForm.controls.codCicloMonitoramento.errors?.required">Campo obrigatório</mat-error>
+					<mat-error *ngIf="dataMapForm.controls.codCicloMonitoramento.errors?.required">Campo obrigatório
+					</mat-error>
 				</mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-          <mat-label>Data Competencia</mat-label>
-          <input
-              matInput
-              formControlName="dataCompetencia"
-              placeholder="Data Competencia"
-              readonly />
-        </mat-form-field>
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Data Competência</mat-label>
+					<input matInput formControlName="dataCompetencia" placeholder="Data Competencia"
+						[matDatepicker]="picker" readonly />
+					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+					<mat-datepicker #picker startView="year" (monthSelected)="closeDatePicker($event, picker)">
+					</mat-datepicker>
+					<mat-error *ngIf="dataMapForm.controls.dataCompetencia.errors?.required">Data Competência é
+						Obrigatória</mat-error>
+				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Área</mat-label>
-					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea" [readonly]="codDataMap" />
+					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea"
+						[readonly]="codDataMap" />
 
 					<mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea"
 						(optionSelected)="selecionaArea($event)">
@@ -69,8 +67,8 @@
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Processo</mat-label>
-					<input matInput formControlName="processo" placeholder="Processo"
-						[matAutocomplete]="autoProcesso" [readonly]="codDataMap" />
+					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso"
+						[readonly]="codDataMap" />
 
 					<mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso"
 						(optionSelected)="selecionaProcesso($event)">
@@ -162,7 +160,8 @@
 							{{armazenamento.nomeLocalArmazenamento}}
 						</mat-option>
 					</mat-select>
-					<mat-error *ngIf="dataMapForm.controls.armazenamentos.errors?.required">Campo obrigatório</mat-error>
+					<mat-error *ngIf="dataMapForm.controls.armazenamentos.errors?.required">Campo obrigatório
+					</mat-error>
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
@@ -179,7 +178,8 @@
 							{{compartilhamento.nomeCompartilhamento}}
 						</mat-option>
 					</mat-select>
-					<mat-error *ngIf="dataMapForm.controls.compartilhamentos.errors?.required">Campo obrigatório</mat-error>
+					<mat-error *ngIf="dataMapForm.controls.compartilhamentos.errors?.required">Campo obrigatório
+					</mat-error>
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
@@ -224,59 +224,58 @@
 		</div>
 	</div>
 
-      <!-- Plano mitigacao -->
+	<!-- Plano mitigacao -->
 
-      <mat-expansion-panel *ngIf="codDataMap" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Plano Mitigação
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+	<mat-expansion-panel *ngIf="codDataMap" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Plano Mitigação
+			</mat-panel-title>
+		</mat-expansion-panel-header>
 
 
-        <div class="marginContent">
-          <div fxLayout="row">
-            <div fxFlex>
-              <mat-form-field fxFlex="30">
-                <input matInput (keyup)="applyFilterPlanoMitigacao($event.target.value)"
-                  placeholder="Buscar plano mitigacao" />
-              </mat-form-field>
-            </div>
-            <div fxLayout="row" fxLayoutGap="5px">
-              <div fxLayout="column" fxLayoutAlign="start end">
-                <a mat-raised-button color="accent"
-                  [routerLink]="['/data-map', codDataMap, 'plano-mitigacao', '']"
-                  routerLinkActive="active">
-                  <mat-icon>add</mat-icon>Novo Plano Mitigacao
-                </a>
-              </div>
-            </div>
-          </div>
+		<div class="marginContent">
+			<div fxLayout="row">
+				<div fxFlex>
+					<mat-form-field fxFlex="30">
+						<input matInput (keyup)="applyFilterPlanoMitigacao($event.target.value)"
+							placeholder="Buscar plano mitigacao" />
+					</mat-form-field>
+				</div>
+				<div fxLayout="row" fxLayoutGap="5px">
+					<div fxLayout="column" fxLayoutAlign="start end">
+						<a mat-raised-button color="accent"
+							[routerLink]="['/data-map', codDataMap, 'plano-mitigacao', '']" routerLinkActive="active">
+							<mat-icon>add</mat-icon>Novo Plano Mitigacao
+						</a>
+					</div>
+				</div>
+			</div>
 
-          <div class="mat-elevation-z8" [hidden]="isLoading">
-            <table mat-table [dataSource]="dataSourcePlanoMitigacao" matSort>
-              <ng-container matColumnDef="desPlanoMitigacao">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-                <td mat-cell *matCellDef="let element; let i = index">{{ element.desPlanoMitigacao }}</td>
-              </ng-container>
+			<div class="mat-elevation-z8" [hidden]="isLoading">
+				<table mat-table [dataSource]="dataSourcePlanoMitigacao" matSort>
+					<ng-container matColumnDef="desPlanoMitigacao">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+						<td mat-cell *matCellDef="let element; let i = index">{{ element.desPlanoMitigacao }}</td>
+					</ng-container>
 
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let element">
-                  <div class="example-button-row">
-                    <button mat-raised-button color="accent"
-                      [routerLink]="['/data-map', element.codDataMapping, 'plano-mitigacao', element.codPlanoMitigacao]">
-                      Editar
-                    </button>
-                  </div>
-                </td>
-              </ng-container>
+					<ng-container matColumnDef="actions">
+						<th mat-header-cell *matHeaderCellDef></th>
+						<td mat-cell *matCellDef="let element">
+							<div class="example-button-row">
+								<button mat-raised-button color="accent"
+									[routerLink]="['/data-map', element.codDataMapping, 'plano-mitigacao', element.codPlanoMitigacao]">
+									Editar
+								</button>
+							</div>
+						</td>
+					</ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            </table>
-          </div>
-        </div>
+					<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+				</table>
+			</div>
+		</div>
 
-      </mat-expansion-panel>
+	</mat-expansion-panel>
 </mat-card>

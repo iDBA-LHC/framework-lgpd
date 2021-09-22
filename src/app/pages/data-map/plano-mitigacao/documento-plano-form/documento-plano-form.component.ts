@@ -17,6 +17,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class DocumentoPlanoFormComponent implements OnInit {
 
   documentoPlanoForm: FormGroup;
+  codDataMap: number;
   codDocumentoPlano: number;
   codPlanoMitigacao: number;
   isLoading = false;
@@ -49,6 +50,7 @@ export class DocumentoPlanoFormComponent implements OnInit {
   pesquisaDocumentoPlano() {
     this.activatedRoute.params.subscribe(
       (data) => {
+		  this.codDataMap = parseInt(data["codDataMap"]);
         this.codPlanoMitigacao = parseInt(data["codPlanoMitigacao"]);
 		this.codDocumentoPlano = parseInt(data["id?"]);
 
@@ -87,7 +89,7 @@ export class DocumentoPlanoFormComponent implements OnInit {
         this.DocumentoPlanoService.alterarDocumentoPlano(DocumentoPlano).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Documento Plano foi atualizado com sucesso!`,null);
-              this.router.navigate(["/plano-mitigacao", this.codPlanoMitigacao]);
+              this.router.navigate(["data-map", this.codDataMap, "plano-mitigacao", this.codPlanoMitigacao]);
           },
           (err) => {
             if (err.status === 401)
@@ -105,7 +107,7 @@ export class DocumentoPlanoFormComponent implements OnInit {
         this.DocumentoPlanoService.incluirDocumentoPlano(DocumentoPlano).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Documento Plano foi criado com sucesso!`,null);
-            this.router.navigate(["/plano-mitigacao", this.codPlanoMitigacao]);
+            this.router.navigate(["data-map", this.codDataMap, "plano-mitigacao", this.codPlanoMitigacao]);
           },
           (err) => {
             if (err.status === 401)

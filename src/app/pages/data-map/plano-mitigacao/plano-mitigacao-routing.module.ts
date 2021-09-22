@@ -1,29 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PlanoMitigacaoFormComponent } from './plano-mitigacao-form/plano-mitigacao-form.component';
 
-
-// const routes: Routes = [{
-//   path: "",
-//   loadChildren: () =>
-//     import("./plano-mitigacao-list/plano-mitigacao-list.module").then(
-//       (module) => module.PlanoMitigacaoListModule
-//     )
-// }, {
-//   path: ":id?",
-//   loadChildren: () =>
-//     import("./plano-mitigacao-form/plano-mitigacao-form.module").then(
-//       (module) => module.PlanoMitigacaoFormModule
-//     )
-// }, {
-//   path: ":codPlanoMitigacao/documento-plano/:id?",
-//   loadChildren: () =>
-//     import("./documento-plano-form/documento-plano-form.module").then(
-//       (module) => module.DocumentoPlanoFormModule
-//     )
-// }];
+const routes: Routes = [{
+  path: "",
+  component: PlanoMitigacaoFormComponent
+}];
 
 @NgModule({
-  imports: [RouterModule.forChild()],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class PlanoMitigacaoRoutingModule { }

@@ -450,7 +450,7 @@ export class DataFlowFormComponent implements OnInit {
 			(retorno) => {
 				if (retorno.body != null) {
 					this.dataFlowForm.controls.codCicloMonitoramento.setValue(retorno.body.codCicloMonitoramento);
-          this.dataFlowForm.controls.dataCompetencia.setValue(retorno.body.dataCompetencia);
+          			this.dataFlowForm.controls.dataCompetencia.setValue(retorno.body.dataCompetencia);
 				} else {
 					this.dataFlowForm.controls.codCicloMonitoramento.setValue(null);
 					TrataExcessaoConexao.TrataExcessao('Não existem ciclos de monitoramento para a empresa selecionada!', this.snackBar);
