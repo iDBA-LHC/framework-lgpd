@@ -72,11 +72,6 @@ export class MenuItems {
 			link: "data-analisys-map",
 			icon: "travel_explore",
 			hidden: false
-    	}, {
-			label: "Plano de Mitigação",
-			link: "plano-mitigacao",
-			icon: "control_camera",
-			hidden: false
-		} ];
+    	} ];
 	}
 }

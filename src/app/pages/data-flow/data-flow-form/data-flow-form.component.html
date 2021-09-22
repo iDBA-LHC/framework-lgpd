@@ -20,7 +20,7 @@
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Empresa</mat-label>
-					<input matInput formControlName="empresa" placeholder="Empresa" [matAutocomplete]="autoEmpresa" [readonly]="codDataFlow" />
+					<input matInput formControlName="empresa" placeholder="Empresa" [matAutocomplete]="autoEmpresa"  />
 
 					<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
 						(optionSelected)="selecionaEmpresa($event)">
@@ -44,7 +44,10 @@
               matInput
               formControlName="dataCompetencia"
               placeholder="Data Competencia"
-              readonly />
+              [matDatepicker]="picker"/>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" (monthSelected)="closeDatePicker($event, picker)"></mat-datepicker>
+          <mat-error *ngIf="dataFlowForm.controls.dataCompetencia.errors?.required">Data Competência é Obrigatória</mat-error>
         </mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">

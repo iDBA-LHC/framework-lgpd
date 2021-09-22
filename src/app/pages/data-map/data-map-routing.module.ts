@@ -14,6 +14,18 @@ const routes: Routes = [{
     import("./data-map-form/data-map-form.module").then(
       (module) => module.DataMapFormModule
     )
+}, {
+  path: ":codDataMap/plano-mitigacao/:id?",
+  loadChildren: () =>
+    import("./plano-mitigacao/plano-mitigacao-form/plano-mitigacao-form.module").then(
+      (module) => module.PlanoMitigacaoFormModule
+    )
+}, {
+  path: ":codDataMap/plano-mitigacao/:codPlanoMitigacao/documento-plano/:id?",
+  loadChildren: () =>
+    import("./plano-mitigacao/documento-plano-form/documento-plano-form.module").then(
+      (module) => module.DocumentoPlanoFormModule
+    )
 }];
 
 @NgModule({

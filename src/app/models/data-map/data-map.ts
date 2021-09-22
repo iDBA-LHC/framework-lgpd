@@ -24,8 +24,8 @@ export class DataMap {
     desObservacoes: string;
 
     nomeCicloMonitoramento: string;
-	dataCompetencia: Date;
-	
+	  dataCompetencia: Date;
+
     nomeAtividade: string;
     codProcesso: number;
     nomeProcesso: number;

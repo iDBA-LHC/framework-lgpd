@@ -14,7 +14,7 @@ export class PlanoMitigacaoService {
 	constructor(private http: HttpClient,
 		private authService: AuthService) { }
 
-	listaTodosPlanoMitigacao() {
+	listaTodosPlanoMitigacao(codDataMap: number) {
 		return this.http.get<PlanoMitigacao[]>(`${environment.apiURL}${this.apiSuffix}`, { observe: "response" });
 	}
 

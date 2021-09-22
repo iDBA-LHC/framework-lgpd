@@ -32,37 +32,37 @@ export class PlanoMitigacaoListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.pesquisaPlanoMitigacao();
+    // this.pesquisaPlanoMitigacao();
   }
 
-  private pesquisaPlanoMitigacao() {
-    this.isLoading = true;
-    this.PlanoMitigacaoService.listaTodosPlanoMitigacao().subscribe(
-      (response) => {
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource<PlanoMitigacao>(response.body);
-        
-        setTimeout(() => {
-            this.dataSource.filterPredicate = (
-                data: {
-                    codPlanoMitigacao: string
-                },
-                filterValue: string
-            ) => data.codPlanoMitigacao.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+  // private pesquisaPlanoMitigacao() {
+  //   this.isLoading = true;
+  //   this.PlanoMitigacaoService.listaTodosPlanoMitigacao().subscribe(
+  //     (response) => {
+  //       this.isLoading = false;
+  //       this.dataSource = new MatTableDataSource<PlanoMitigacao>(response.body);
 
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-        });
-    },
-    (err) => {
-        if (err.status == 401) {
-            TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaPlanoMitigacao();}));
-        } else {
-            this.isLoading = false;
-            TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-        }
-    }
-    )
-  }
+  //       setTimeout(() => {
+  //           this.dataSource.filterPredicate = (
+  //               data: {
+  //                   codPlanoMitigacao: string
+  //               },
+  //               filterValue: string
+  //           ) => data.codPlanoMitigacao.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+
+  //           this.dataSource.paginator = this.paginator;
+  //           this.dataSource.sort = this.sort;
+  //       });
+  //   },
+  //   (err) => {
+  //       if (err.status == 401) {
+  //           TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaPlanoMitigacao();}));
+  //       } else {
+  //           this.isLoading = false;
+  //           TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+  //       }
+  //   }
+  //   )
+  // }
 
 }

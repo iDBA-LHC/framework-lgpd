@@ -115,13 +115,6 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       }, {
-        path: "plano-mitigacao",
-        loadChildren: () =>
-          import("./pages/plano-mitigacao/plano-mitigacao.module").then(
-            (module) => module.PlanoMitigacaoModule
-          ),
-        canActivate: [AuthGuard],
-      }, {
         path: "data-flow",
         loadChildren: () =>
           import("./pages/data-flow/data-flow.module").then(
@@ -152,7 +145,7 @@ const routes: Routes = [
 })
 export class AppRoutingModule {
   constructor(private router: Router) {
-      this.router.errorHandler = (error: any) => {        
+      this.router.errorHandler = (error: any) => {
         this.router.navigate(['/home']);
       }
     }

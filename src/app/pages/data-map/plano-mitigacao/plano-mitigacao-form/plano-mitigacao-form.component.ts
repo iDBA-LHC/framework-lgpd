@@ -23,6 +23,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 
   planoMitigacaoForm: FormGroup;
   codPlanoMitigacao: number;
+  codDataMap: number;
   isLoading = false;
 
   dataMapAnt: DataMap;
@@ -55,7 +56,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
   }
 
   private createForm() {
-    this.planoMitigacaoForm = this.formBuilder.group({      
+    this.planoMitigacaoForm = this.formBuilder.group({
       codDataMapping: ["", Validators.required],
 	  dataMapping: ["", Validators.required],
       desPlanoMitigacao: ["", Validators.required],
@@ -81,6 +82,8 @@ export class PlanoMitigacaoFormComponent implements OnInit {
     this.activatedRoute.params.subscribe(
       (data) => {
         this.codPlanoMitigacao = parseInt(data["id?"]);
+        this.codDataMap = parseInt(data["codDataMap?"]);
+
 
 		this.pesquisaDataMaps();
 
@@ -88,7 +91,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
           this.PlanoMitigacaoService.pesquisaPlanoMitigacao(this.codPlanoMitigacao).subscribe(
             (retorno) => {
               this.planoMitigacaoForm.patchValue({
-                codDataMapping: retorno.body[0].codDataMapping,								
+                codDataMapping: retorno.body[0].codDataMapping,
 				desPlanoMitigacao: retorno.body[0].desPlanoMitigacao,
 				desObservacao: retorno.body[0].desObservacao,
 				dataLimite: retorno.body[0].dataLimite,
@@ -102,7 +105,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				dataStatus: retorno.body[0].dataStatus
 
               });
-              
+
 			  this.pesquisaDocumentoPlano();
             },
             (err) => {
