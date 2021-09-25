@@ -141,6 +141,8 @@ export class DataFlowFormComponent implements OnInit {
 
 								codEmpresa: retorno.body[0].codEmpresa,
 								codCicloMonitoramento: retorno.body[0].codCicloMonitoramento,
+								dataCompetencia: retorno.body[0].dataCompetencia,
+								
 								codArea: retorno.body[0].codArea,
 								codProcesso: retorno.body[0].codProcesso,
 								codAtividade: retorno.body[0].codAtividade,

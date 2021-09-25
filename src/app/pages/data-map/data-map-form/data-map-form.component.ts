@@ -157,9 +157,11 @@ export class DataMapFormComponent implements OnInit {
 						(retorno) => {
 							this.dataMapForm.patchValue({
 								codDataMap: retorno.body[0].codDataMap,
+								
+								codEmpresa: retorno.body[0].codEmpresa,								
 								codCicloMonitoramento: retorno.body[0].codCicloMonitoramento,
-
-								codEmpresa: retorno.body[0].codEmpresa,
+								dataCompetencia: retorno.body[0].dataCompetencia,
+								
 								codArea: retorno.body[0].codArea,
 								codProcesso: retorno.body[0].codProcesso,
 								codAtividade: retorno.body[0].codAtividade,
