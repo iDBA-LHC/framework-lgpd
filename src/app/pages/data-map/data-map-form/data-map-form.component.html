@@ -12,9 +12,14 @@
 				fxFlex.gt-sm="100" [formGroup]="dataMapForm" #ngForm="ngForm" (submit)="salvarDataMap()">
 
 				<mat-card-header>
-					<mat-card-title>
+					<mat-card-title *ngIf="indTipo == 0">
 						<h2 *ngIf="!codDataMap">Novo Data Map</h2>
 						<h2 *ngIf="codDataMap">Editar Data Map</h2>
+					</mat-card-title>
+
+					<mat-card-title *ngIf="indTipo == 1">
+						<h2 *ngIf="!codDataMap">Novo Data Analisys Map</h2>
+						<h2 *ngIf="codDataMap">Editar Data Analisys Map</h2>
 					</mat-card-title>
 				</mat-card-header>
 
@@ -225,7 +230,7 @@
 
 	<!-- Plano mitigacao -->
 
-	<mat-expansion-panel *ngIf="codDataMap" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
+	<mat-expansion-panel *ngIf="codDataMap && indTipo == 1" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
 				Plano Mitigação

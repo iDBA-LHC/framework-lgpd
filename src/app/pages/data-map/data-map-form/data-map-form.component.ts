@@ -43,6 +43,7 @@ export class DataMapFormComponent implements OnInit {
 	codDataMap: number;
 	dataMapForm: FormGroup;
 	isLoading = false;
+	indTipo : number;
 
 	dataSourcePlanoMitigacao = new MatTableDataSource();
 	displayedColumns: string[] = ["desPlanoMitigacao", "actions"];
@@ -96,8 +97,7 @@ export class DataMapFormComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		//this.isLoading = true;	
-
+		this.indTipo = 0;
 		this.createForm();
 		this.pesquisaDataMap();
 	}
@@ -148,6 +148,11 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	pesquisaDataMap() {
+
+		if (this.router.url.includes('data-analisys-map')) {
+			this.indTipo = 1;
+		}		
+
 		this.activatedRoute.params.subscribe(
 			(data) => {
 				this.codDataMap = parseInt(data["id?"]);
