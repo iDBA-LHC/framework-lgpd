@@ -55,9 +55,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 	}
 
 	private createForm() {
-		this.planoMitigacaoForm = this.formBuilder.group({
-			codDataMapping: ["", Validators.required],
-			dataMapping: ["", Validators.required],
+		this.planoMitigacaoForm = this.formBuilder.group({			
 			desPlanoMitigacao: ["", Validators.required],
 			desObservacao: ["", Validators.required],
 			dataLimite: ["", Validators.required],
@@ -151,7 +149,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				this.PlanoMitigacaoService.alterarPlanoMitigacao(PlanoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi atualizado com sucesso!`, null);
-						this.router.navigate(["data-map", this.codDataMap]);
+						this.router.navigate(["data-analisys-map", this.codDataMap]);
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -167,7 +165,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				this.PlanoMitigacaoService.incluirPlanoMitigacao(PlanoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi criado com sucesso!`, null);
-						this.router.navigate(["data-map", this.codDataMap]);
+						this.router.navigate(["data-analisys-map", this.codDataMap]);
 					},
 					(err) => {
 						if (err.status === 401) {
