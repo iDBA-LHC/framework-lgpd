@@ -41,6 +41,8 @@ export class DataFlowFormComponent implements OnInit {
 	codDataFlow: number;
 	isLoading = false;
 
+	codCicloMonitoramento: number;
+
 	listaAtividade: Atividade[];
 
 	listaMetadados: Metadados[];
@@ -99,7 +101,6 @@ export class DataFlowFormComponent implements OnInit {
 
 			codEmpresa: [0, Validators.required],
 			empresa: ["", Validators.required],
-			codCicloMonitoramento: ["", Validators.required],
 			dataCompetencia: [""],
 
 			codArea: ["", Validators.required],
@@ -139,8 +140,7 @@ export class DataFlowFormComponent implements OnInit {
 								codDataFlow: retorno.body[0].codDataFlow,
 								nomeProcessamento: retorno.body[0].nomeProcessamento,
 
-								codEmpresa: retorno.body[0].codEmpresa,
-								codCicloMonitoramento: retorno.body[0].codCicloMonitoramento,
+								codEmpresa: retorno.body[0].codEmpresa,								
 								dataCompetencia: retorno.body[0].dataCompetencia,
 								
 								codArea: retorno.body[0].codArea,
@@ -157,6 +157,9 @@ export class DataFlowFormComponent implements OnInit {
 								armazenamentos: retorno.body[0].armazenamentos,
 								compartilhamentos: retorno.body[0].compartilhamentos
 							});
+
+							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
+
 							this.preencherCombos();
 
 							this.pesquisaArea(retorno.body[0].codEmpresa);
@@ -208,6 +211,8 @@ export class DataFlowFormComponent implements OnInit {
 			DataFlow.usuarios = usuarios2;
 			DataFlow.codUsuarioInclusao = this.authService.loggedUserId;
 
+			DataFlow.codCicloMonitoramento = this.codCicloMonitoramento;
+
 			if (this.codDataFlow) {
 				// Alteração
 				this.DataFlowService.alterarDataFlow(DataFlow).subscribe(
@@ -241,7 +246,9 @@ export class DataFlowFormComponent implements OnInit {
 					}
 				)
 			}
-		}
+		} else {
+      		this.showMessage("Campos obrigatórios não foram preenchidos", "Warn");
+    	}
 	}
 
 	private pesquisaLocalArmazenamento() {
@@ -447,18 +454,19 @@ export class DataFlowFormComponent implements OnInit {
 	}
 
 	private buscarUltimoCicloMonitoramento(codigoEmpresa: number) {
+		this.isLoading = true;
 		this.cicloMonitoramentoService.buscarUltimoCicloMonitoramento(codigoEmpresa).subscribe(
 			(retorno) => {
+				this.isLoading = false;
 				if (retorno.body != null) {
-					this.dataFlowForm.controls.codCicloMonitoramento.setValue(retorno.body.codCicloMonitoramento);
+					this.codCicloMonitoramento = retorno.body.codCicloMonitoramento;
           			this.dataFlowForm.controls.dataCompetencia.setValue(retorno.body.dataCompetencia);
 				} else {
-					this.dataFlowForm.controls.codCicloMonitoramento.setValue(null);
+					this.codCicloMonitoramento = null;
 					TrataExcessaoConexao.TrataExcessao('Não existem ciclos de monitoramento para a empresa selecionada!', this.snackBar);
 				}
 			}
-		)
-		this.isLoading = false;
+		)		
 	}
 
 	private pesquisaArea(codEmpresa:number) {
@@ -549,11 +557,15 @@ export class DataFlowFormComponent implements OnInit {
 		return processo ? processo.nomeProcesso : "";
 	}
 
-  closeDatePicker(eventData: any, picker:any) {
+	closeDatePicker(eventData: any, picker:any) {
 
     this.dataFlowForm.controls.dataCompetencia.setValue(eventData);
 
       picker.close();
     }
+
+	private showMessage(msg: string, type: string = "Success") {
+   	 this.snackBar.openSnackBar(msg, null, type);
+  	}
 
 }

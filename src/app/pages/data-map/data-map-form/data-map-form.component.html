@@ -25,7 +25,7 @@
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Empresa</mat-label>
-					<input matInput formControlName="empresa" placeholder="Empresa" [matAutocomplete]="autoEmpresa" />
+					<input matInput formControlName="empresa" placeholder="Empresa" [matAutocomplete]="autoEmpresa" [readonly]="codDataMap > 0"/>
 
 					<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
 						(optionSelected)="selecionaEmpresa($event)">
@@ -37,28 +37,14 @@
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Ciclo de Monitoramento</mat-label>
-					<input matInput formControlName="codCicloMonitoramento" placeholder="Ciclo de Monitoramento"
-						autocomplete="off" type="string" readonly />
-					<mat-error *ngIf="dataMapForm.controls.codCicloMonitoramento.errors?.required">Campo obrigatório
-					</mat-error>
-				</mat-form-field>
-
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Competência</mat-label>
-					<input matInput formControlName="dataCompetencia" placeholder="Data Competencia"
-						[matDatepicker]="picker" readonly />
-					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-					<mat-datepicker #picker startView="year" (monthSelected)="closeDatePicker($event, picker)">
-					</mat-datepicker>
-					<mat-error *ngIf="dataMapForm.controls.dataCompetencia.errors?.required">Data Competência é
-						Obrigatória</mat-error>
+					<input matInput formControlName="dataCompetencia" placeholder="Data Competência"
+						[matDatepicker]="picker" readonly />					
 				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Área</mat-label>
-					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea"
-						 />
+					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea" [readonly]="codDataMap > 0" />
 
 					<mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea"
 						(optionSelected)="selecionaArea($event)">
@@ -72,8 +58,7 @@
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Processo</mat-label>
-					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso"
-						 />
+					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso" [readonly]="codDataMap > 0" />
 
 					<mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso"
 						(optionSelected)="selecionaProcesso($event)">
@@ -87,8 +72,7 @@
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Atividade</mat-label>
-					<input matInput formControlName="atividade" placeholder="Atividade"
-						[matAutocomplete]="autoAtividade"  />
+					<input matInput formControlName="atividade" placeholder="Atividade" [matAutocomplete]="autoAtividade" [readonly]="codDataMap > 0" />
 					<mat-autocomplete #autoAtividade="matAutocomplete" [displayWith]="displayAtividade"
 						(optionSelected)="selecionaAtividade($event)">
 						<mat-option *ngFor="let atividade of listaAtividade" [value]="atividade">

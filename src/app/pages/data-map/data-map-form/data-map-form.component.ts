@@ -45,6 +45,8 @@ export class DataMapFormComponent implements OnInit {
 	isLoading = false;
 	indTipo : number;
 
+	codCicloMonitoramento: number;
+
 	dataSourcePlanoMitigacao = new MatTableDataSource();
 	displayedColumns: string[] = ["desPlanoMitigacao", "actions"];
 
@@ -106,8 +108,7 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm = this.formBuilder.group({
 
 			codEmpresa: [0, Validators.required],
-			empresa: ["", Validators.required],
-			codCicloMonitoramento: ["", Validators.required],
+			empresa: ["", Validators.required],			
 			dataCompetencia: [""],
 
 			codArea: ["", Validators.required],
@@ -163,8 +164,7 @@ export class DataMapFormComponent implements OnInit {
 							this.dataMapForm.patchValue({
 								codDataMap: retorno.body[0].codDataMap,
 								
-								codEmpresa: retorno.body[0].codEmpresa,								
-								codCicloMonitoramento: retorno.body[0].codCicloMonitoramento,
+								codEmpresa: retorno.body[0].codEmpresa,
 								dataCompetencia: retorno.body[0].dataCompetencia,
 								
 								codArea: retorno.body[0].codArea,
@@ -191,6 +191,8 @@ export class DataMapFormComponent implements OnInit {
 								indRisco: retorno.body[0].indRisco,
 								desObservacoes: retorno.body[0].desObservacoes
 							});
+
+							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
 
 							this.preencherCombos();
 
@@ -245,6 +247,7 @@ export class DataMapFormComponent implements OnInit {
 
 			DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);
 			DataMap.indTipo = 0;
+			DataMap.codCicloMonitoramento = this.codCicloMonitoramento;
 
 			if (this.codDataMap) {
 				// Alteração
@@ -279,7 +282,9 @@ export class DataMapFormComponent implements OnInit {
 					}
 				)
 			}
-		}
+		} else {
+      		this.showMessage("Campos obrigatórios não foram preenchidos", "Warn");
+    	}
 	}
 
 	private pesquisaMetadados() {
@@ -504,18 +509,19 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	private buscarUltimoCicloMonitoramento(codigoEmpresa: number) {
+		this.isLoading = true;
 		this.cicloMonitoramentoService.buscarUltimoCicloMonitoramento(codigoEmpresa).subscribe(
 			(retorno) => {
+				this.isLoading = false;
 				if (retorno.body != null) {
-					this.dataMapForm.controls.codCicloMonitoramento.setValue(retorno.body.codCicloMonitoramento);
+					this.codCicloMonitoramento = retorno.body.codCicloMonitoramento;
 					this.dataMapForm.controls.dataCompetencia.setValue(retorno.body.dataCompetencia);
 				} else {
-					this.dataMapForm.controls.codCicloMonitoramento.setValue(null);
+					this.codCicloMonitoramento = null;
 					TrataExcessaoConexao.TrataExcessao('Não existem ciclos de monitoramento para a empresa selecionada!', this.snackBar);
 				}
 			}
-		)
-		this.isLoading = false;
+		)		
 	}
 
 	private pesquisaArea(codEmpresa: number) {
@@ -629,4 +635,8 @@ export class DataMapFormComponent implements OnInit {
 			}
 		)
 	}
+
+	private showMessage(msg: string, type: string = "Success") {
+    	this.snackBar.openSnackBar(msg, null, type);
+  	}
 }
