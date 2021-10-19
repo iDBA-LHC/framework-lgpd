@@ -22,7 +22,7 @@
     <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="nomeEmpresa">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Controladora</th>
         <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeEmpresa }}</td>
       </ng-container>
 
@@ -42,7 +42,7 @@
       </ng-container>
 
       <ng-container matColumnDef="dataCompetencia">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Competência</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ciclo de Monitoramento</th>
         <td mat-cell *matCellDef="let element; let i = index">{{ element.dataCompetencia | date:'MM/yyyy' }}</td>
       </ng-container>
 

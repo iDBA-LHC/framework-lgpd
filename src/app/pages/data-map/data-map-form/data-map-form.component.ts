@@ -161,6 +161,19 @@ export class DataMapFormComponent implements OnInit {
 				if (this.codDataMap) {
 					this.dataMapService.pesquisaDataMap(this.codDataMap).subscribe(
 						(retorno) => {
+
+							if (retorno.body[0].indTipo != this.indTipo)
+							{
+								if (this.indTipo==0)
+								{
+									this.router.navigate(["/data-map"]);
+								}
+								else
+								{
+									this.router.navigate(["/data-analisys-map"]);
+								}
+							}
+
 							this.dataMapForm.patchValue({
 								codDataMap: retorno.body[0].codDataMap,
 								
@@ -234,6 +247,12 @@ export class DataMapFormComponent implements OnInit {
 
 		if (this.dataMapForm.valid) {
 
+			if (this.codCicloMonitoramento == null)
+			{
+				TrataExcessaoConexao.TrataExcessao('Não Existem Ciclos de Monitoramento para a Empresa Selecionada!', this.snackBar);
+				return;
+			}
+
 			const DataMap: DataMap = this.dataMapForm.getRawValue();
 			DataMap.codDataMap = this.codDataMap;
 
@@ -246,15 +265,23 @@ export class DataMapFormComponent implements OnInit {
 			DataMap.indAnonimizacao = (this.dataMapForm.controls.indAnonimizacao.value ? 1 : 0);
 
 			DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);
-			DataMap.indTipo = 0;
+			DataMap.indTipo = this.indTipo;
 			DataMap.codCicloMonitoramento = this.codCicloMonitoramento;
 
 			if (this.codDataMap) {
 				// Alteração
 				this.dataMapService.alterarDataMap(DataMap).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O data map foi atualizado com sucesso!`, null);
-						this.router.navigate(["/data-map"]);
+						if (this.indTipo==1)
+						{
+							this.snackBar.openSnackBar(`Data Analisys Map Alterado com Sucesso`, null);
+							this.router.navigate(["/data-analisys-map"]);
+						}
+						else
+						{
+							this.snackBar.openSnackBar(`Data Map Alterado com Sucesso`, null);
+							this.router.navigate(["/data-map"]);
+						}
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -269,8 +296,16 @@ export class DataMapFormComponent implements OnInit {
 				// Inclusão
 				this.dataMapService.incluirDataMap(DataMap).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O data map foi criado com sucesso!`, null);
-						this.router.navigate(["/data-map"]);
+						if (this.indTipo==1)
+						{
+							this.snackBar.openSnackBar(`Data Analisys Map Criado com Sucesso`, null);
+							this.router.navigate(["/data-analisys-map"]);
+						}
+						else
+						{
+							this.snackBar.openSnackBar(`Data  Map Criado com Sucesso`, null);
+							this.router.navigate(["/data-map"]);
+						}
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -315,7 +350,7 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	displayMetadados(metadados: Metadados): string {
-		return metadados ? metadados.nomeMetadados : "";
+		return metadados ? metadados.valoresMetadados : "";
 	}
 
 	private pesquisaAtividade(codProcesso: number) {
@@ -497,6 +532,12 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.empresa.setValue(empresaSelecionada);
 		this.dataMapForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
 
+		this.dataMapForm.controls.area.setValue(null);
+		this.dataMapForm.controls.codProcesso.setValue(null);
+		this.dataMapForm.controls.processo.setValue(null);
+		this.dataMapForm.controls.codAtividade.setValue(null);
+    	this.dataMapForm.controls.atividade.setValue(null);
+
 		this.isLoading = true;
 
 		this.buscarUltimoCicloMonitoramento(empresaSelecionada.codigoEmpresa);
@@ -557,6 +598,11 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.area.setValue(areaSelecionada);
 		this.dataMapForm.controls.codArea.setValue(areaSelecionada.codArea);
 
+		this.dataMapForm.controls.codProcesso.setValue(null);
+		this.dataMapForm.controls.processo.setValue(null);
+		this.dataMapForm.controls.codAtividade.setValue(null);
+		this.dataMapForm.controls.atividade.setValue(null);
+
 		this.pesquisaProcesso(areaSelecionada.codArea);
 	}
 
@@ -599,6 +645,9 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.processo.setValue(processoSelecionada);
 		this.dataMapForm.controls.codProcesso.setValue(processoSelecionada.codProcesso);
 
+		this.dataMapForm.controls.codAtividade.setValue(null);
+    	this.dataMapForm.controls.atividade.setValue(null);
+
 		this.pesquisaAtividade(processoSelecionada.codProcesso);
 	}
 
@@ -624,10 +673,10 @@ export class DataMapFormComponent implements OnInit {
 				setTimeout(() => {
 					this.dataSourcePlanoMitigacao.filterPredicate = (
 						data: {
-							nomePlanoMitigacao: string
+							desPlanoMitigacao: string,
 						},
 						filterValue: string
-					) => data.nomePlanoMitigacao.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+					) => data.desPlanoMitigacao.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
 					this.dataSourcePlanoMitigacao.paginator = this.paginator;
 					this.dataSourcePlanoMitigacao.sort = this.sort;
@@ -638,5 +687,6 @@ export class DataMapFormComponent implements OnInit {
 
 	private showMessage(msg: string, type: string = "Success") {
     	this.snackBar.openSnackBar(msg, null, type);
-  	}
+	}
+
 }

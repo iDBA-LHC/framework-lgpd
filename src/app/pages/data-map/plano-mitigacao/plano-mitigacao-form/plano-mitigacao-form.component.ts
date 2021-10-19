@@ -66,7 +66,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 			dataRevisao: [""],
 			dataRecusa: [""],
 			desMotivoRecusa: [""],
-			dataStatus: ["", Validators.required],
+			dataStatus: [""],
 
 		});
 	}
@@ -123,10 +123,10 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				setTimeout(() => {
 					this.dataSourceDocumentoPlano.filterPredicate = (
 						data: {
-							nomeDocumentoPlano: string
+							desDocumentoPlano: string
 						},
 						filterValue: string
-					) => data.nomeDocumentoPlano.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+					) => data.desDocumentoPlano.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
 					this.dataSourceDocumentoPlano.paginator = this.paginator;
 					this.dataSourceDocumentoPlano.sort = this.sort;
@@ -178,5 +178,20 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				)
 			}
 		}
+		else
+		{
+			this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+		}
+	}
+
+	navigateToDataAnalasysMap()
+	{
+		this.router.navigate(["data-analisys-map", this.codDataMap]);
+	}
+
+	openNewWindow(documentoPlano: DocumentoPlano): void {
+		const url = documentoPlano.desEnderecoPlano;
+	
+		window.open(url, '_blank');
 	}
 }

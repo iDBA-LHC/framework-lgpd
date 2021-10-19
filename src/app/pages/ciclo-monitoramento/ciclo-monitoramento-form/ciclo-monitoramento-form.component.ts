@@ -64,9 +64,8 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   closeDatePicker(eventData: any, picker:any) {
 	
 	this.cicloMonitoramentoForm.controls.dataCompetencia.setValue(eventData);
-	
-    picker.close();    
-  }
+  picker.close();    
+}
 
   private pesquisaCicloMonitoramento() {
     this.activatedRoute.params.subscribe((data) => {
@@ -78,11 +77,12 @@ export class CicloMonitoramentoFormComponent implements OnInit {
               nomeCicloMonitoramento: retorno.body[0].nomeCicloMonitoramento,
               codEmpresa: retorno.body[0].codEmpresa,
               dataCompetencia: retorno.body[0].dataCompetencia,
-			  usuarios: retorno.body[0].usuarios
+			        usuarios: retorno.body[0].usuarios
             });
             this.cicloMonitoramentoUsuarioCriado = retorno.body[0].codUsuarioInclusao;
-            
+
             this.pesquisaEmpresas();
+            
           });
       } else {
         this.pesquisaEmpresas();
@@ -166,13 +166,13 @@ export class CicloMonitoramentoFormComponent implements OnInit {
       const ciclo: CicloMonitoramento = this.cicloMonitoramentoForm.getRawValue();
       ciclo.codCicloMonitoramento = this.codCicloMonitoramento;
 
-	  var usuarios2 = new Array();
-	  ciclo.usuarios.forEach(function(e, i){
-		let usuario2: Usuario2 = new Usuario2;
-		usuario2.codUsuario = e.codigoUsuario;
-		usuarios2.push(usuario2);
-	  });
-	  ciclo.usuarios = usuarios2;
+      var usuarios2 = new Array();
+      ciclo.usuarios.forEach(function(e, i){
+        let usuario2: Usuario2 = new Usuario2;
+        usuario2.codUsuario = e.codigoUsuario;
+        usuarios2.push(usuario2);
+      });
+	    ciclo.usuarios = usuarios2;
 
       if (this.codCicloMonitoramento) {
         // Alteração
@@ -213,7 +213,9 @@ export class CicloMonitoramentoFormComponent implements OnInit {
           }
         )
       }      
-    }
+    } else {
+      this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+  }
   }
 }
 function ViewChild(arg0: string) {

@@ -196,6 +196,12 @@ export class DataFlowFormComponent implements OnInit {
 
 		if (this.dataFlowForm.valid) {
 
+			if (this.codCicloMonitoramento == null)
+			{
+				TrataExcessaoConexao.TrataExcessao('Não Existem Ciclos de Monitoramento para a Empresa Selecionada!', this.snackBar);
+				return;
+			}
+
 			const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
 			DataFlow.codDataFlow = this.codDataFlow;
 
@@ -217,7 +223,7 @@ export class DataFlowFormComponent implements OnInit {
 				// Alteração
 				this.DataFlowService.alterarDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O data flow foi atualizado com sucesso!`, null);
+						this.snackBar.openSnackBar(`Data Flow Atualizado com Sucesso!`, null);
 						this.router.navigate(["/data-flow"]);
 					},
 					(err) => {
@@ -233,7 +239,7 @@ export class DataFlowFormComponent implements OnInit {
 				// Inclusão
 				this.DataFlowService.incluirDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O data flow foi criado com sucesso!`, null);
+						this.snackBar.openSnackBar(`Data Flow Criado com Sucesso!`, null);
 						this.router.navigate(["/data-flow"]);
 					},
 					(err) => {
@@ -315,7 +321,7 @@ export class DataFlowFormComponent implements OnInit {
 	}
 
 	displayMetadados(metadados: Metadados): string {
-		return metadados ? metadados.nomeMetadados : "";
+		return metadados ? metadados.valoresMetadados : "";
 	}
 
 	selecionaAtividade(event) {
@@ -436,9 +442,11 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.empresa.setValue(empresaSelecionada);
 		this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
 
-    this.dataFlowForm.controls.area.setValue(null);
-    this.dataFlowForm.controls.processo.setValue(null);
-    this.dataFlowForm.controls.atividade.setValue(null);
+		this.dataFlowForm.controls.area.setValue(null);
+		this.dataFlowForm.controls.codProcesso.setValue(null);
+		this.dataFlowForm.controls.processo.setValue(null);
+		this.dataFlowForm.controls.codAtividade.setValue(null);
+    	this.dataFlowForm.controls.atividade.setValue(null);
 
 		this.pesquisaUsuarios();
 
@@ -502,8 +510,10 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.area.setValue(areaSelecionada);
 		this.dataFlowForm.controls.codArea.setValue(areaSelecionada.codArea);
 
-    this.dataFlowForm.controls.codProcesso.setValue(null);
-    this.dataFlowForm.controls.processo.setValue(null);
+    	this.dataFlowForm.controls.codProcesso.setValue(null);
+		this.dataFlowForm.controls.processo.setValue(null);
+		this.dataFlowForm.controls.codAtividade.setValue(null);
+		this.dataFlowForm.controls.atividade.setValue(null);
 
 		this.pesquisaProcesso(areaSelecionada.codArea);
 	}
@@ -547,8 +557,8 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.processo.setValue(processoSelecionada);
 		this.dataFlowForm.controls.codProcesso.setValue(processoSelecionada.codProcesso);
 
-    this.dataFlowForm.controls.codAtividade.setValue(null);
-    this.dataFlowForm.controls.atividade.setValue(null);
+    	this.dataFlowForm.controls.codAtividade.setValue(null);
+    	this.dataFlowForm.controls.atividade.setValue(null);
 
 		this.pesquisaAtividade(processoSelecionada.codProcesso);
 	}

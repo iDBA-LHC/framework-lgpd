@@ -36,7 +36,7 @@
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Limite</mat-label>
-					<input matInput formControlName="dataLimite" placeholder="data limite" [matDatepicker]="picker6" />
+					<input matInput formControlName="dataLimite" placeholder="Data Limite" [matDatepicker]="picker6" />
 					<mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
 					<mat-datepicker #picker6></mat-datepicker>
 					<mat-error *ngIf="planoMitigacaoForm.controls.dataLimite.errors?.required">data limite é Obrigatória
@@ -62,7 +62,7 @@
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Elaboração</mat-label>
-					<input matInput formControlName="dataElaboracao" placeholder="data Elaboração"
+					<input matInput formControlName="dataElaboracao" placeholder="Data Elaboração"
 						[matDatepicker]="picker5" />
 					<mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
 					<mat-datepicker #picker5></mat-datepicker>
@@ -73,7 +73,7 @@
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Aditivação</mat-label>
-					<input matInput formControlName="dataAditivacao" placeholder="data Aditivação"
+					<input matInput formControlName="dataAditivacao" placeholder="Data Aditivação"
 						[matDatepicker]="picker1" />
 					<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
 					<mat-datepicker #picker1></mat-datepicker>
@@ -81,7 +81,7 @@
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Revisão</mat-label>
-					<input matInput formControlName="dataRevisao" placeholder="data Revisao"
+					<input matInput formControlName="dataRevisao" placeholder="Data Revisão"
 						[matDatepicker]="picker2" />
 					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
 					<mat-datepicker #picker2></mat-datepicker>
@@ -89,7 +89,7 @@
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Recusa</mat-label>
-					<input matInput formControlName="dataRecusa" placeholder="data Recusa" [matDatepicker]="picker3" />
+					<input matInput formControlName="dataRecusa" placeholder="Data Recusa" [matDatepicker]="picker3" />
 					<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
 					<mat-datepicker #picker3></mat-datepicker>
 				</mat-form-field>
@@ -102,13 +102,13 @@
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Status</mat-label>
-					<input matInput formControlName="dataStatus" placeholder="data Status" [matDatepicker]="picker4" />
-					<mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-					<mat-datepicker #picker4></mat-datepicker>
+					<input matInput formControlName="dataStatus" placeholder="Data Status" [matDatepicker]="picker4" readonly/>
 				</mat-form-field>
 
 				<mat-card-actions>
 					<button mat-raised-button color="accent">Salvar</button>
+					<button mat-raised-button color="primary"
+						(click)="navigateToDataAnalasysMap(element)">Voltar</button>
 				</mat-card-actions>
 			</form>
 		</div>
@@ -120,7 +120,6 @@
 				Documentos
 			</mat-panel-title>
 		</mat-expansion-panel-header>
-
 
 		<div class="marginContent">
 			<div fxLayout="row">
@@ -152,6 +151,10 @@
 						<th mat-header-cell *matHeaderCellDef></th>
 						<td mat-cell *matCellDef="let element">
 							<div class="example-button-row">
+								<button mat-raised-button color="primary"
+									(click)="openNewWindow(element)">
+									Visualizar Documento
+								</button>
 								<button mat-raised-button color="accent"
 									[routerLink]="['/data-analisys-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', element.codDocumentoPlano]">
 									Editar

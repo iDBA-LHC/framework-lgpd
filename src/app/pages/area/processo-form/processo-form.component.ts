@@ -182,4 +182,9 @@ export class ProcessoFormComponent implements OnInit {
     }
   }
 
+  navigateToArea()
+	{
+    this.router.navigate(["/area", this.areaId]);
+	}
+
 }

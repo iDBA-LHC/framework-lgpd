@@ -19,8 +19,8 @@
 				</mat-card-header>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
-					<mat-label>Empresa</mat-label>
-					<input matInput formControlName="empresa" placeholder="Empresa" [matAutocomplete]="autoEmpresa" [readonly]="codDataFlow > 0"/>
+					<mat-label>Controladora</mat-label>
+					<input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="codDataFlow > 0"/>
 
 					<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
 						(optionSelected)="selecionaEmpresa($event)">
@@ -32,8 +32,8 @@
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Data Competência</mat-label>
-					<input matInput formControlName="dataCompetencia" placeholder="Data Competencia"
+					<mat-label>Ciclo de Monitoramento</mat-label>
+					<input matInput formControlName="dataCompetencia" placeholder="Ciclo de Monitoramento"
 						[matDatepicker]="picker" readonly />					
 				</mat-form-field>
 
@@ -83,15 +83,15 @@
 					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados"
 						(optionSelected)="selecionaMetadados($event)">
 						<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
-							{{metadados.nomeMetadados}}
+							{{metadados.valoresMetadados}}
 						</mat-option>
 					</mat-autocomplete>
 					<mat-error *ngIf="dataFlowForm.controls.metadados.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Meio de processamento</mat-label>
-					<input matInput formControlName="nomeProcessamento" placeholder="Nome Processamento"
+					<mat-label>Meio de Processamento</mat-label>
+					<input matInput formControlName="nomeProcessamento" placeholder="Meio de Processamento"
 						autocomplete="off" type="string" />
 					<mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Campo obrigatório
 					</mat-error>
@@ -99,7 +99,7 @@
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
 					formControlName="indDescarte" style="width: 50%;">
-					<span class="ng-tns-c15-3 ng-star-inserted">Possuí descarte</span>
+					<span class="ng-tns-c15-3 ng-star-inserted">Possui descarte</span>
 				</mat-slide-toggle>
 
 				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px"
@@ -126,8 +126,8 @@
 				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
-					<mat-label>Usuários envolvidos</mat-label>
-					<mat-select matInput formControlName="usuarios" multiple placeholder="Usuários"
+					<mat-label>Usuários Envolvidos</mat-label>
+					<mat-select matInput formControlName="usuarios" multiple placeholder="Usuários Envolvidos"
 						[compareWith]="compareUsuarioSelecionado" [(ngModel)]="usuarioSelecionado">
 						<mat-option *ngFor="let usuario of listaUsuariosFiltrados" [value]="usuario">
 							{{usuario.nomeUsuario}}

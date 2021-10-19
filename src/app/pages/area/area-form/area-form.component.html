@@ -47,11 +47,11 @@
             </mat-form-field>
 
             <mat-form-field style="width: 50%;" fxFlexOffset="5px">   
-              <mat-label>Empresa</mat-label>
+              <mat-label>Controladora</mat-label>
               <input 
                 matInput
                 formControlName="empresa"
-                placeholder="Empresa"
+                placeholder="Controladora"
                 [matAutocomplete]="autoEmpresa"/>
   
               <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa" (optionSelected) = "selecionaEmpresa($event)">
@@ -59,7 +59,7 @@
                   {{empresa.nomeEmpresa}}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="areaForm.controls.empresa.errors?.required">Empresa é Obrigatória</mat-error> 
+              <mat-error *ngIf="areaForm.controls.empresa.errors?.required">Controladora é Obrigatória</mat-error> 
             </mat-form-field> 
   
               <mat-card-actions>

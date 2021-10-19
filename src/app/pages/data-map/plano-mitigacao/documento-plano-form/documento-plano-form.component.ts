@@ -34,7 +34,7 @@ export class DocumentoPlanoFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    //this.isLoading = true;
+    this.isLoading = true;
 
     this.createForm();
     this.pesquisaDocumentoPlano();
@@ -50,17 +50,18 @@ export class DocumentoPlanoFormComponent implements OnInit {
   pesquisaDocumentoPlano() {
     this.activatedRoute.params.subscribe(
       (data) => {
-		  this.codDataMap = parseInt(data["codDataMap"]);
+		    this.codDataMap = parseInt(data["codDataMap"]);
         this.codPlanoMitigacao = parseInt(data["codPlanoMitigacao"]);
-		this.codDocumentoPlano = parseInt(data["id?"]);
+		    this.codDocumentoPlano = parseInt(data["id?"]);
 
         if (this.codDocumentoPlano) {
           this.DocumentoPlanoService.pesquisaDocumentoPlano(this.codDocumentoPlano).subscribe(
             (retorno) => {
               this.documentoPlanoForm.patchValue({
                 desDocumentoPlano: retorno.body[0].desDocumentoPlano,
-				desEnderecoPlano: retorno.body[0].desEnderecoPlano
+				        desEnderecoPlano: retorno.body[0].desEnderecoPlano
               });
+              this.isLoading = false;
             },
             (err) => {
               if (err.status === 401)
@@ -82,14 +83,14 @@ export class DocumentoPlanoFormComponent implements OnInit {
     if (this.documentoPlanoForm.valid) {
       const DocumentoPlano: DocumentoPlano = this.documentoPlanoForm.getRawValue();
       DocumentoPlano.codDocumentoPlano = this.codDocumentoPlano;
-	  DocumentoPlano.codPlanoMitigacao = this.codPlanoMitigacao;
+	    DocumentoPlano.codPlanoMitigacao = this.codPlanoMitigacao;
 
       if (this.codDocumentoPlano) {
         // Alteração
         this.DocumentoPlanoService.alterarDocumentoPlano(DocumentoPlano).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Documento Plano foi atualizado com sucesso!`,null);
-              this.router.navigate(["data-map", this.codDataMap, "plano-mitigacao", this.codPlanoMitigacao]);
+            this.navigateToPlanoMitigacao();
           },
           (err) => {
             if (err.status === 401)
@@ -107,7 +108,7 @@ export class DocumentoPlanoFormComponent implements OnInit {
         this.DocumentoPlanoService.incluirDocumentoPlano(DocumentoPlano).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Documento Plano foi criado com sucesso!`,null);
-            this.router.navigate(["data-map", this.codDataMap, "plano-mitigacao", this.codPlanoMitigacao]);
+            this.navigateToPlanoMitigacao();
           },
           (err) => {
             if (err.status === 401)
@@ -122,5 +123,14 @@ export class DocumentoPlanoFormComponent implements OnInit {
         )
       }
     }
+    else
+    {
+      this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+    }
   }
+
+  navigateToPlanoMitigacao()
+	{
+    this.router.navigate(["data-analisys-map", this.codDataMap, "plano-mitigacao", this.codPlanoMitigacao]);
+	}
 }

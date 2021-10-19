@@ -167,7 +167,7 @@ export class AtividadeFormComponent implements OnInit {
   }
 
   displayMetadados(met: Metadados): string {
-    return met && met.nomeMetadados ? met.nomeMetadados : '';
+    return met && met.valoresMetadados ? met.valoresMetadados : '';
   }
 
   selecionaMetadados(event) {
@@ -185,4 +185,9 @@ export class AtividadeFormComponent implements OnInit {
 
     this.isLoading = false;
   }
+
+  navigateToProcesso()
+	{
+    this.router.navigate(["area", this.areaId, "processo", this.processoId])
+	}
 }

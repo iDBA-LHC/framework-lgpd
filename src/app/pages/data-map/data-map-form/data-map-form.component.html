@@ -24,8 +24,8 @@
 				</mat-card-header>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
-					<mat-label>Empresa</mat-label>
-					<input matInput formControlName="empresa" placeholder="Empresa" [matAutocomplete]="autoEmpresa" [readonly]="codDataMap > 0"/>
+					<mat-label>Controladora</mat-label>
+					<input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="codDataMap > 0"/>
 
 					<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
 						(optionSelected)="selecionaEmpresa($event)">
@@ -55,7 +55,6 @@
 					<mat-error *ngIf="dataMapForm.controls.area.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
-
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Processo</mat-label>
 					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso" [readonly]="codDataMap > 0" />
@@ -68,7 +67,6 @@
 					</mat-autocomplete>
 					<mat-error *ngIf="dataMapForm.controls.processo.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
-
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Atividade</mat-label>
@@ -89,7 +87,7 @@
 					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados"
 						(optionSelected)="selecionaMetadados($event)">
 						<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
-							{{metadados.nomeMetadados}}
+							{{metadados.valoresMetadados}}
 						</mat-option>
 					</mat-autocomplete>
 					<mat-error *ngIf="dataMapForm.controls.metadados.errors?.required">Campo obrigatório</mat-error>
@@ -227,7 +225,7 @@
 				<div fxFlex>
 					<mat-form-field fxFlex="30">
 						<input matInput (keyup)="applyFilterPlanoMitigacao($event.target.value)"
-							placeholder="Buscar plano mitigacao" />
+							placeholder="Buscar Plano de Mitigação" />
 					</mat-form-field>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px">

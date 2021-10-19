@@ -4,6 +4,13 @@ import { EmpresaFormComponent } from './empresa-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EmpresaFormRoutingModule } from './empresa-form-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
+
+export const options: Partial<IConfig> = {
+  decimalMarker: ",",
+  validation: false,
+  showMaskTyped: true,
+};
 
 
 @NgModule({
@@ -13,6 +20,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ReactiveFormsModule,
     EmpresaFormRoutingModule,
     SharedModule,
+    NgxMaskModule.forRoot(options),
   ],
 })
 
