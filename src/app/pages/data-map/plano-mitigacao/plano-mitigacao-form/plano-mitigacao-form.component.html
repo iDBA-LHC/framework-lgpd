@@ -103,12 +103,13 @@
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Status</mat-label>
 					<input matInput formControlName="dataStatus" placeholder="Data Status" [matDatepicker]="picker4" readonly/>
+					<mat-datepicker #picker4></mat-datepicker>
 				</mat-form-field>
 
 				<mat-card-actions>
 					<button mat-raised-button color="accent">Salvar</button>
 					<button mat-raised-button color="primary"
-						(click)="navigateToDataAnalasysMap(element)">Voltar</button>
+						(click)="navigateToDataAnalasysMap()">Voltar</button>
 				</mat-card-actions>
 			</form>
 		</div>

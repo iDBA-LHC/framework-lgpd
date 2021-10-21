@@ -39,7 +39,8 @@
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Competência</mat-label>
 					<input matInput formControlName="dataCompetencia" placeholder="Data Competência"
-						[matDatepicker]="picker" readonly />					
+						[matDatepicker]="picker" readonly />
+						<mat-datepicker #picker></mat-datepicker>					
 				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
@@ -187,7 +188,7 @@
 				</mat-form-field>
 
 				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px"
-					formControlName="indRisco" [(ngModel)]="indRisco">
+					formControlName="indRisco">
 					<mat-label>Risco:</mat-label>
 					<mat-radio-button [value]="1">Baixo</mat-radio-button>
 					<mat-radio-button [value]="2">Moderado</mat-radio-button>

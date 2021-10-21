@@ -67,6 +67,10 @@ export class DataFlowFormComponent implements OnInit {
 	listaProcessos: Processo[];
 	listaProcessosFiltradas: Observable<Processo[]>;
 
+	usuarioSelecionado: Usuario[];
+	armazenamentoSelecionado: LocalArmazenamento[];
+	compartilhamentoSelecionado: Compartilhamento[];
+
 	constructor(
 		private atividadeService: AtividadeService,
 		private activatedRoute: ActivatedRoute,

@@ -130,7 +130,7 @@ export class CompartilhamentoFormComponent implements OnInit {
     return localArmazenamento && localArmazenamento.nomeLocalArmazenamento ? localArmazenamento.nomeLocalArmazenamento : '';
   }
 
-  private salvarCompartilhamento() {
+  salvarCompartilhamento() {
     if (this.compartilhamentoForm.valid) {
       const compartilhamento: Compartilhamento = this.compartilhamentoForm.getRawValue();
       compartilhamento.codCompartilhamento = this.compartilhamentoCodigo;

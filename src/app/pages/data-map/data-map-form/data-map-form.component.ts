@@ -55,6 +55,10 @@ export class DataMapFormComponent implements OnInit {
 	listaMetadados: Metadados[];
 	listaCicloVida: CicloDeVida[];
 
+	formaColetaSelecionado: FormaColeta[];
+	armazenamentoSelecionado: LocalArmazenamento[];
+	compartilhamentoSelecionado: Compartilhamento[];
+
 	listaFormaColetas: FormaColeta[];
 	listaFormaColetasFiltrados: FormaColeta[];
 
