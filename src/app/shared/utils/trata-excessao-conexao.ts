@@ -13,9 +13,18 @@ export class TrataExcessaoConexao {
 
     static TrataExcessao(err, snackBar: CustomSnackBarService)
     {
+        console.log(err);
         if (err.status === 500 || err.hasOwnProperty("statusText"))
-        {			
-            snackBar.openSnackBar(err.error.msg, null, "Error");
+        {		
+            if (err.error!=null)
+            {
+                snackBar.openSnackBar(err.error.msg, null, "Error");
+            }	
+            else 
+            {
+                snackBar.openSnackBar(err.statusText, null, "Error");
+            }
+            
         }
         else{
             snackBar.openSnackBar(err, null, "Error");
