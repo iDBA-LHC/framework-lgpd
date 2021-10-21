@@ -19,13 +19,13 @@
   
               <mat-card-header>
                   <mat-card-title>
-                      <h2 *ngIf="!empresaId">Nova Empresa</h2>
-                      <h2 *ngIf="empresaId">Editar Empresa</h2>
+                      <h2 *ngIf="!empresaId">Nova Controladora</h2>
+                      <h2 *ngIf="empresaId">Editar Controladora</h2>
                   </mat-card-title>
               </mat-card-header>
     
               <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-                  <mat-label>Nome Empresa</mat-label>
+                  <mat-label>Nome Controladora</mat-label>
                   <input
                       matInput
                       formControlName="nomeEmpresa"
@@ -40,8 +40,9 @@
                 <input
                     matInput
                     formControlName="numeroCNPJ"
-                    placeholder="Nome"
+                    placeholder="CNPJ"
                     autocomplete="off"
+                    mask="00.000.000/0000-00"
                     type="text"/>
                 <mat-error *ngIf="empresaForm.controls.numeroCNPJ.errors?.required">CNPJ é Obrigatório</mat-error>
                 <mat-error *ngIf="empresaForm.controls.numeroCNPJ.hasError('invalidCNPJ')">CNPJ Informado não é Válido</mat-error>
@@ -75,6 +76,7 @@
                     matInput
                     formControlName="numeroCPFControlador"
                     placeholder="Nome"
+                    mask="000.000.000-00"
                     autocomplete="off"
                     type="text"/>
                 <mat-error *ngIf="empresaForm.controls.numeroCPFControlador.errors?.required">CPF do Controlador é Obrigatório</mat-error>
@@ -113,7 +115,7 @@
               </mat-slide-toggle>
 
               <mat-form-field style="width: 50%;" fxFlexOffset="10px">   
-                <mat-label>Empresa Matriz</mat-label>
+                <mat-label>Matriz</mat-label>
                 <input 
                   matInput
                   formControlName="empresaMatriz"

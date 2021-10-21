@@ -9,18 +9,23 @@
 
 		<div>
 			<form fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100"
-				fxFlex.gt-sm="100" [formGroup]="dataMapForm" (submit)="salvarDataMap()">
+				fxFlex.gt-sm="100" [formGroup]="dataMapForm" #ngForm="ngForm" (submit)="salvarDataMap()">
 
 				<mat-card-header>
-					<mat-card-title>
+					<mat-card-title *ngIf="indTipo == 0">
 						<h2 *ngIf="!codDataMap">Novo Data Map</h2>
 						<h2 *ngIf="codDataMap">Editar Data Map</h2>
+					</mat-card-title>
+
+					<mat-card-title *ngIf="indTipo == 1">
+						<h2 *ngIf="!codDataMap">Novo Data Analisys Map</h2>
+						<h2 *ngIf="codDataMap">Editar Data Analisys Map</h2>
 					</mat-card-title>
 				</mat-card-header>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
-					<mat-label>Empresa</mat-label>
-					<input matInput formControlName="empresa" placeholder="Empresa" [matAutocomplete]="autoEmpresa" />
+					<mat-label>Controladora</mat-label>
+					<input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="codDataMap > 0"/>
 
 					<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
 						(optionSelected)="selecionaEmpresa($event)">
@@ -32,28 +37,15 @@
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Ciclo de Monitoramento</mat-label>
-					<input matInput formControlName="codCicloMonitoramento" placeholder="Ciclo de Monitoramento"
-						autocomplete="off" type="string" readonly />
-					<mat-error *ngIf="dataMapForm.controls.codCicloMonitoramento.errors?.required">Campo obrigatório
-					</mat-error>
-				</mat-form-field>
-
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data Competência</mat-label>
-					<input matInput formControlName="dataCompetencia" placeholder="Data Competencia"
+					<input matInput formControlName="dataCompetencia" placeholder="Data Competência"
 						[matDatepicker]="picker" readonly />
-					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-					<mat-datepicker #picker startView="year" (monthSelected)="closeDatePicker($event, picker)">
-					</mat-datepicker>
-					<mat-error *ngIf="dataMapForm.controls.dataCompetencia.errors?.required">Data Competência é
-						Obrigatória</mat-error>
+						<mat-datepicker #picker></mat-datepicker>					
 				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Área</mat-label>
-					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea"
-						 />
+					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea" [readonly]="codDataMap > 0" />
 
 					<mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea"
 						(optionSelected)="selecionaArea($event)">
@@ -64,11 +56,9 @@
 					<mat-error *ngIf="dataMapForm.controls.area.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
-
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Processo</mat-label>
-					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso"
-						 />
+					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso" [readonly]="codDataMap > 0" />
 
 					<mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso"
 						(optionSelected)="selecionaProcesso($event)">
@@ -79,11 +69,9 @@
 					<mat-error *ngIf="dataMapForm.controls.processo.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
-
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Atividade</mat-label>
-					<input matInput formControlName="atividade" placeholder="Atividade"
-						[matAutocomplete]="autoAtividade"  />
+					<input matInput formControlName="atividade" placeholder="Atividade" [matAutocomplete]="autoAtividade" [readonly]="codDataMap > 0" />
 					<mat-autocomplete #autoAtividade="matAutocomplete" [displayWith]="displayAtividade"
 						(optionSelected)="selecionaAtividade($event)">
 						<mat-option *ngFor="let atividade of listaAtividade" [value]="atividade">
@@ -100,7 +88,7 @@
 					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados"
 						(optionSelected)="selecionaMetadados($event)">
 						<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
-							{{metadados.nomeMetadados}}
+							{{metadados.valoresMetadados}}
 						</mat-option>
 					</mat-autocomplete>
 					<mat-error *ngIf="dataMapForm.controls.metadados.errors?.required">Campo obrigatório</mat-error>
@@ -136,7 +124,7 @@
 				</mat-slide-toggle>
 
 
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Forma de Coleta</mat-label>
 					<mat-select matInput formControlName="formaColetas" multiple placeholder="selecione..."
 						[compareWith]="compareFormaColeta" [(ngModel)]="formaColetaSelecionado">
@@ -152,7 +140,7 @@
 					<span class="ng-tns-c15-3 ng-star-inserted">Necessita Consentimento</span>
 				</mat-slide-toggle>
 
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Local de Armazanamento</mat-label>
 					<mat-select matInput formControlName="armazenamentos" multiple placeholder="selecione..."
 						[compareWith]="compareArmazenamento" [(ngModel)]="armazenamentoSelecionado">
@@ -160,8 +148,7 @@
 							{{armazenamento.nomeLocalArmazenamento}}
 						</mat-option>
 					</mat-select>
-					<mat-error *ngIf="dataMapForm.controls.armazenamentos.errors?.required">Campo obrigatório
-					</mat-error>
+					<mat-error *ngIf="dataMapForm.controls.armazenamentos.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
@@ -169,7 +156,7 @@
 					<span class="ng-tns-c15-3 ng-star-inserted">Transferência Internacional</span>
 				</mat-slide-toggle>
 
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Compartilhamentos</mat-label>
 					<mat-select matInput formControlName="compartilhamentos" multiple placeholder="selecione..."
 						[compareWith]="compareCompartilhamento" [(ngModel)]="compartilhamentoSelecionado">
@@ -187,7 +174,7 @@
 					<span class="ng-tns-c15-3 ng-star-inserted">Anonimização</span>
 				</mat-slide-toggle>
 
-				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+				<mat-form-field style="width: 50%;" fxFlexOffset="20px">
 					<mat-label>Ciclo Vida</mat-label>
 					<input matInput formControlName="cicloVida" placeholder="Ciclo Vida"
 						[matAutocomplete]="autoCicloVida" />
@@ -200,14 +187,14 @@
 					<mat-error *ngIf="dataMapForm.controls.cicloVida.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
-				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="10px"
+				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px"
 					formControlName="indRisco">
 					<mat-label>Risco:</mat-label>
-					<mat-radio-button value="1">Baixo</mat-radio-button>
-					<mat-radio-button value="2">Moderado</mat-radio-button>
-					<mat-radio-button value="3">Elevado</mat-radio-button>
-					<mat-radio-button value="4">Extremo</mat-radio-button>
-					<mat-error *ngIf="dataMapForm.controls.indRisco.errors?.required">Campo obrigatório</mat-error>
+					<mat-radio-button [value]="1">Baixo</mat-radio-button>
+					<mat-radio-button [value]="2">Moderado</mat-radio-button>
+					<mat-radio-button [value]="3">Elevado</mat-radio-button>
+					<mat-radio-button [value]="4">Extremo</mat-radio-button>					
+					<mat-error *ngIf="ngForm.submitted && dataMapForm.controls.indRisco.invalid">Campo obrigatório</mat-error>
 				</mat-radio-group>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
@@ -226,7 +213,7 @@
 
 	<!-- Plano mitigacao -->
 
-	<mat-expansion-panel *ngIf="codDataMap" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
+	<mat-expansion-panel *ngIf="codDataMap && indTipo == 1" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
 				Plano Mitigação
@@ -239,13 +226,13 @@
 				<div fxFlex>
 					<mat-form-field fxFlex="30">
 						<input matInput (keyup)="applyFilterPlanoMitigacao($event.target.value)"
-							placeholder="Buscar plano mitigacao" />
+							placeholder="Buscar Plano de Mitigação" />
 					</mat-form-field>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px">
 					<div fxLayout="column" fxLayoutAlign="start end">
 						<a mat-raised-button color="accent"
-							[routerLink]="['/data-map', codDataMap, 'plano-mitigacao', '']" routerLinkActive="active">
+							[routerLink]="['/data-analisys-map', codDataMap, 'plano-mitigacao', '']" routerLinkActive="active">
 							<mat-icon>add</mat-icon>Novo Plano Mitigacao
 						</a>
 					</div>
@@ -264,7 +251,7 @@
 						<td mat-cell *matCellDef="let element">
 							<div class="example-button-row">
 								<button mat-raised-button color="accent"
-									[routerLink]="['/data-map', element.codDataMapping, 'plano-mitigacao', element.codPlanoMitigacao]">
+									[routerLink]="['/data-analisys-map', element.codDataMapping, 'plano-mitigacao', element.codPlanoMitigacao]">
 									Editar
 								</button>
 							</div>

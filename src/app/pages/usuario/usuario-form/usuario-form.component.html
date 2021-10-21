@@ -59,11 +59,11 @@
           </mat-form-field>
 
             <mat-form-field *ngIf="!meuUsuario" style="width: 50%;" fxFlexOffset="5px">   
-              <mat-label>Empresa</mat-label>
+              <mat-label>Controladora</mat-label>
               <input 
                 matInput
                 formControlName="empresa"
-                placeholder="Empresa"
+                placeholder="Controladora"
                 [matAutocomplete]="autoEmpresa"/>
   
               <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa" (optionSelected) = "selecionaEmpresa($event)">

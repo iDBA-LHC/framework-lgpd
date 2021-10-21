@@ -84,6 +84,7 @@ export class UsuarioFormComponent implements OnInit {
         this.usuarioId = data["id?"];
         this.usuarioService.pesquisaUsuario(this.usuarioId).subscribe(
             (retorno) => {
+
               this.usuarioForm.patchValue({
                 emailUsuario: retorno.body[0].emailUsuario,
                 nomeUsuario: retorno.body[0].nomeUsuario,

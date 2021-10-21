@@ -50,10 +50,11 @@ import {
 } from "@angular/material";
 import { CancelJobModalModule } from "./components/cancel-job-modal/cancel-job-modal.module";
 import { MatTableExporterModule } from "mat-table-exporter";
+import { CpfCnpjPipeModule } from './components/pipe/cpf-cnpj-pipe.module';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, HeaderModule, SidemenuModule],
+  imports: [CommonModule, HeaderModule, SidemenuModule,],
   exports: [
     HeaderModule,
     SidemenuModule,
@@ -103,6 +104,7 @@ import { MatTableExporterModule } from "mat-table-exporter";
     MatTreeModule,
     CustomSnackBarModule,
     MatTableExporterModule, 
+    CpfCnpjPipeModule,
   ],
 })
 export class SharedModule {}

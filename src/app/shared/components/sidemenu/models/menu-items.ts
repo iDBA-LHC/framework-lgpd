@@ -13,8 +13,8 @@ export class MenuItems {
 			icon: "account_circle",
 			hidden: false,
 		}, {
-			label: "Empresa",
-			link: "empresa",
+			label: "Controladora",
+			link: "controladora",
 			icon: "work",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
 		}, {
@@ -31,11 +31,6 @@ export class MenuItems {
 			label: "Ciclo de Vida",
 			link: "ciclo-de-vida",
 			icon: "donut_large",
-			hidden: false,
-		}, {
-			label: "Ciclo de Monit.",
-			link: "ciclo-monitoramento",
-			icon: "settings_backup_restore",
 			hidden: false,
 		}, {
 			label: "Forma de Coleta",
@@ -57,6 +52,11 @@ export class MenuItems {
 			link: "local-armazenamento",
 			icon: "inventory_2",
 			hidden: false
+		}, {
+			label: "Ciclo Monitoramento",
+			link: "ciclo-monitoramento",
+			icon: "settings_backup_restore",
+			hidden: false,
 		}, {
 			label: "Data Flow",
 			link: "data-flow",

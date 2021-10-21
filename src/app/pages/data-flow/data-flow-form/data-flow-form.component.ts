@@ -41,6 +41,8 @@ export class DataFlowFormComponent implements OnInit {
 	codDataFlow: number;
 	isLoading = false;
 
+	codCicloMonitoramento: number;
+
 	listaAtividade: Atividade[];
 
 	listaMetadados: Metadados[];
@@ -65,6 +67,10 @@ export class DataFlowFormComponent implements OnInit {
 	listaProcessos: Processo[];
 	listaProcessosFiltradas: Observable<Processo[]>;
 
+	usuarioSelecionado: Usuario[];
+	armazenamentoSelecionado: LocalArmazenamento[];
+	compartilhamentoSelecionado: Compartilhamento[];
+
 	constructor(
 		private atividadeService: AtividadeService,
 		private activatedRoute: ActivatedRoute,
@@ -88,20 +94,18 @@ export class DataFlowFormComponent implements OnInit {
 	ngOnInit() {
 		//this.isLoading = true;
 
-		this.createForm();
+		this.createForm();		
 		this.pesquisaDataFlow();
 	}
 
 	private createForm() {
 		this.dataFlowForm = this.formBuilder.group({
 
-      dataCompetencia: [""],
-
 			nomeProcessamento: ["", Validators.required],
 
 			codEmpresa: [0, Validators.required],
 			empresa: ["", Validators.required],
-			codCicloMonitoramento: ["", Validators.required],
+			dataCompetencia: [""],
 
 			codArea: ["", Validators.required],
 			area: ["", Validators.required],
@@ -115,7 +119,7 @@ export class DataFlowFormComponent implements OnInit {
 			codMetadados: ["", Validators.required],
 			metadados: ["", Validators.required],
 
-			indDescarte: ["", Validators.required],
+			indDescarte: [""],
 			indRisco: ["", Validators.required],
 
 			codCicloVida: ["", Validators.required],
@@ -140,8 +144,9 @@ export class DataFlowFormComponent implements OnInit {
 								codDataFlow: retorno.body[0].codDataFlow,
 								nomeProcessamento: retorno.body[0].nomeProcessamento,
 
-								codEmpresa: retorno.body[0].codEmpresa,
-								codCicloMonitoramento: retorno.body[0].codCicloMonitoramento,
+								codEmpresa: retorno.body[0].codEmpresa,								
+								dataCompetencia: retorno.body[0].dataCompetencia,
+								
 								codArea: retorno.body[0].codArea,
 								codProcesso: retorno.body[0].codProcesso,
 								codAtividade: retorno.body[0].codAtividade,
@@ -156,6 +161,9 @@ export class DataFlowFormComponent implements OnInit {
 								armazenamentos: retorno.body[0].armazenamentos,
 								compartilhamentos: retorno.body[0].compartilhamentos
 							});
+
+							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
+
 							this.preencherCombos();
 
 							this.pesquisaArea(retorno.body[0].codEmpresa);
@@ -190,12 +198,18 @@ export class DataFlowFormComponent implements OnInit {
 
 	salvarDataFlow() {
 
-		//if (this.dataFlowForm.valid) {
+		if (this.dataFlowForm.valid) {
+
+			if (this.codCicloMonitoramento == null)
+			{
+				TrataExcessaoConexao.TrataExcessao('Não Existem Ciclos de Monitoramento para a Empresa Selecionada!', this.snackBar);
+				return;
+			}
 
 			const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
 			DataFlow.codDataFlow = this.codDataFlow;
 
-			DataFlow.indRisco = (this.dataFlowForm.controls.indRisco.value ? 1 : 0);
+			DataFlow.indRisco = parseInt(this.dataFlowForm.controls.indRisco.value);
 			DataFlow.indDescarte = (this.dataFlowForm.controls.indDescarte.value ? 1 : 0);
 
 			var usuarios2 = new Array();
@@ -207,11 +221,13 @@ export class DataFlowFormComponent implements OnInit {
 			DataFlow.usuarios = usuarios2;
 			DataFlow.codUsuarioInclusao = this.authService.loggedUserId;
 
+			DataFlow.codCicloMonitoramento = this.codCicloMonitoramento;
+
 			if (this.codDataFlow) {
 				// Alteração
 				this.DataFlowService.alterarDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O data flow foi atualizado com sucesso!`, null);
+						this.snackBar.openSnackBar(`Data Flow Atualizado com Sucesso!`, null);
 						this.router.navigate(["/data-flow"]);
 					},
 					(err) => {
@@ -227,7 +243,7 @@ export class DataFlowFormComponent implements OnInit {
 				// Inclusão
 				this.DataFlowService.incluirDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`O data flow foi criado com sucesso!`, null);
+						this.snackBar.openSnackBar(`Data Flow Criado com Sucesso!`, null);
 						this.router.navigate(["/data-flow"]);
 					},
 					(err) => {
@@ -240,7 +256,9 @@ export class DataFlowFormComponent implements OnInit {
 					}
 				)
 			}
-		//}
+		} else {
+      		this.showMessage("Campos obrigatórios não foram preenchidos", "Warn");
+    	}
 	}
 
 	private pesquisaLocalArmazenamento() {
@@ -307,7 +325,7 @@ export class DataFlowFormComponent implements OnInit {
 	}
 
 	displayMetadados(metadados: Metadados): string {
-		return metadados ? metadados.nomeMetadados : "";
+		return metadados ? metadados.valoresMetadados : "";
 	}
 
 	selecionaAtividade(event) {
@@ -317,7 +335,7 @@ export class DataFlowFormComponent implements OnInit {
 
 		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
 		if (metadados) {
-      this.dataFlowForm.controls.codMetadados.setValue(metadados.codMetadados);
+      		this.dataFlowForm.controls.codMetadados.setValue(metadados.codMetadados);
 			this.dataFlowForm.controls.metadados.setValue(metadados);
 		}
 	}
@@ -428,9 +446,11 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.empresa.setValue(empresaSelecionada);
 		this.dataFlowForm.controls.codEmpresa.setValue(empresaSelecionada.codigoEmpresa);
 
-    this.dataFlowForm.controls.area.setValue(null);
-    this.dataFlowForm.controls.processo.setValue(null);
-    this.dataFlowForm.controls.atividade.setValue(null);
+		this.dataFlowForm.controls.area.setValue(null);
+		this.dataFlowForm.controls.codProcesso.setValue(null);
+		this.dataFlowForm.controls.processo.setValue(null);
+		this.dataFlowForm.controls.codAtividade.setValue(null);
+    	this.dataFlowForm.controls.atividade.setValue(null);
 
 		this.pesquisaUsuarios();
 
@@ -446,18 +466,19 @@ export class DataFlowFormComponent implements OnInit {
 	}
 
 	private buscarUltimoCicloMonitoramento(codigoEmpresa: number) {
+		this.isLoading = true;
 		this.cicloMonitoramentoService.buscarUltimoCicloMonitoramento(codigoEmpresa).subscribe(
 			(retorno) => {
+				this.isLoading = false;
 				if (retorno.body != null) {
-					this.dataFlowForm.controls.codCicloMonitoramento.setValue(retorno.body.codCicloMonitoramento);
+					this.codCicloMonitoramento = retorno.body.codCicloMonitoramento;
           			this.dataFlowForm.controls.dataCompetencia.setValue(retorno.body.dataCompetencia);
 				} else {
-					this.dataFlowForm.controls.codCicloMonitoramento.setValue(null);
+					this.codCicloMonitoramento = null;
 					TrataExcessaoConexao.TrataExcessao('Não existem ciclos de monitoramento para a empresa selecionada!', this.snackBar);
 				}
 			}
-		)
-		this.isLoading = false;
+		)		
 	}
 
 	private pesquisaArea(codEmpresa:number) {
@@ -493,8 +514,10 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.area.setValue(areaSelecionada);
 		this.dataFlowForm.controls.codArea.setValue(areaSelecionada.codArea);
 
-    this.dataFlowForm.controls.codProcesso.setValue(null);
-    this.dataFlowForm.controls.processo.setValue(null);
+    	this.dataFlowForm.controls.codProcesso.setValue(null);
+		this.dataFlowForm.controls.processo.setValue(null);
+		this.dataFlowForm.controls.codAtividade.setValue(null);
+		this.dataFlowForm.controls.atividade.setValue(null);
 
 		this.pesquisaProcesso(areaSelecionada.codArea);
 	}
@@ -538,8 +561,8 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.processo.setValue(processoSelecionada);
 		this.dataFlowForm.controls.codProcesso.setValue(processoSelecionada.codProcesso);
 
-    this.dataFlowForm.controls.codAtividade.setValue(null);
-    this.dataFlowForm.controls.atividade.setValue(null);
+    	this.dataFlowForm.controls.codAtividade.setValue(null);
+    	this.dataFlowForm.controls.atividade.setValue(null);
 
 		this.pesquisaAtividade(processoSelecionada.codProcesso);
 	}
@@ -548,11 +571,15 @@ export class DataFlowFormComponent implements OnInit {
 		return processo ? processo.nomeProcesso : "";
 	}
 
-  closeDatePicker(eventData: any, picker:any) {
+	closeDatePicker(eventData: any, picker:any) {
 
     this.dataFlowForm.controls.dataCompetencia.setValue(eventData);
 
       picker.close();
     }
+
+	private showMessage(msg: string, type: string = "Success") {
+   	 this.snackBar.openSnackBar(msg, null, type);
+  	}
 
 }

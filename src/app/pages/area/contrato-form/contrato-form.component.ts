@@ -120,4 +120,9 @@ export class ContratoFormComponent implements OnInit {
     }
   }
 
+  navigateToProcesso()
+	{
+    this.router.navigate(["area", this.areaId, "processo", this.processoId])
+	}
+
 }

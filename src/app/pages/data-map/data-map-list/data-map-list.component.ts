@@ -17,6 +17,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class DataMapListComponent implements OnInit {
 
   isLoading = false;
+  indTipo : number;
 
   displayedColumns: string[] = ["nomeEmpresa", "nomeArea", "nomeProcesso", "nomeAtividade", "dataCompetencia", "actions"];
 
@@ -34,18 +35,18 @@ export class DataMapListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+	this.indTipo = 0;
     this.pesquisaDataMap();
   }
 
   private pesquisaDataMap() {
     this.isLoading = true;
-
-	var indTipo = 0;
+	
 	if (this.router.url.includes('data-analisys-map')) {
-		indTipo = 1;
+		this.indTipo = 1;
 	}		
 
-    this.DataMapService.listaTodosDataMap(indTipo).subscribe(
+    this.DataMapService.listaTodosDataMap(this.indTipo).subscribe(
       (response) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource<DataMap>(response.body);
@@ -79,6 +80,10 @@ export class DataMapListComponent implements OnInit {
         }
     }
     )
+  }
+
+  applyFilter(value: string) {
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 
 }

@@ -47,11 +47,13 @@ export class MetadadosListComponent implements OnInit {
             this.dataSource.filterPredicate = (
               data: {
                 nomeMetadados: string,
-                nomeLei: string
+                nomeLei: string,
+                valoresMetadados: string,
               },
               filterValue: string
             ) => data.nomeMetadados.toString().trim().toLowerCase().indexOf(filterValue) !== -1 || 
-            data.nomeLei.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+                 data.nomeLei.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+                 data.valoresMetadados.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;

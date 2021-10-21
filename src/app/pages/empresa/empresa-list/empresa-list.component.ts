@@ -22,7 +22,6 @@ export class EmpresaListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-
   constructor(
     private empresaService: EmpresaService,
     private snackBar: CustomSnackBarService,
@@ -67,4 +66,7 @@ export class EmpresaListComponent implements OnInit {
     );    
   }
 
+  applyFilter(value: string) {
+    this.dataSource.filter = value.trim().toLowerCase();
+  }
 }

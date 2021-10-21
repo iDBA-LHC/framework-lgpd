@@ -37,7 +37,7 @@ const routes: Routes = [
         canActivate: [AuthMeuUsuarioGuard],
       },
       {
-        path: "empresa",
+        path: "controladora",
         loadChildren: () =>
           import("./pages/empresa/empresa.module").then(
             (module) => module.EmpresaModule

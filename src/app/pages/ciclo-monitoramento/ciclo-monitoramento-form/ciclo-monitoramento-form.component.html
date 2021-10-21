@@ -25,11 +25,11 @@
               </mat-card-header>
 
               <mat-form-field style="width: 50%;" fxFlexOffset="10px">
-                <mat-label>Empresa</mat-label>
+                <mat-label>Controladora</mat-label>
                 <input
                   matInput
                   formControlName="empresa"
-                  placeholder="Empresa"
+                  placeholder="Controladora"
                   [matAutocomplete]="autoEmpresa"/>
 
                 <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa" (optionSelected) = "selecionaEmpresa($event)">
@@ -41,11 +41,12 @@
               </mat-form-field>
 
               <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-                <mat-label>Data Competencia</mat-label>
+                <mat-label>Data Competência</mat-label>
                 <input
                     matInput
+					          readonly
                     formControlName="dataCompetencia"
-                    placeholder="Data Competencia"
+                    placeholder="Data Competência"
                     [matDatepicker]="picker"/>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker startView="year" (monthSelected)="closeDatePicker($event, picker)"></mat-datepicker>
@@ -66,10 +67,10 @@
               <mat-form-field style="width: 50%;" fxFlexOffset="10px">
                 <mat-label>Comitê</mat-label>
                 <mat-select matInput formControlName="usuarios" multiple placeholder="Usuario"
-				  [compareWith]="compareUsuarioSelecionado" [(ngModel)]="usuarioSelecionado">
-					<mat-option *ngFor="let usuario of listaUsuariosFiltrados" [value]="usuario">
-						{{usuario.nomeUsuario}}
-					</mat-option>
+                  [compareWith]="compareUsuarioSelecionado" [(ngModel)]="usuarioSelecionado">
+                  <mat-option *ngFor="let usuario of listaUsuariosFiltrados" [value]="usuario">
+                    {{usuario.nomeUsuario}}
+                  </mat-option>
                 </mat-select>
 
                 <mat-error *ngIf="cicloMonitoramentoForm.controls.usuarios.errors?.required">Comitê é Obrigatório</mat-error>

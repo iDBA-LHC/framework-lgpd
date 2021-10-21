@@ -135,7 +135,7 @@ export class ProcessoFormComponent implements OnInit {
   }
 
 
-  private salvarProcesso() {
+  salvarProcesso() {
     if (this.processoForm.valid) {
       const processo: Processo = this.processoForm.getRawValue();
       processo.codProcesso = this.processoId;
@@ -181,5 +181,10 @@ export class ProcessoFormComponent implements OnInit {
       }
     }
   }
+
+  navigateToArea()
+	{
+    this.router.navigate(["/area", this.areaId]);
+	}
 
 }

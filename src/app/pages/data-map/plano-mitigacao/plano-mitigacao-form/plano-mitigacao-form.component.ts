@@ -55,9 +55,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 	}
 
 	private createForm() {
-		this.planoMitigacaoForm = this.formBuilder.group({
-			codDataMapping: ["", Validators.required],
-			dataMapping: ["", Validators.required],
+		this.planoMitigacaoForm = this.formBuilder.group({			
 			desPlanoMitigacao: ["", Validators.required],
 			desObservacao: ["", Validators.required],
 			dataLimite: ["", Validators.required],
@@ -68,7 +66,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 			dataRevisao: [""],
 			dataRecusa: [""],
 			desMotivoRecusa: [""],
-			dataStatus: ["", Validators.required],
+			dataStatus: [""],
 
 		});
 	}
@@ -125,10 +123,10 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				setTimeout(() => {
 					this.dataSourceDocumentoPlano.filterPredicate = (
 						data: {
-							nomeDocumentoPlano: string
+							desDocumentoPlano: string
 						},
 						filterValue: string
-					) => data.nomeDocumentoPlano.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+					) => data.desDocumentoPlano.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
 					this.dataSourceDocumentoPlano.paginator = this.paginator;
 					this.dataSourceDocumentoPlano.sort = this.sort;
@@ -151,7 +149,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				this.PlanoMitigacaoService.alterarPlanoMitigacao(PlanoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi atualizado com sucesso!`, null);
-						this.router.navigate(["data-map", this.codDataMap]);
+						this.router.navigate(["data-analisys-map", this.codDataMap]);
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -167,7 +165,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				this.PlanoMitigacaoService.incluirPlanoMitigacao(PlanoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi criado com sucesso!`, null);
-						this.router.navigate(["data-map", this.codDataMap]);
+						this.router.navigate(["data-analisys-map", this.codDataMap]);
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -180,5 +178,20 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				)
 			}
 		}
+		else
+		{
+			this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+		}
+	}
+
+	navigateToDataAnalasysMap()
+	{
+		this.router.navigate(["data-analisys-map", this.codDataMap]);
+	}
+
+	openNewWindow(documentoPlano: DocumentoPlano): void {
+		const url = documentoPlano.desEnderecoPlano;
+	
+		window.open(url, '_blank');
 	}
 }
