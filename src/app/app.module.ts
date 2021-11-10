@@ -22,7 +22,6 @@ import { StorageServiceModule} from 'angular-webstorage-service';
 import { AuthMeuUsuarioGuard } from './guards/auth-meu-usuario.guard';
 import { AuthTokenInterceptor } from './shared/utils/auth-token-interceptor';
 
-
 export function jwtOptionsFactory() {
   return {
     tokenGetter: () => {

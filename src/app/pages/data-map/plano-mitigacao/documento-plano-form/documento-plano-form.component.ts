@@ -30,7 +30,6 @@ export class DocumentoPlanoFormComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private DocumentoPlanoService: DocumentoPlanoService,
-    private compartilhamentoService: CompartilhamentoService
   ) { }
 
   ngOnInit() {
@@ -75,19 +74,21 @@ export class DocumentoPlanoFormComponent implements OnInit {
             }
           );
         }
+        else
+          this.isLoading = false;
       }
     )
   }
 
   salvarDocumentoPlano() {
     if (this.documentoPlanoForm.valid) {
-      const DocumentoPlano: DocumentoPlano = this.documentoPlanoForm.getRawValue();
-      DocumentoPlano.codDocumentoPlano = this.codDocumentoPlano;
-	    DocumentoPlano.codPlanoMitigacao = this.codPlanoMitigacao;
+      const documentoPlano: DocumentoPlano = this.documentoPlanoForm.getRawValue();
+      documentoPlano.codDocumentoPlano = this.codDocumentoPlano;
+      documentoPlano.codPlanoMitigacao = this.codPlanoMitigacao;
 
       if (this.codDocumentoPlano) {
         // Alteração
-        this.DocumentoPlanoService.alterarDocumentoPlano(DocumentoPlano).subscribe(
+        this.DocumentoPlanoService.alterarDocumentoPlano(documentoPlano).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Documento Plano foi atualizado com sucesso!`,null);
             this.navigateToPlanoMitigacao();
@@ -105,7 +106,7 @@ export class DocumentoPlanoFormComponent implements OnInit {
         )
       } else {
         // Inclusão
-        this.DocumentoPlanoService.incluirDocumentoPlano(DocumentoPlano).subscribe(
+        this.DocumentoPlanoService.incluirDocumentoPlano(documentoPlano).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Documento Plano foi criado com sucesso!`,null);
             this.navigateToPlanoMitigacao();

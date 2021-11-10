@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource, MatAutocompleteSelectedEvent } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -32,6 +32,7 @@ import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-ba
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { Atividade } from './../../../models/atividade/atividade';
 import { AtividadeService } from './../../../services/atividade.service';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
 
 @Component({
 	selector: 'app-data-map-form',
@@ -52,8 +53,15 @@ export class DataMapFormComponent implements OnInit {
 
 	listaAtividade: Atividade[];
 	listaBaseLegal: BaseLegal[];
-	listaMetadados: Metadados[];
 	listaCicloVida: CicloDeVida[];
+
+	listaMetadados: Metadados[];
+	metadados: Metadados[];
+	listaMetadadosFiltrados: Observable<Metadados []>;
+  
+	separatorKeysCodes: number[] = [ENTER, COMMA];
+	metadadosCtrl = new FormControl();
+	metadadosDataMap: Metadados[] = [];
 
 	formaColetaSelecionado: FormaColeta[];
 	armazenamentoSelecionado: LocalArmazenamento[];
@@ -79,6 +87,8 @@ export class DataMapFormComponent implements OnInit {
 
 	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 	@ViewChild(MatSort, { static: false }) sort: MatSort;
+
+	@ViewChild('metadadosInput',{static: false}) metadadosInput: ElementRef<HTMLInputElement>;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -123,9 +133,6 @@ export class DataMapFormComponent implements OnInit {
 
 			codAtividade: ["", Validators.required],
 			atividade: ["", Validators.required],
-
-			codMetadados: ["", Validators.required],
-			metadados: ["", Validators.required],
 
 			codBaseLegal: ["", Validators.required],
 			baseLegal: ["", Validators.required],
@@ -187,7 +194,6 @@ export class DataMapFormComponent implements OnInit {
 								codArea: retorno.body[0].codArea,
 								codProcesso: retorno.body[0].codProcesso,
 								codAtividade: retorno.body[0].codAtividade,
-								codMetadados: retorno.body[0].codMetadados,
 
 								codBaseLegal: retorno.body[0].codBaseLegal,
 
@@ -208,6 +214,8 @@ export class DataMapFormComponent implements OnInit {
 								indRisco: retorno.body[0].indRisco,
 								desObservacoes: retorno.body[0].desObservacoes
 							});
+
+							this.metadadosDataMap = retorno.body[0].metadados;
 
 							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
 
@@ -257,6 +265,12 @@ export class DataMapFormComponent implements OnInit {
 				return;
 			}
 
+			if (this.metadadosDataMap.length===0)
+			{
+				this.showMessage("Deve Ser Selecionado ao menos um Metadado","Warn");
+				return;
+			}
+
 			const DataMap: DataMap = this.dataMapForm.getRawValue();
 			DataMap.codDataMap = this.codDataMap;
 
@@ -271,6 +285,7 @@ export class DataMapFormComponent implements OnInit {
 			DataMap.indRisco = parseInt(this.dataMapForm.controls.indRisco.value);
 			DataMap.indTipo = this.indTipo;
 			DataMap.codCicloMonitoramento = this.codCicloMonitoramento;
+			DataMap.metadados = this.metadadosDataMap;
 
 			if (this.codDataMap) {
 				// Alteração
@@ -326,36 +341,90 @@ export class DataMapFormComponent implements OnInit {
     	}
 	}
 
-	private pesquisaMetadados() {
+	displayMetadados(metadados: Metadados): string {
+		return metadados ? metadados.nomeMetadados : "";
+	}
+
+	remove(metadados: Metadados): void {
+		const index = this.metadadosDataMap.indexOf(metadados);
+
+		if (index >= 0) {
+			this.metadadosDataMap.splice(index, 1);
+			this.listaMetadados.push(metadados);
+		}
+
+		this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+
+		this.metadadosCtrl.setValue("");
+	}
+	
+	selectedMetadados(event: MatAutocompleteSelectedEvent): void {
+		this.metadadosDataMap.push(event.option.value);
+	
+		this.metadadosInput.nativeElement.value = '';
+		const index = this.listaMetadados.indexOf(event.option.value);
+	
+		if (index >= 0) {
+		  this.listaMetadados.splice(index, 1);
+		}
+		this.metadadosCtrl.setValue("");
+	}
+
+	private pesquisaMetadados() {    
 		this.metadadosService.listaTodosMetadados().subscribe(
 			(retorno) => {
-				this.listaMetadados = retorno.body;
+			this.listaMetadados = retorno.body;    
+			
+			this.removeSelecionados();
+		
+			this.listaMetadadosFiltrados = this.metadadosCtrl.valueChanges
+				.pipe(
+				startWith(''),
+				map(value => typeof value === 'string' ? value: value.nomeMetadados),
+				map(name => {
+					return name ? this.filtraMetadados(name): this.listaMetadados.slice();
+				}));
 
-				if (this.dataMapForm.controls.codMetadados.value != 0) {
-					let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == this.dataMapForm.controls.codMetadados.value)[0];
-					if (metadados) {
-						this.dataMapForm.controls.metadados.setValue(metadados);
-					}
-				}
-			}
-		)
+				this.isLoading = false;
+
+			});
+
 		this.isLoading = false;
 	}
 
-	selecionaMetadados(event) {
-		let selecionado: Metadados = event.option.value;
-		this.dataMapForm.controls.metadados.setValue(selecionado);
-		this.dataMapForm.controls.codMetadados.setValue(selecionado.codMetadados);
-	}
+	removeSelecionados()
+	{
+		var index = -1;
+		if (this.listaMetadados != undefined && this.listaMetadados.length!=0 &&
+			this.metadadosDataMap != undefined && this.metadadosDataMap.length!=0)
+		{
+		var listaAux = this.listaMetadados;
+		this.listaMetadados = [];
+		listaAux.forEach(meta => {
+			index = -1;
+			this.metadadosDataMap.forEach(metaDataMap => {
+			if (meta.codMetadados === metaDataMap.codMetadados)
+			{
+				index = 1;
+			}          
+			});
 
-	compareMetadados(o1: any, o2: any): boolean {
-		if (o2 != null)
-			return o1.codMetadados === o2.codMetadados;
-	}
+			if (index===-1)
+			{
+			this.listaMetadados.push(meta);
+			}
+		});
+		this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+		
+		this.metadadosCtrl.setValue("");
+		}
+	}  
 
-	displayMetadados(metadados: Metadados): string {
-		return metadados ? metadados.valoresMetadados : "";
-	}
+	filtraMetadados(value: string): Metadados[] {
+		const filterValue = value.toLowerCase();
+
+		return this.listaMetadados.filter(item => item.nomeMetadados.trim().toLowerCase().includes(filterValue));
+	}	  
 
 	private pesquisaAtividade(codProcesso: number) {
 		this.isLoading = true;
@@ -383,11 +452,9 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.atividade.setValue(selecionado);
 		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);
 
-		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
-		if (metadados) {
-			this.dataMapForm.controls.metadados.setValue(metadados);
-			this.dataMapForm.controls.codMetadados.setValue(metadados.codMetadados);
-		}
+		this.metadadosDataMap = selecionado.metadados;    
+        
+        this.removeSelecionados();
 	}
 
 	private pesquisaBaselegal() {
@@ -584,6 +651,7 @@ export class DataMapFormComponent implements OnInit {
 				this.listaAreasFiltradas = this.dataMapForm.controls.area.valueChanges
 					.pipe(
 						startWith(''),
+						map(value => value === undefined || value === null ? "": value),
 						map(value => typeof value === 'string' ? value : value.nomeArea),
 						map(name => {
 							return name ? this.filtraArea(name) : this.listaAreas.slice();
@@ -631,6 +699,7 @@ export class DataMapFormComponent implements OnInit {
 				this.listaProcessosFiltradas = this.dataMapForm.controls.processo.valueChanges
 					.pipe(
 						startWith(''),
+						map(value => value === undefined || value === null ? "": value),
 						map(value => typeof value === 'string' ? value : value.nomeProcesso),
 						map(name => {
 							return name ? this.filtraProcesso(name) : this.listaProcessos.slice();

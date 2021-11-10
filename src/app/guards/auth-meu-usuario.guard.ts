@@ -21,27 +21,13 @@ export class AuthMeuUsuarioGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
-    /*return this.authService.isLoggedIn.pipe(
-      take(1),
-      map((isLoggedIn: boolean) => {
-        return true; 
-      })
-    );*/
-
-    /*
-	console.log(next.queryParams);
-    params.subscribe((data) => {
-      console.log(data);
-      console.log(data["id?"]);
-    });*/
 
     return this.authService.isLoggedIn.pipe(
       take(1),
 
       map((isLoggedIn: boolean) => {
 
-        if (!isLoggedIn) {
-          
+        if (!isLoggedIn) {          
           this.router.navigate(["/public/sign-in"]);
           return false;
         }

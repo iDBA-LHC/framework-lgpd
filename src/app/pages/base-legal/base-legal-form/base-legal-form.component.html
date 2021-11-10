@@ -34,6 +34,17 @@
                       type="text"/>
                   <mat-error *ngIf="baseLegalForm.controls.nomeBase.errors?.required">Nome é Obrigatório</mat-error>
               </mat-form-field> 
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Descrição</mat-label>
+                <input
+                    matInput
+                    formControlName="desBase"
+                    placeholder="Nome"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="baseLegalForm.controls.desBase.errors?.required">Descrição é Obrigatória</mat-error>
+            </mat-form-field> 
   
               <mat-card-actions>
                 <button mat-raised-button color="accent">Salvar</button>

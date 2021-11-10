@@ -35,9 +35,9 @@
           <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeMetadados }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="nomeLei">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Lei</th>
-            <td mat-cell *matCellDef="let element; let i = index">{{ element.nomeLei }}</td>
+        <ng-container matColumnDef="indSensivel">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Dados Sensíveis</th>
+            <td mat-cell *matCellDef="let element; let i = index">{{ element.indSensivel == 1 ? "Sim" : "Não" }}</td>
         </ng-container>
   
         <ng-container matColumnDef="actions">

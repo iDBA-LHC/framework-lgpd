@@ -35,7 +35,11 @@ export class AuthGuard implements CanActivate {
         var menuItems: MenuItems = new MenuItems(this.authService);
         var menuItemButton:MenuItemButton = <MenuItemButton> menuItems.menuItems.filter(menuItem => menuItem.link == next.routeConfig.path)[0];
 
-        if ((!menuItemButton || menuItemButton.hidden) && (next.routeConfig.path != "home") && (next.routeConfig.path.length != 0))
+        if ((!menuItemButton || menuItemButton.hidden) && 
+             (next.routeConfig.path != "home") && 
+             (next.routeConfig.path != "muda-senha") &&
+             (next.routeConfig.path != "nova-senha") &&
+             (next.routeConfig.path.length != 0))
         {
           this.snackBar.openSnackBar(
             "Você Não Tem Permissão de Acesso a Esta Página",
@@ -44,9 +48,9 @@ export class AuthGuard implements CanActivate {
           );
           this.router.navigate(["/home"]);
           return false;
-        }
+        }            
 
-        if (!isLoggedIn) {          
+        if (!isLoggedIn &&  next.routeConfig.path != "nova-senha"){          
           this.router.navigate(["/public/sign-in"]);
           return false;
         }

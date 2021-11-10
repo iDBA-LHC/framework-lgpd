@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { MatDialog, MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { MetadadosService } from 'src/app/services/metadados.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-atividade-form',
@@ -25,9 +26,15 @@ export class AtividadeFormComponent implements OnInit {
   atividadeId: number;
   isLoading = false;
 
-  metadadosAnt: Metadados;
   listaMetadados: Metadados[];
+  metadados: Metadados[];
   listaMetadadosFiltrados: Observable<Metadados []>;
+
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  metadadosCtrl = new FormControl();
+  metadadosAtividade: Metadados[] = [];
+
+  @ViewChild('metadadosInput',{static: false}) metadadosInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -45,14 +52,13 @@ export class AtividadeFormComponent implements OnInit {
 
     this.createForm();
     this.pesquisaAtividade();
-  }
+  }  
 
   createForm() {
     this.atividadeForm = this.formBuilder.group({
       nomeAtividade: ["", Validators.required],
       obsAtividade: [],
       metadados: [],
-      codMetadados: [],
       indAutomatizado: [false, ],
     });
   }
@@ -71,9 +77,9 @@ export class AtividadeFormComponent implements OnInit {
                 nomeAtividade: retorno.body[0].nomeAtividade,
                 obsAtividade: retorno.body[0].obsAtividade,
                 indAutomatizado: retorno.body[0].indAutomatizado,
-                codMetadados: retorno.body[0].codMetadados
-              });
+              });              
 
+              this.metadadosAtividade = retorno.body[0].metadados;
               this.pesquisaMetadados();
 
               this.isLoading = false;
@@ -93,6 +99,7 @@ export class AtividadeFormComponent implements OnInit {
       atividade.codProcesso = this.processoId;
       atividade.indAutomatizado = (this.atividadeForm.controls.indAutomatizado.value ? 1 : 0);
       atividade.codUsuarioAlteracao = this.authService.getLoggedUserId();
+      atividade.metadados = this.metadadosAtividade;
 
       if (this.atividadeId) {
         // Alteração
@@ -133,19 +140,14 @@ export class AtividadeFormComponent implements OnInit {
     }
   }
 
-  private pesquisaMetadados() {
+  private pesquisaMetadados() {    
     this.metadadosService.listaTodosMetadados().subscribe(
       (retorno) => {
-        this.listaMetadados = retorno.body;
-
-        if (this.atividadeForm.controls.codMetadados.value != 0) {
-          let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == this.atividadeForm.controls.codMetadados.value)[0];
-          if (metadados) {
-            this.atividadeForm.controls.metadados.setValue(metadados);
-          }
-        }
-
-        this.listaMetadadosFiltrados = this.atividadeForm.controls.metadados.valueChanges
+        this.listaMetadados = retorno.body;    
+        
+        this.removeSelecionados();
+    
+        this.listaMetadadosFiltrados = this.metadadosCtrl.valueChanges
           .pipe(
             startWith(''),
             map(value => typeof value === 'string' ? value: value.nomeMetadados),
@@ -154,9 +156,10 @@ export class AtividadeFormComponent implements OnInit {
             })
           );
 
-        this.isLoading = false;
-      }
-    )
+          this.isLoading = false;
+
+      });
+
     this.isLoading = false;
   }
 
@@ -167,23 +170,60 @@ export class AtividadeFormComponent implements OnInit {
   }
 
   displayMetadados(met: Metadados): string {
-    return met && met.valoresMetadados ? met.valoresMetadados : '';
+    return met && met.nomeMetadados ? met.nomeMetadados : '';
   }
 
-  selecionaMetadados(event) {
-    let metadadosSelecionado: Metadados = event.option.value;
-    this.isLoading = true;
+  removeSelecionados()
+  {
+    var index = -1;
+    if (this.listaMetadados != undefined && this.listaMetadados.length!=0 &&
+        this.metadadosAtividade != undefined && this.metadadosAtividade.length!=0)
+    {
+      var listaAux = this.listaMetadados;
+      this.listaMetadados = [];
+      listaAux.forEach(meta => {
+        index = -1;
+        this.metadadosAtividade.forEach(metaAtividade => {
+          if (meta.codMetadados === metaAtividade.codMetadados)
+          {
+            index = 1;
+          }          
+        });
 
-    if (metadadosSelecionado) {
-      //Só consultar no BD se houve alteração da empresa selecionada
-      if (metadadosSelecionado != this.metadadosAnt)
-      {
-        this.atividadeForm.controls.codMetadados.setValue(metadadosSelecionado.codMetadados);
-        this.metadadosAnt = metadadosSelecionado;
-      }
+        if (index===-1)
+        {
+          this.listaMetadados.push(meta);
+        }
+      });
+      this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+      
+      this.metadadosCtrl.setValue("");
+    }
+  }
+
+  remove(metadados: Metadados): void {
+    const index = this.metadadosAtividade.indexOf(metadados);
+
+    if (index >= 0) {
+      this.metadadosAtividade.splice(index, 1);
+      this.listaMetadados.push(metadados);
     }
 
-    this.isLoading = false;
+    this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+
+    this.metadadosCtrl.setValue("");
+  }
+
+  selectedMetadados(event: MatAutocompleteSelectedEvent): void {
+    this.metadadosAtividade.push(event.option.value);
+
+    this.metadadosInput.nativeElement.value = '';
+    const index = this.listaMetadados.indexOf(event.option.value);
+
+    if (index >= 0) {
+      this.listaMetadados.splice(index, 1);
+    }
+    this.metadadosCtrl.setValue("");
   }
 
   navigateToProcesso()

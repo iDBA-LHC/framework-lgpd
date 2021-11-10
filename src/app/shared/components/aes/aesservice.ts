@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 
 export class AESService {
 
-  constructor() { }
+  constructor() {}
 
   public encrypt(value : string) : string{
     return CryptoJS.AES.encrypt(value, environment.encryptionKey.trim()).toString();
@@ -16,5 +16,9 @@ export class AESService {
 
   public decrypt(textToDecrypt : string){
     return CryptoJS.AES.decrypt(textToDecrypt, environment.encryptionKey.trim()).toString(CryptoJS.enc.Utf8);
+  }
+
+  public criptogrfaSenha(senha: string): string{
+    return CryptoJS.HmacSHA256(senha, environment.encryptionKey.trim()).toString();
   }
 }

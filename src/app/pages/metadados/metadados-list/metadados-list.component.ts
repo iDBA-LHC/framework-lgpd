@@ -16,12 +16,11 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class MetadadosListComponent implements OnInit {
   isLoading = false;
 
-  displayedColumns: string[] = ["nomeMetadados", "nomeLei", "actions"];
+  displayedColumns: string[] = ["nomeMetadados", "indSensivel", "actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-
 
   constructor(
     private metadadosService: MetadadosService,
@@ -46,14 +45,10 @@ export class MetadadosListComponent implements OnInit {
           () => {
             this.dataSource.filterPredicate = (
               data: {
-                nomeMetadados: string,
-                nomeLei: string,
-                valoresMetadados: string,
+                nomeMetadados: string
               },
               filterValue: string
-            ) => data.nomeMetadados.toString().trim().toLowerCase().indexOf(filterValue) !== -1 || 
-                 data.nomeLei.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-                 data.valoresMetadados.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+            ) => data.nomeMetadados.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;

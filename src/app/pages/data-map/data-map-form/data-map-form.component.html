@@ -81,19 +81,37 @@
 					<mat-error *ngIf="dataMapForm.controls.atividade.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
-				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+				<mat-form-field fxFlexOffset="10px" style="width: 50%;">
 					<mat-label>Metadados</mat-label>
-					<input matInput formControlName="metadados" placeholder="Metadados"
-						[matAutocomplete]="autoMetadados" />
-					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados"
-						(optionSelected)="selecionaMetadados($event)">
-						<mat-option *ngFor="let metadados of listaMetadados" [value]="metadados">
-							{{metadados.valoresMetadados}}
-						</mat-option>
-					</mat-autocomplete>
-					<mat-error *ngIf="dataMapForm.controls.metadados.errors?.required">Campo obrigatório</mat-error>
-				</mat-form-field>
+					<mat-chip-list #chipListMetadados aria-label="Selecione Metadados">
+					  <mat-chip
+					  *ngFor="let metadados of metadadosDataMap"
+					  [removable]="true"
+					  (removed)="remove(metadados)">
+	
+					  <span *ngIf="metadados.indSensivel" style="color: red;">
+						  {{metadados.nomeMetadados}}
+					  </span>
+					  <span *ngIf="!metadados.indSensivel">
+						{{metadados.nomeMetadados}}
+					  </span>
+					  <mat-icon matChipRemove>cancel</mat-icon>  
 
+					</mat-chip>
+					  <input
+						placeholder="Metadados..."
+						#metadadosInput
+						[formControl]="metadadosCtrl"
+						[matAutocomplete]="autoMetadados"
+						[matChipInputFor]="chipListMetadados"
+						[matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+					</mat-chip-list>
+					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selectedMetadados($event)">
+					  <mat-option *ngFor="let metadados of listaMetadadosFiltrados | async" [value]="metadados">
+						{{metadados.nomeMetadados}}
+					  </mat-option>
+					</mat-autocomplete>
+				</mat-form-field>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Base Legal</mat-label>

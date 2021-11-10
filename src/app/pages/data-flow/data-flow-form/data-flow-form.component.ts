@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { MatDialog, MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -29,6 +29,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { Usuario2 } from './../../../models/usuario/usuario2';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
 
 @Component({
 	selector: 'app-data-flow-form',
@@ -46,6 +47,12 @@ export class DataFlowFormComponent implements OnInit {
 	listaAtividade: Atividade[];
 
 	listaMetadados: Metadados[];
+	metadados: Metadados[];
+	listaMetadadosFiltrados: Observable<Metadados []>;
+  
+	separatorKeysCodes: number[] = [ENTER, COMMA];
+	metadadosCtrl = new FormControl();
+	metadadosDataFlow: Metadados[] = [];
 
 	listaArmazenamentos: LocalArmazenamento[];
 	listaArmazenamentosFiltrados: LocalArmazenamento[];
@@ -70,6 +77,8 @@ export class DataFlowFormComponent implements OnInit {
 	usuarioSelecionado: Usuario[];
 	armazenamentoSelecionado: LocalArmazenamento[];
 	compartilhamentoSelecionado: Compartilhamento[];
+
+	@ViewChild('metadadosInput',{static: false}) metadadosInput: ElementRef<HTMLInputElement>;
 
 	constructor(
 		private atividadeService: AtividadeService,
@@ -116,9 +125,6 @@ export class DataFlowFormComponent implements OnInit {
 			codAtividade: ["", Validators.required],
 			atividade: ["", Validators.required],
 
-			codMetadados: ["", Validators.required],
-			metadados: ["", Validators.required],
-
 			indDescarte: [""],
 			indRisco: ["", Validators.required],
 
@@ -150,7 +156,6 @@ export class DataFlowFormComponent implements OnInit {
 								codArea: retorno.body[0].codArea,
 								codProcesso: retorno.body[0].codProcesso,
 								codAtividade: retorno.body[0].codAtividade,
-								codMetadados: retorno.body[0].codMetadados,
 
 								indDescarte: retorno.body[0].indDescarte,
 								indRisco: retorno.body[0].indRisco,
@@ -161,6 +166,8 @@ export class DataFlowFormComponent implements OnInit {
 								armazenamentos: retorno.body[0].armazenamentos,
 								compartilhamentos: retorno.body[0].compartilhamentos
 							});
+
+							this.metadadosDataFlow = retorno.body[0].metadados;
 
 							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
 
@@ -206,6 +213,12 @@ export class DataFlowFormComponent implements OnInit {
 				return;
 			}
 
+			if (this.metadadosDataFlow.length===0)
+			{
+				this.showMessage("Deve Ser Selecionado ao menos um Metadado","Warn");
+				return;
+			}
+
 			const DataFlow: DataFlow = this.dataFlowForm.getRawValue();
 			DataFlow.codDataFlow = this.codDataFlow;
 
@@ -222,6 +235,7 @@ export class DataFlowFormComponent implements OnInit {
 			DataFlow.codUsuarioInclusao = this.authService.loggedUserId;
 
 			DataFlow.codCicloMonitoramento = this.codCicloMonitoramento;
+			DataFlow.metadados = this.metadadosDataFlow;
 
 			if (this.codDataFlow) {
 				// Alteração
@@ -325,7 +339,7 @@ export class DataFlowFormComponent implements OnInit {
 	}
 
 	displayMetadados(metadados: Metadados): string {
-		return metadados ? metadados.valoresMetadados : "";
+		return metadados ? metadados.nomeMetadados : "";
 	}
 
 	selecionaAtividade(event) {
@@ -333,18 +347,36 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.atividade.setValue(selecionado);
 		this.dataFlowForm.controls.codAtividade.setValue(selecionado.codAtividade);
 
-		let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == selecionado.codMetadados)[0];
-		if (metadados) {
-      		this.dataFlowForm.controls.codMetadados.setValue(metadados.codMetadados);
-			this.dataFlowForm.controls.metadados.setValue(metadados);
-		}
+		this.metadadosDataFlow = selecionado.metadados;    
+        
+        this.removeSelecionados();
+
 	}
 
-	selecionaMetadados(event) {
-		let selecionado: Metadados = event.option.value;
-		this.dataFlowForm.controls.metadados.setValue(selecionado);
-		this.dataFlowForm.controls.codMetadados.setValue(selecionado.codMetadados);
+	remove(metadados: Metadados): void {
+		const index = this.metadadosDataFlow.indexOf(metadados);
+
+		if (index >= 0) {
+			this.metadadosDataFlow.splice(index, 1);
+			this.listaMetadados.push(metadados);
+		}
+
+		this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+
+		this.metadadosCtrl.setValue("");
 	}
+	
+	selectedMetadados(event: MatAutocompleteSelectedEvent): void {
+		this.metadadosDataFlow.push(event.option.value);
+	
+		this.metadadosInput.nativeElement.value = '';
+		const index = this.listaMetadados.indexOf(event.option.value);
+	
+		if (index >= 0) {
+		  this.listaMetadados.splice(index, 1);
+		}
+		this.metadadosCtrl.setValue("");
+	  }
 
 	private pesquisaAtividade(codProcesso: number) {
 		this.isLoading = true;
@@ -364,20 +396,61 @@ export class DataFlowFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-	private pesquisaMetadados() {
+	private pesquisaMetadados() {    
 		this.metadadosService.listaTodosMetadados().subscribe(
-			(retorno) => {
-				this.listaMetadados = retorno.body;
-
-				if (this.dataFlowForm.controls.codMetadados.value != 0) {
-					let metadados: Metadados = <Metadados>this.listaMetadados.filter(metadados => metadados.codMetadados == this.dataFlowForm.controls.codMetadados.value)[0];
-					if (metadados) {
-						this.dataFlowForm.controls.metadados.setValue(metadados);
-					}
-				}
-			}
-		)
+		  (retorno) => {
+			this.listaMetadados = retorno.body;    
+			
+			this.removeSelecionados();
+		
+			this.listaMetadadosFiltrados = this.metadadosCtrl.valueChanges
+			  .pipe(
+				startWith(''),
+				map(value => typeof value === 'string' ? value: value.nomeMetadados),
+				map(name => {
+				  return name ? this.filtraMetadados(name): this.listaMetadados.slice();
+				})
+			  );
+	
+			  this.isLoading = false;
+	
+		  });
+	
 		this.isLoading = false;
+	  }
+
+	removeSelecionados()
+	{
+		var index = -1;
+		if (this.listaMetadados != undefined && this.listaMetadados.length!=0 &&
+			this.metadadosDataFlow != undefined && this.metadadosDataFlow.length!=0)
+		{
+		var listaAux = this.listaMetadados;
+		this.listaMetadados = [];
+		listaAux.forEach(meta => {
+			index = -1;
+			this.metadadosDataFlow.forEach(metaDataFlow => {
+			if (meta.codMetadados === metaDataFlow.codMetadados)
+			{
+				index = 1;
+			}          
+			});
+
+			if (index===-1)
+			{
+			this.listaMetadados.push(meta);
+			}
+		});
+		this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+		
+		this.metadadosCtrl.setValue("");
+		}
+	}  
+
+	filtraMetadados(value: string): Metadados[] {
+		const filterValue = value.toLowerCase();
+
+		return this.listaMetadados.filter(item => item.nomeMetadados.trim().toLowerCase().includes(filterValue));
 	}
 
 	private pesquisaCicloVida() {
@@ -496,6 +569,7 @@ export class DataFlowFormComponent implements OnInit {
 				this.listaAreasFiltradas = this.dataFlowForm.controls.area.valueChanges
 					.pipe(
 						startWith(''),
+						map(value => value === undefined || value === null ? "": value),
 						map(value => typeof value === 'string' ? value : value.nomeArea),
 						map(name => {
 							return name ? this.filtraArea(name) : this.listaAreas.slice();
@@ -543,6 +617,7 @@ export class DataFlowFormComponent implements OnInit {
 				this.listaProcessosFiltradas = this.dataFlowForm.controls.processo.valueChanges
 					.pipe(
 						startWith(''),
+						map(value => value === undefined || value === null ? "": value),
 						map(value => typeof value === 'string' ? value : value.nomeProcesso),
 						map(name => {
 							return name ? this.filtraProcesso(name) : this.listaProcessos.slice();
@@ -573,13 +648,12 @@ export class DataFlowFormComponent implements OnInit {
 
 	closeDatePicker(eventData: any, picker:any) {
 
-    this.dataFlowForm.controls.dataCompetencia.setValue(eventData);
-
-      picker.close();
+    	this.dataFlowForm.controls.dataCompetencia.setValue(eventData);
+      	picker.close();
     }
 
 	private showMessage(msg: string, type: string = "Success") {
-   	 this.snackBar.openSnackBar(msg, null, type);
+   	 	this.snackBar.openSnackBar(msg, null, type);
   	}
 
 }

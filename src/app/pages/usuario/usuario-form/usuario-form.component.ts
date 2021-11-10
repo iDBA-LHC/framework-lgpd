@@ -190,6 +190,12 @@ export class UsuarioFormComponent implements OnInit {
     }
   }
 
+  alterarSenha($event)
+  {
+    $event.preventDefault();
+    this.router.navigate(["/muda-senha"]);
+  }
+
   gerarSenha($event)
   {
     $event.preventDefault();
