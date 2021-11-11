@@ -4,7 +4,6 @@ import { HttpClient, HttpResponse} from '@angular/common/http';
 import { AESService } from '../shared/components/aes/aesservice';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,9 +28,9 @@ export class UsuarioService {
     return this.http.get<Usuario>(environment.apiURL + "usuario/" + id.toString(), { observe: "response" });
   }
 
-  gerarSenha(id: number)
+  gerarSenha(usuario: Usuario)
   {
-    return this.http.get<Usuario>("" + id);
+    return this.http.post(environment.apiURL + "usuario/gerasenha/" , usuario, { observe: "response" });
   }
 
   inativarUsuario(usuario: Usuario)
@@ -42,6 +41,11 @@ export class UsuarioService {
   alterarUsuario(usuario: Usuario)
   {
     return this.http.put<Usuario>(environment.apiURL + "usuario/" + usuario.codigoUsuario , usuario, { observe: "response" });
+  }
+
+  alterarSenhaUsuario(usuario: Usuario)
+  {
+    return this.http.put<Usuario>(environment.apiURL + "usuario/" + usuario.codigoUsuario + "/senha", usuario, { observe: "response" });
   }
 
   alterarMeuUsuario(usuario: Usuario)

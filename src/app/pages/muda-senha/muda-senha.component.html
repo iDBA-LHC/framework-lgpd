@@ -1,0 +1,78 @@
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+
+        <div *ngIf="isLoading" class="overlay-spinner">
+            <div class="center-spinner">
+              <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+            </div>
+        </div>
+        <div>
+          <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="mudaSenhaForm"
+            (submit)="alterarSenha()">
+  
+              <mat-card-header>
+                  <mat-card-title>
+                      <h2>Alterar Senha</h2>
+                  </mat-card-title>
+              </mat-card-header>
+    
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Nome</mat-label>
+                  <input
+                      matInput
+                      formControlName="nomeUsuario"
+                      placeholder="Nome"
+                      autocomplete="off"
+                      readonly="true"
+                      type="text"/>
+              </mat-form-field>
+  
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                  <mat-label>Email</mat-label>
+                  <input
+                      matInput
+                      formControlName="emailUsuario"
+                      placeholder="Email"
+                      autocomplete="off"
+                      readonly="true"
+                      type="email"/>
+              </mat-form-field>
+  
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Nova Senha</mat-label>
+                <input
+                    matInput
+                    formControlName="novaSenha"
+                    placeholder="Nova Senha"
+                    autocomplete="off"                    
+                    type="password"/>
+                <mat-error *ngIf="mudaSenhaForm.controls.novaSenha.errors?.required">Nova Senha é Obrigatória</mat-error>
+            </mat-form-field>  
+            
+            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Confirma Senha</mat-label>
+                <input
+                    matInput
+                    formControlName="confirmaNovaSenha"
+                    placeholder="Confirma Senha"
+                    autocomplete="off"                    
+                    type="password"/>
+                <mat-error *ngIf="mudaSenhaForm.controls.confirmaNovaSenha.errors?.required">Confirmação da Senha é Obrigatória</mat-error>
+                <mat-error *ngIf="mudaSenhaForm.controls.confirmaNovaSenha.hasError('mismatchedPasswords')">Nova Senha e Confirmação da Nova Senha Não São Iguais</mat-error>
+            </mat-form-field>
+  
+            <mat-card-actions>
+                <button mat-raised-button color="accent">Salvar</button>
+            </mat-card-actions>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+    
+  

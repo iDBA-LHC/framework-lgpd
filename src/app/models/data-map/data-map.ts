@@ -1,6 +1,7 @@
 import { Compartilhamento } from "../compartilhamento/compartilhamento";
 import { FormaColeta } from "../forma-coleta/forma-coleta";
 import { LocalArmazenamento } from "../local-armazenamento/local-armazenamento";
+import { Metadados } from '../metadados/metadados';
 
 export class DataMap {
     codDataMap: number;
@@ -8,7 +9,7 @@ export class DataMap {
     codAtividade: number;
 	// 0 - DataMap / 1 - DataAnalisysMap
     indTipo: number;
-  	codMetadados: number;
+
     codBaseLegal: number;
     indPrincipios: number;
     indSensivel: number;
@@ -17,7 +18,8 @@ export class DataMap {
     indNecessitaConsentimento: number;
   	armazenamentos: Array<LocalArmazenamento>;
   	indTransfInternacional: number;
-  	compartilhamentos: Array<Compartilhamento>;
+    compartilhamentos: Array<Compartilhamento>;
+    metadados: Array<Metadados>;
     indAnonimizacao: number;
   	codCicloVida: number;
     indRisco: number;

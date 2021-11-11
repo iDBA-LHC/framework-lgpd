@@ -79,14 +79,18 @@ export class UsuarioListComponent implements OnInit {
 
     confirmRemoveDialog.afterClosed().subscribe((result) => {
       if (result) {
-        this.usuarioService.gerarSenha(usuario.codigoUsuario).subscribe(
+        this.isLoading = true;
+        this.usuarioService.gerarSenha(usuario).subscribe(
           () => {
             this.snackBar.openSnackBar(
               `Senha foi gerada com sucesso.`,
-              null
-            );
+              null);
+            this.isLoading = false;  
           },
-          (err) => this.snackBar.openSnackBar(err.error, null, "Error")
+          (err) => {
+            this.isLoading = false;  
+            this.snackBar.openSnackBar(err.error, null, "Error");
+          }
         );
       }
     });

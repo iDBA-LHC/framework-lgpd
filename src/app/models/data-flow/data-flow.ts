@@ -1,13 +1,13 @@
 import { Compartilhamento } from "../compartilhamento/compartilhamento";
 import { LocalArmazenamento } from "../local-armazenamento/local-armazenamento";
 import { Usuario } from '../usuario/usuario';
+import { Metadados } from '../metadados/metadados';
 
 export class DataFlow {
   codDataFlow: number;
   nomeProcessamento: string;
   codCicloMonitoramento: number;
   codAtividade: number;
-  codMetadados: number;
   indDescarte: number;
   indRisco: number;
   codCicloVida: number;
@@ -15,6 +15,7 @@ export class DataFlow {
   usuarios: Array<Usuario>;
   armazenamentos: Array<LocalArmazenamento>;
   compartilhamentos: Array<Compartilhamento>;
+  metadados: Array<Metadados>;
   
   nomeCicloMonitoramento: string;
   dataCompetencia: Date;

@@ -8,4 +8,5 @@ export class AuthData{
     token: string;
     dataHoraLogin: Date;
     dataHoraValidade: Date;
+    userAgent: string;
 }

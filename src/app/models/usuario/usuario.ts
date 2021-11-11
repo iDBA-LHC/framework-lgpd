@@ -3,6 +3,7 @@ export class Usuario {
 	codUsuario: number; // tosco
     nomeUsuario: string;
     emailUsuario: string;
+    senhaUsuario: string;
     codigoArea: number;
     nomeArea: string;
     codigoEmpresa: number;

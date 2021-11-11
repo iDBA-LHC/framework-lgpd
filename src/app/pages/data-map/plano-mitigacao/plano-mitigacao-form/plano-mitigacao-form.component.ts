@@ -2,8 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { DataMap } from 'src/app/models/data-map/data-map';
 import { DocumentoPlano } from 'src/app/models/documento-plano/documento-plano';
 import { PlanoMitigacao } from 'src/app/models/plano-mitigacao/plano-mitigacao';
 import { AuthService } from 'src/app/services/auth.service';
@@ -24,10 +22,6 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 	codPlanoMitigacao: number;
 	codDataMap: number;
 	isLoading = false;
-
-	dataMapAnt: DataMap;
-	listaDataMap: DataMap[];
-	listaDataMapFiltrados: Observable<DataMap[]>;
 
 	displayedColumns: string[] = ["desDocumentoPlano", "actions"];
 	dataSourceDocumentoPlano = new MatTableDataSource();
@@ -140,13 +134,17 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 
 			this.isLoading = true;
 
-			const PlanoMitigacao: PlanoMitigacao = this.planoMitigacaoForm.getRawValue();
-			PlanoMitigacao.codPlanoMitigacao = this.codPlanoMitigacao;
-			PlanoMitigacao.codDataMapping = this.codDataMap;
+			const planoMitigacao: PlanoMitigacao = this.planoMitigacaoForm.getRawValue();
+			planoMitigacao.codPlanoMitigacao = this.codPlanoMitigacao;
+			planoMitigacao.codDataMapping = this.codDataMap;
+
+			planoMitigacao.dataAditivacao = this.planoMitigacaoForm.controls.dataAditivacao.value == "" ? null : this.planoMitigacaoForm.controls.dataAditivacao.value;
+			planoMitigacao.dataRevisao = this.planoMitigacaoForm.controls.dataRevisao.value == "" ? null : this.planoMitigacaoForm.controls.dataRevisao.value;
+			planoMitigacao.dataRecusa = this.planoMitigacaoForm.controls.dataRecusa.value == "" ? null : this.planoMitigacaoForm.controls.dataRecusa.value;			
 
 			if (this.codPlanoMitigacao) {
 				// Alteração
-				this.PlanoMitigacaoService.alterarPlanoMitigacao(PlanoMitigacao).subscribe(
+				this.PlanoMitigacaoService.alterarPlanoMitigacao(planoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi atualizado com sucesso!`, null);
 						this.router.navigate(["data-analisys-map", this.codDataMap]);
@@ -162,7 +160,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				)
 			} else {
 				// Inclusão
-				this.PlanoMitigacaoService.incluirPlanoMitigacao(PlanoMitigacao).subscribe(
+				this.PlanoMitigacaoService.incluirPlanoMitigacao(planoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi criado com sucesso!`, null);
 						this.router.navigate(["data-analisys-map", this.codDataMap]);

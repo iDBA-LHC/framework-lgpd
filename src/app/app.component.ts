@@ -33,7 +33,7 @@ export class AppComponent {
               private authService: AuthService,
               private router: Router) {
 
-    router.events.subscribe((event: RouterEvent) => {
+    router.events.subscribe((event: RouterEvent) => {      
       this.navigationInterceptor(event)
     });
 
@@ -62,6 +62,7 @@ export class AppComponent {
 
   // Shows and hides the loading spinner during RouterEvent changes
   navigationInterceptor(event: RouterEvent): void {
+
     if (event instanceof NavigationStart) {
       this.showOverlay = true;
     }

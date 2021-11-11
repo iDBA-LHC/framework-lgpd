@@ -1,0 +1,73 @@
+<div fxLayout="row" fxFill fxLayoutAlign="center center" class="authBackground">
+    <mat-card class="w-30"> 
+      <form 
+        fxLayout="row wrap"
+        fxLayout="column"
+        fxLayoutAlign="space-between center"
+        [formGroup]="novaSenhaForm"
+        (submit)="criarNovaSenha()">
+        <mat-card-header *ngIf="ambiente">
+          <mat-card-title>
+            <h2 style="color: firebrick">{{this.ambiente}}</h2>
+          </mat-card-title>
+        </mat-card-header>
+  
+        <mat-card-header>
+            <mat-card-title>
+                <h2>Cadastrar Nova Senha</h2>
+            </mat-card-title>
+        </mat-card-header>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+            <mat-label>Nome</mat-label>
+            <input
+                matInput
+                formControlName="nomeUsuario"
+                placeholder="Nome"
+                autocomplete="off"
+                readonly="true"
+                type="text"/>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+            <mat-label>Email</mat-label>
+            <input
+                matInput
+                formControlName="emailUsuario"
+                placeholder="Email"
+                autocomplete="off"
+                readonly="true"
+                type="email"/>
+        </mat-form-field>
+
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+          <mat-label>Nova Senha</mat-label>
+          <input
+              matInput
+              formControlName="novaSenha"
+              placeholder="Nova Senha"
+              autocomplete="off"                    
+              type="password"/>
+          <mat-error *ngIf="novaSenhaForm.controls.novaSenha.errors?.required">Nova Senha é Obrigatória</mat-error>
+        </mat-form-field>  
+        
+        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+            <mat-label>Confirma Senha</mat-label>
+            <input
+                matInput
+                formControlName="confirmaNovaSenha"
+                placeholder="Confirma Senha"
+                autocomplete="off"                    
+                type="password"/>
+            <mat-error *ngIf="novaSenhaForm.controls.confirmaNovaSenha.errors?.required">Confirmação da Senha é Obrigatória</mat-error>
+            <mat-error *ngIf="novaSenhaForm.controls.confirmaNovaSenha.hasError('mismatchedPasswords')">Nova Senha e Confirmação da Nova Senha Não São Iguais</mat-error>
+        </mat-form-field>
+
+        <mat-card-actions>
+            <button mat-raised-button color="accent">Salvar</button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+
+  

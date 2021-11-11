@@ -39,9 +39,7 @@ export class MetadadosFormComponent implements OnInit {
   private createForm() {
     this.metadadosForm = this.formBuilder.group({
       nomeMetadados: ["", Validators.required],
-      valoresMetadados: ["", Validators.required],
-      indSensivel: [false, ],
-      nomeLei: []
+      indSensivel: [false, ]
     });
   }
 
@@ -55,9 +53,7 @@ export class MetadadosFormComponent implements OnInit {
             (retorno) => {
               this.metadadosForm.patchValue({
                 nomeMetadados: retorno.body[0].nomeMetadados,
-                valoresMetadados: retorno.body[0].valoresMetadados,
                 indSensivel: retorno.body[0].indSensivel == 0 ? false : true,
-                nomeLei: retorno.body[0].nomeLei,
               });
             },
             (err) => {

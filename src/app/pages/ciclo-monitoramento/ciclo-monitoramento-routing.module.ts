@@ -14,6 +14,13 @@ const routes: Routes = [{
     import("./ciclo-monitoramento-form/ciclo-monitoramento-form.module").then(
       (module) => module.CicloMonitoramentoFormModule
     )
+},
+{
+  path: ":cicloId/documento-ciclo/:id?",
+  loadChildren: () =>
+    import("./documento-ciclo-form/documento-ciclo-form.module").then(
+      (module) => module.DocumentoCicloFormModule
+    )
 }];
 
 @NgModule({

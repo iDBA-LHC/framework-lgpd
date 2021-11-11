@@ -8,16 +8,14 @@
     #sidenav
     [(mode)]="over"
     [(opened)]="opened"
-    class="bottom-to-top sidemenu-back"
-  >
+    class="bottom-to-top sidemenu-back">
     <app-sidemenu></app-sidemenu>
   </mat-sidenav>
 
   <mat-sidenav-content perfectScrollbar>
     <app-header
       *ngIf="isLoggedIn$ | async as isLoggedIn"
-      (sideNav)="getSideNav()"
-    >
+      (sideNav)="getSideNav()">
     </app-header>
     <router-outlet></router-outlet>
     <!--<div class="bottom-img-wrapper" *ngIf="isLoggedIn$ | async as isLoggedIn">

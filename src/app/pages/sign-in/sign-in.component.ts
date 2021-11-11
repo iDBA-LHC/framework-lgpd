@@ -4,9 +4,7 @@ import { environment } from "./../../../environments/environment";
 import { AuthService } from "./../../services/auth.service";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
-import { emailValidator } from "src/app/shared/utils/app.validator";
 import { Router } from "@angular/router";
-import { BehaviorSubject } from "rxjs";
 
 @Component({
   selector: "app-sign-in",
@@ -22,7 +20,7 @@ export class SignInComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private snackBar: CustomSnackBarService
+    private snackBar: CustomSnackBarService,
   ) {}
 
   ngOnInit() {

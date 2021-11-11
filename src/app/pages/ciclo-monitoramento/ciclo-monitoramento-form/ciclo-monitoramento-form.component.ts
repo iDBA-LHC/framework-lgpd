@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -14,6 +14,8 @@ import { EmpresaService } from 'src/app/services/empresa.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { DocumentoCicloService } from 'src/app/services/documento-ciclo.service';
+import { DocumentoCiclo } from 'src/app/models/documento-ciclo/documento-ciclo';
 
 @Component({
   selector: 'app-ciclo-monitoramento-form',
@@ -34,6 +36,12 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   listaUsuariosFiltrados: Usuario[];
 
   usuarioSelecionado: Usuario[];
+
+  displayedColumns: string[] = ["desDocumentoCiclo", "actions"];
+	dataSourceDocumentoCiclo = new MatTableDataSource();
+
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+	@ViewChild(MatSort, { static: false }) sort: MatSort;
 	
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -42,6 +50,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
     private cicloMonitoramentoService: CicloMonitoramentoService,
     private empresaService: EmpresaService,
     private usuarioService: UsuarioService,
+    private documentoCicloService: DocumentoCicloService,
     private snackBar: CustomSnackBarService,
     private router: Router,
     private dialog: MatDialog,
@@ -84,6 +93,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
             this.cicloMonitoramentoUsuarioCriado = retorno.body[0].codUsuarioInclusao;
 
             this.pesquisaEmpresas();
+            this.pesquisaDocumentoCiclo();
             
           });
       } else {
@@ -91,6 +101,25 @@ export class CicloMonitoramentoFormComponent implements OnInit {
       }
     });
   }
+
+  pesquisaDocumentoCiclo() {
+		this.documentoCicloService.listarTodosDocumentoCiclo(this.codCicloMonitoramento).subscribe(
+			(response) => {
+				this.dataSourceDocumentoCiclo = new MatTableDataSource<DocumentoCiclo>(response.body);
+				setTimeout(() => {
+					this.dataSourceDocumentoCiclo.filterPredicate = (
+						data: {
+							desDocumentoCiclo: string
+						},
+						filterValue: string
+					) => data.desDocumentoCiclo.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+
+					this.dataSourceDocumentoCiclo.paginator = this.paginator;
+					this.dataSourceDocumentoCiclo.sort = this.sort;
+				})
+			}
+		)
+	}
 
   private pesquisaEmpresas() {
     this.empresaService.listaTodasEmpresas().subscribe(
@@ -217,10 +246,18 @@ export class CicloMonitoramentoFormComponent implements OnInit {
       }      
     } else {
       this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+    }
   }
+
+  applyFilterDocumento(value: string) {
+    this.dataSourceDocumentoCiclo.filter = value.trim().toLowerCase();
   }
-}
-function ViewChild(arg0: string) {
-	throw new Error('Function not implemented.');
+  
+  openNewWindow(documentoCiclo: DocumentoCiclo): void {
+    const url = documentoCiclo.desEnderecoDocumento;
+  
+    window.open(url, '_blank');
+  }
+
 }
 

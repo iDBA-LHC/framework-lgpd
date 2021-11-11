@@ -37,6 +37,14 @@ const routes: Routes = [
         canActivate: [AuthMeuUsuarioGuard],
       },
       {
+        path: "muda-senha",
+        loadChildren: () =>
+          import("./pages/muda-senha/muda-senha.module").then(
+            (module) => module.MudaSenhaModule
+          ),
+          canActivate: [AuthGuard],  
+      },
+      {
         path: "controladora",
         loadChildren: () =>
           import("./pages/empresa/empresa.module").then(
@@ -121,9 +129,8 @@ const routes: Routes = [
             (module) => module.DataFlowModule
           ),
         canActivate: [AuthGuard],
-      }
+      },
     ],
-    canActivate: [AuthGuard],
   },
   {
     path: "public",
@@ -135,6 +142,13 @@ const routes: Routes = [
             (module) => module.SignInModule
           ),
       },
+      {
+        path: "nova-senha",
+        loadChildren: () =>
+          import("./pages/nova-senha/nova-senha.module").then(
+            (module) => module.NovaSenhaModule
+          ), 
+      }
     ],
   },
 ];

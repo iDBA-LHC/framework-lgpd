@@ -35,33 +35,9 @@
                   <mat-error *ngIf="metadadosForm.controls.nomeMetadados.errors?.required">Nome é Obrigatório</mat-error>
               </mat-form-field> 
 
-            
-            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-                <mat-label>Valores</mat-label>
-                <textarea
-                    matInput
-                    formControlName="valoresMetadados"
-                    placeholder="Metadados"
-                    autocomplete="off"
-                    type="textField"
-                    resizeToFitContent="true">
-                    </textarea>
-                    <mat-error *ngIf="metadadosForm.controls.valoresMetadados.errors?.required">Metadados é Obrigatório</mat-error>
-            </mat-form-field> 
-
-            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-                <mat-label>Lei</mat-label>
-                <input
-                    matInput
-                    formControlName="nomeLei"
-                    placeholder="Nome Lei"
-                    autocomplete="off"
-                    type="text"/>
-            </mat-form-field> 
-
-            <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indSensivel" style="width: 50%;">
-                <span class="ng-tns-c15-3 ng-star-inserted">Sensível</span>
-            </mat-slide-toggle>
+              <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indSensivel" style="width: 50%;">
+                  <span class="ng-tns-c15-3 ng-star-inserted">Sensível</span>
+              </mat-slide-toggle>
   
               <mat-card-actions>
                 <button mat-raised-button color="accent">Salvar</button>

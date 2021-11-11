@@ -38,7 +38,8 @@ export class BaseLegalFormComponent implements OnInit {
 
   private createForm() {
     this.baseLegalForm = this.formBuilder.group({
-      nomeBase: ["", Validators.required]
+      nomeBase: ["", Validators.required],
+      desBase: ["", Validators.required]
     });
   }
 
@@ -51,7 +52,8 @@ export class BaseLegalFormComponent implements OnInit {
           this.baseLegalService.pesquisaBaseLegal(this.baseLegalId).subscribe(
             (retorno) => {
               this.baseLegalForm.patchValue({
-                nomeBase: retorno.body[0].nomeBase
+                nomeBase: retorno.body[0].nomeBase,
+                desBase: retorno.body[0].desBase
               });
             },
             (err) => {
@@ -116,5 +118,4 @@ export class BaseLegalFormComponent implements OnInit {
       }
     }
   }
-
 }

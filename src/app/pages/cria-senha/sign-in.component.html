@@ -1,0 +1,60 @@
+<!--<div fxLayout="row" fxLayoutAlign="center center" class="top-img-wrapper authBackground">
+  <img src="./../../../assets/img/logo.png" class="top-img"/>
+</div>-->
+<div fxLayout="row" fxFill fxLayoutAlign="center center" class="authBackground">
+  <mat-card class="w-30"> 
+    <form 
+      fxLayout="row wrap"
+      fxLayout="column"
+      fxLayoutAlign="space-between center"
+      [formGroup]="signInForm"
+      (submit)="login(signInForm.value)"
+    >
+      <mat-card-header *ngIf="ambiente">
+        <mat-card-title>
+          <h2 style="color: firebrick">{{this.ambiente}}</h2>
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-header>
+        <mat-card-title>
+          <h2>Bem vindo</h2>
+        </mat-card-title>
+      </mat-card-header>
+      <div class="my-overlay" *ngIf="isLoading">
+        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+      </div>
+      <mat-form-field class="w-100" fxFlex>
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          placeholder="Email"
+          autocomplete="off"/>
+        <mat-error *ngIf="signInForm.controls.email.errors?.required">Email é obrigatório</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-100" fxFlex>
+        <mat-label>Senha</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          placeholder="Password"
+          autocomplete="off"
+          type="password"
+        />
+        <mat-error *ngIf="signInForm.controls.password.errors?.required"
+          >Senha é obrigatória</mat-error>
+      </mat-form-field>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary">
+          Acessar
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>
+<!--<div fxLayout="row" fxLayoutAlign="center center" class="bottom-img-wrapper authBackground">
+  <img src="./../../../assets/img/light.png" class="bottom-img"/>
+</div>-->

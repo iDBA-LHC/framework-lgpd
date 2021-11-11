@@ -22,6 +22,7 @@ export class AuthService {
   loggedUserName: string;
   loggedUserId: number;
   loggedUserType: Number;
+  loggedUserEmail: string;
   active: Boolean;
   loggedTime: Date;
   token: string;
@@ -39,7 +40,23 @@ export class AuthService {
 
       if (environment.production)
       {
-        token = aesService.decrypt(token);
+        try{
+          token = this.aesService.decrypt(token);
+        }
+        catch {
+          this.snackBar.openSnackBar("Sessão Inválida!", "error");
+          this.logout();
+          return;
+        }
+      }
+      else
+      {
+        if (!this.IsJsonString(token))
+        {
+          this.snackBar.openSnackBar("Sessão Inválida!", "error");
+          this.logout();
+          return;
+        }
       }
 
       this.loggedUserName = JSON.parse(token).nomeUsuario;
@@ -47,6 +64,7 @@ export class AuthService {
       this.loggedUserType = JSON.parse(token).indTipoUsuario;
       this.active = JSON.parse(token).indAtivo;
       this.loggedTime = JSON.parse(token).dataHoraLogin;
+      this.loggedUserEmail = JSON.parse(token).emailUsuario;
       this.token = JSON.parse(token).token;
       this.loggedIn.next(true);
     }
@@ -54,9 +72,7 @@ export class AuthService {
 
   login(authRequest: AuthRequest) {    
 
-    this.aesService = new AESService();
-
-    //authRequest.password = aesService.encrypt(authRequest.password)
+    authRequest.password = this.aesService.criptogrfaSenha(authRequest.password)
 
     this.http.post<AuthData>(environment.apiURL + "usuario/login", authRequest, { observe: 'response' }).subscribe( 
       resp => {        
@@ -64,6 +80,7 @@ export class AuthService {
         authData = resp.body[0];
         authData.dataHoraLogin = new Date();
         authData.dataHoraValidade = new Date(authData.dataHoraLogin.getTime() + environment.timeout);
+        authData.userAgent = window.navigator.userAgent;
         this.setSession(authData);
         this.loggedIn.next(true);
         this.snackBar.openSnackBar("Bem vindo!", null);
@@ -87,6 +104,11 @@ export class AuthService {
     return this.loggedUserType;
   }
 
+  getLoggedUserEmail()
+  {
+    return this.loggedUserEmail;
+  }
+
   getToken()
   {
     return this.token;
@@ -98,6 +120,11 @@ export class AuthService {
 
   getLoggedTime(){
     return this.loggedTime
+  }
+
+  getIsLoggedIn()
+  {
+    return this.loggedIn.getValue();
   }
 
   public get isLoggedIn() {
@@ -112,35 +139,24 @@ export class AuthService {
     this.router.navigate(["/public/sign-in"]);
   }
 
-  /*private handleJwtResponse(tokenResponse) {
-    if (tokenResponse.OutputPars==="OK")
-    {
-      var authData:AuthData = new AuthData();
-      //usuario.codigousuario = tokenResponse.retorno.usuario[0].codigoUsuario;
-      
-      authData.codigoUsuario = tokenResponse.
-      usuario.nomeUsuario   = tokenResponse.retorno.usuario[0].nomeUsuario;
-      //usuario.indTipo       = tokenResponse.retorno.usuario[0].indTipo;
-      usuario.indAtivo      = tokenResponse.retorno.usuario[0].indAtivo;
-      usuario.dataHoraLogin = tokenResponse.retorno.usuario[0].dataHoraLogin;
-      usuario.dataHoraValidade = new Date(usuario.dataHoraLogin.getTime() + environment.timeout);
-
-      this.setSession(usuario);      
-    }
-    else
-    { 
-      throw new Error(tokenResponse.ErrMsg);     
-    }
-    return tokenResponse;
-  }*/
-
   isTokenExpired(token?: string): boolean {
     if (!token) token = localStorage.getItem(this.jwtTokenName);
-    if (!token) return true;    
+    if (!token) return true;   
 
     if (environment.production)
     {
-      token = this.aesService.decrypt(token);
+      try{
+        token = this.aesService.decrypt(token);
+      }
+      catch (error){
+        return true;
+      }
+    }
+    else if (!this.IsJsonString(token))
+    {
+      this.snackBar.openSnackBar("Sessão Inválida!", "error");
+      this.logout();
+      return;
     }
 
     var authData = JSON.parse(token);
@@ -159,20 +175,38 @@ export class AuthService {
       token = this.aesService.encrypt(token);
     }
     localStorage.setItem(this.jwtTokenName, token);
-    this.loggedUserName = authData.nomeUsuario;
-    this.loggedUserId   = authData.codigoUsuario;
-    this.loggedUserType = authData.indTipoUsuario;
-    this.loggedTime     = authData.dataHoraLogin;
-    this.token          = authData.token;
+    this.loggedUserName  = authData.nomeUsuario;
+    this.loggedUserId    = authData.codigoUsuario;
+    this.loggedUserType  = authData.indTipoUsuario;
+    this.loggedTime      = authData.dataHoraLogin;
+    this.token           = authData.token;
+    this.loggedUserEmail = authData.emailUsuario;
     this.loggedIn.next(true);
   }
 
   private getSession():boolean {
     var token:string = localStorage.getItem(this.jwtTokenName);
     if (!token) return false;
+
     if (environment.production)
     {
-      token = this.aesService.decrypt(token);
+      try{
+        token = this.aesService.decrypt(token);
+      }
+      catch (error){
+        return false;
+      }
+    }
+    else if (!this.IsJsonString(token))
+    {
+      this.snackBar.openSnackBar("Sessão Inválida!", "error");
+      this.logout();
+      return;
+    }
+
+    if (!token)
+    {
+      return false;
     }
     let authData : AuthData = JSON.parse(token);
     if ( authData ){
@@ -186,10 +220,25 @@ export class AuthService {
   renewToken()
   {
     var token:string = localStorage.getItem(this.jwtTokenName);
+
     if (environment.production)
     {
-      token = this.aesService.decrypt(token);
+      try{
+        token = this.aesService.decrypt(token);
+      }
+      catch (error){
+        this.snackBar.openSnackBar("Sessão Inválida!", "error");
+        this.logout();
+        return;
+      }
     }
+    else if (!this.IsJsonString(token))
+    {
+      this.snackBar.openSnackBar("Sessão Inválida!", "error");
+      this.logout();
+      return;
+    }
+
     var authData = JSON.parse(token);
     authData.dataHoraValidade = new Date(new Date().getTime() + environment.timeout);
     this.setSession(authData);
@@ -204,8 +253,22 @@ export class AuthService {
 
       if (environment.production)
       {
-        token = this.aesService.decrypt(token);
+        try{
+          token = this.aesService.decrypt(token);
+        }
+        catch (error){
+          this.snackBar.openSnackBar("Sessão Inválida!", "error");
+          this.logout();
+          return;
+        }
       }
+      else  if (!this.IsJsonString(token))
+      {
+        this.snackBar.openSnackBar("Sessão Inválida!", "error");
+        this.logout();
+        return;
+      }
+
       const authRequest: AuthRequest = {
         email: JSON.parse(token).emailUsuario,
         password: JSON.parse(token).senhaUsuario,
@@ -217,6 +280,7 @@ export class AuthService {
           authData = resp.body[0];
           authData.dataHoraLogin = new Date();
           authData.dataHoraValidade = new Date(authData.dataHoraLogin.getTime() + environment.timeout);
+          authData.userAgent = window.navigator.userAgent;
           this.setSession(authData);
           callBackFunction();
         },
@@ -226,5 +290,13 @@ export class AuthService {
       );
     }
   } 
-
+  
+  private IsJsonString(str:string) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+  }
 }

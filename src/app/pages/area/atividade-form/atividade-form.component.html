@@ -35,17 +35,34 @@
                   <mat-error *ngIf="atividadeForm.controls.nomeAtividade.errors?.required">Nome é Obrigatório</mat-error>
               </mat-form-field>
 
-              <mat-form-field style="width: 50%;" fxFlexOffset="5px">   
+              <mat-form-field fxFlexOffset="5px" style="width: 50%;">
                 <mat-label>Metadados</mat-label>
-                <input 
-                  matInput
-                  formControlName="metadados"
-                  placeholder="Metadados"
-                  [matAutocomplete]="autoMetadados"/>
-    
-                <mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selecionaMetadados($event)">
+                <mat-chip-list #chipListMetadados aria-label="Selecione Metadados">
+                  <mat-chip
+                  *ngFor="let metadados of metadadosAtividade"
+                  [removable]="true"
+                  (removed)="remove(metadados)">
+
+                  <span *ngIf="metadados.indSensivel" style="color: red;">
+                      {{metadados.nomeMetadados}}
+                  </span>
+                  <span *ngIf="!metadados.indSensivel">
+                    {{metadados.nomeMetadados}}
+                  </span>
+
+                  <mat-icon matChipRemove>cancel</mat-icon>                    
+                </mat-chip>
+                  <input
+                    placeholder="Metadados..."
+                    #metadadosInput
+                    [formControl]="metadadosCtrl"
+                    [matAutocomplete]="autoMetadados"
+                    [matChipInputFor]="chipListMetadados"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                </mat-chip-list>
+                <mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selectedMetadados($event)">
                   <mat-option *ngFor="let metadados of listaMetadadosFiltrados | async" [value]="metadados">
-                    {{metadados.valoresMetadados}}
+                    {{metadados.nomeMetadados}}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
