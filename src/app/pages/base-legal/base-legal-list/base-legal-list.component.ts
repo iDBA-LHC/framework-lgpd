@@ -6,6 +6,8 @@ import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-ba
 import { BaseLegalService } from 'src/app/services/base-legal.service';
 import { BaseLegal } from 'src/app/models/base-legal/base-legal';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-base-legal-list',
@@ -15,13 +17,13 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 
 export class BaseLegalListComponent implements OnInit {
     isLoading = false;
+    permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
     displayedColumns: string[] = ["nomeBase", "actions"];
 
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-
 
     constructor(
         private baseLegalService: BaseLegalService,
@@ -68,6 +70,45 @@ export class BaseLegalListComponent implements OnInit {
 
     applyFilter(value: string) {
         this.dataSource.filter = value.trim().toLowerCase();
+    }
+
+    excluir(baseLegal: BaseLegal)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Base Legal",
+              msg: `Tem certeza que deseja prosseguir com exclusão da Base Legal ${baseLegal.nomeBase}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusao(baseLegal);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusao(baseLegal:BaseLegal)
+    {
+        this.baseLegalService.excluirBaseLegal(baseLegal.codigoBase).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Base Legal ${baseLegal.nomeBase} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaBasesLegais();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusao(baseLegal);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
     }
 
 }

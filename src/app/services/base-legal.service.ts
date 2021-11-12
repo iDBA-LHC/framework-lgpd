@@ -30,4 +30,9 @@ export class BaseLegalService {
       `${environment.apiURL}base_legal/`,
       baseLegal, { observe: "response" })
   }
+
+  excluirBaseLegal(id: number)
+  {
+    return this.http.delete(`${environment.apiURL}base_legal/${id}`,{ observe: "response" })
+  }
 }

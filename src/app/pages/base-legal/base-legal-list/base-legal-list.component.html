@@ -15,7 +15,7 @@
               color="accent"
               [routerLink]="['/base-legal', '']"
               routerLinkActive="active">
-              <mat-icon>add</mat-icon>Nova Base Legal</a>
+              <mat-icon>add</mat-icon>Nova Base Legal</a>              
           </div>
         </div>
     </div>
@@ -45,6 +45,17 @@
                 color="accent"
                 [routerLink]="['/base-legal', element.codigoBase]">
                 Editar
+              </button>
+              <button
+                *ngIf="permiteExclusao"
+                mat-raised-button
+                color="warn"          
+                [disabled]="element.indRelacionamento ? true : false"      
+                (click)="excluir(element)">
+                <span matTooltip="Existe Mapa Associado. Não É Possível Excluir" 
+                      [matTooltipDisabled]="!element.indRelacionamento">
+                  Excluir
+                </span>
               </button>
             </div>
           </td>

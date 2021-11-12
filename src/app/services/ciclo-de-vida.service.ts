@@ -29,4 +29,9 @@ export class CicloDeVidaService {
       `${environment.apiURL}ciclo_vida/`,
       cicloDeVida, { observe: "response" });
   }
+
+  excluirCicloDeVida(id: number)
+  {
+    return this.http.delete(`${environment.apiURL}ciclo_vida/${id}`,{ observe: "response" })
+  }
 }
