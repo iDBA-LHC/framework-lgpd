@@ -29,4 +29,9 @@ export class LocalArmazenamentoService {
   alterarLocalArmazenamento(localArmazenamento: LocalArmazenamento) {
     return this.http.put<LocalArmazenamento>(`${environment.apiURL}${this.apiSuffix}`, localArmazenamento, { observe: "response" });
   }
+
+  excluirLocalArmzenamento(id: number)
+  {
+    return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`,{ observe: "response" })
+  }
 }

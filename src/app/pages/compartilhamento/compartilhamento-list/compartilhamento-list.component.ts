@@ -6,6 +6,8 @@ import { CompartilhamentoService } from 'src/app/services/compartilhamento.servi
 import { ExportPdfService } from 'src/app/services/export-pdf.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-compartilhamento-list',
@@ -15,6 +17,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 
 export class CompartilhamentoListComponent implements OnInit {
   isLoading = false;
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   displayedColumns: string[] = ["nomeCompartilhamento", "nomeAplicacao", "nomeModulo", "nomeFornecedor", "actions"];
 
@@ -70,4 +73,43 @@ export class CompartilhamentoListComponent implements OnInit {
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
+
+  excluir(compartilhamento: Compartilhamento)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Compartilhamento",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Compartilhamento ${compartilhamento.nomeCompartilhamento}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusao(compartilhamento);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusao(compartilhamento: Compartilhamento)
+    {
+        this.compartilhamentoService.excluirCompartilhamento(compartilhamento.codCompartilhamento).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Compartilhamento ${compartilhamento.nomeCompartilhamento} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaCompartilhamentos();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusao(compartilhamento);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 }

@@ -6,6 +6,8 @@ import { ExportPdfService } from "src/app/services/export-pdf.service";
 import { FormaColetaService } from "src/app/services/forma-coleta.service";
 import { CustomSnackBarService } from "src/app/shared/components/custom-snack-bar/custom-snack-bar.service";
 import { TrataExcessaoConexao } from "src/app/shared/utils/trata-excessao-conexao";
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
     selector: 'app-forma-coleta-list',
@@ -15,6 +17,7 @@ import { TrataExcessaoConexao } from "src/app/shared/utils/trata-excessao-conexa
 
 export class FormaColetaListComponent implements OnInit {
     isLoading = false;
+    permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
     displayedColumns: string[] = ["nomeFormaColeta", "actions"];
 
@@ -66,5 +69,44 @@ export class FormaColetaListComponent implements OnInit {
     
     applyFilter(value: string) {
         this.dataSource.filter = value.trim().toLowerCase();
+    }
+
+    excluir(formaColeta: FormaColeta)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Forma de Coleta",
+              msg: `Tem certeza que deseja prosseguir com exclusão da Forma de Coleta ${formaColeta.nomeFormaColeta}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusao(formaColeta);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusao(formaColeta: FormaColeta)
+    {
+        this.formaColetaService.excluirFormaColeta(formaColeta.codFormaColeta).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Forma de Coleta ${formaColeta.nomeFormaColeta} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaFormaColetas();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusao(formaColeta);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
     }
 }

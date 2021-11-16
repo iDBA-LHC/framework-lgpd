@@ -6,5 +6,5 @@ export class LocalArmazenamento {
     indNuvem: number;
     nomeProvedorNuvem: string;
     codCompartilhamento: number;
-	codigoEmpresa: any;
+	indRelacionamento: boolean;
 }

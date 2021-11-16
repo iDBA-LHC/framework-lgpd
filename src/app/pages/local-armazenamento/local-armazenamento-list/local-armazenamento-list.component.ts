@@ -6,6 +6,8 @@ import { ExportPdfService } from 'src/app/services/export-pdf.service';
 import { LocalArmazenamentoService } from 'src/app/services/local-armazenamento.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-local-armazenamento-list',
@@ -16,6 +18,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class LocalArmazenamentoListComponent implements OnInit {
 
   isLoading = false;
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   displayedColumns: string[] = ["nomeLocalArmazenamento", "actions"];
 
@@ -68,5 +71,44 @@ export class LocalArmazenamentoListComponent implements OnInit {
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
+
+  excluir(localArmazenamento: LocalArmazenamento)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Local de Armazenamento",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Local de Armazenamento ${localArmazenamento.nomeLocalArmazenamento}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusao(localArmazenamento);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusao(localArmazenamento: LocalArmazenamento)
+    {
+        this.localArmazenamentoService.excluirLocalArmzenamento(localArmazenamento.codLocalArmazenamento).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Local de Armzenamento ${localArmazenamento.nomeLocalArmazenamento} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaLocaisArmazenamento();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusao(localArmazenamento);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 
 }

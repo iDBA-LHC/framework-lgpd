@@ -29,4 +29,9 @@ export class CompartilhamentoService {
   alterarCompartilhamento(compartilhamento: Compartilhamento) {
     return this.http.put<Compartilhamento>(`${environment.apiURL}${this.apiSuffix}`, compartilhamento, { observe: "response" });
   }
+
+  excluirCompartilhamento(id: number)
+  {
+    return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`,{ observe: "response" })
+  }
 }

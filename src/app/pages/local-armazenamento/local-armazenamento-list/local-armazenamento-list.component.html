@@ -46,6 +46,17 @@
                 [routerLink]="['/local-armazenamento', element.codLocalArmazenamento]">
                 Editar
               </button>
+              <button
+                *ngIf="permiteExclusao"
+                mat-raised-button
+                color="warn"          
+                [disabled]="element.indRelacionamento ? true : false"
+                (click)="excluir(element)">
+                <span matTooltip="Existe Mapa Associado. Não É Possível Excluir" 
+                      [matTooltipDisabled]="!element.indRelacionamento">
+                  Excluir
+                </span>
+              </button>
             </div>
           </td>
         </ng-container>

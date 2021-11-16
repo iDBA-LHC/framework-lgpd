@@ -5,5 +5,5 @@ export class Compartilhamento {
     nomeModulo: string;
     nomeFornecedor: string;
     codLocalArmazenamento: number;
-	codigoEmpresa: any;
+	indRelacionamento: boolean;
 }

@@ -32,4 +32,9 @@ export class FormaColetaService {
             formaColeta, {observe: "response"}
         );
     }
+
+    excluirFormaColeta(id: number)
+    {
+      return this.http.delete(`${environment.apiURL}forma_coleta/${id}`,{ observe: "response" })
+    }
 }
