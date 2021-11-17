@@ -29,4 +29,8 @@ export class AtividadeService {
   public alterarAtividade(atividade: Atividade) {
     return this.http.put(`${environment.apiURL}${this.apiSufix}`, atividade, { observe: "response" });
   }
+
+  public excluirAtividade(id: number) {
+    return this.http.delete(`${environment.apiURL}${this.apiSufix}${id}`, { observe: "response" });
+  }
 }

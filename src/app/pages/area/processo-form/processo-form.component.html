@@ -61,7 +61,6 @@
         Atividades
       </mat-panel-title>
     </mat-expansion-panel-header>
-    
 
     <div class="marginContent">
       <div fxLayout="row">
@@ -102,6 +101,17 @@
                   [routerLink]="['/area', areaId, 'processo', processoId, 'atividade', element.codAtividade]">
                   Editar
                 </button>
+                <button
+                  *ngIf="permiteExclusao"
+                  mat-raised-button
+                  color="warn"          
+                  [disabled]="element.indRelacionamento ? true : false"
+                  (click)="excluirAtividade(element)">
+                  <span matTooltip="Existe Mapa Associado. Não É Possível Excluir" 
+                        [matTooltipDisabled]="!element.indRelacionamento">
+                    Excluir
+                  </span>
+                </button>
               </div>
             </td>
           </ng-container>
@@ -113,8 +123,6 @@
     </div>
 
   </mat-expansion-panel>
-
-
 
   <!-- Contratos -->
   <mat-expansion-panel *ngIf="processoId" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
@@ -158,11 +166,22 @@
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
               <div class="example-button-row">
+                <button mat-raised-button color="primary"
+                  (click)="openNewWindow(element)">
+                  Visualizar Documento
+                </button>
                 <button
                   mat-raised-button
                   color="accent"
                   [routerLink]="['/area', areaId, 'processo', processoId, 'contrato', element.codContrato]">
                   Editar
+                </button>
+                <button
+                  *ngIf="permiteExclusao"
+                  mat-raised-button
+                  color="warn"          
+                  (click)="excluirContrato(element)">
+                    Excluir
                 </button>
               </div>
             </td>

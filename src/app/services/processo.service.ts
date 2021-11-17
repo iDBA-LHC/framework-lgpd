@@ -32,4 +32,8 @@ export class ProcessoService {
     return this.http.put(`${environment.apiURL}${this.apiSufix}`, processo, { observe: "response" });
   }
 
+  excluirProcesso(id: number) {
+    return this.http.delete(`${environment.apiURL}${this.apiSufix}${id}`, { observe: "response" });
+  }
+
 }

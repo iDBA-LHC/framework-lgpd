@@ -11,6 +11,8 @@ import { ContratoService } from 'src/app/services/contrato.service';
 import { ProcessoService } from 'src/app/services/processo.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-processo-form',
@@ -18,6 +20,8 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
   styleUrls: ['./processo-form.component.css']
 })
 export class ProcessoFormComponent implements OnInit {
+
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   processoForm: FormGroup;
   processoId: number;
@@ -103,6 +107,7 @@ export class ProcessoFormComponent implements OnInit {
           this.dataSourceAtividade.paginator = this.paginatorAtividade;
           this.dataSourceAtividade.sort = this.sortAtividade;
         });
+        this.isLoading = false;
       }
     );
   };
@@ -125,7 +130,9 @@ export class ProcessoFormComponent implements OnInit {
 
           this.dataSourceContrato.paginator = this.paginatorContrato;
           this.dataSourceContrato.sort = this.sortContrato;
-        })
+
+        });
+        this.isLoading = false;
       }
     )
   };
@@ -185,6 +192,90 @@ export class ProcessoFormComponent implements OnInit {
   navigateToArea()
 	{
     this.router.navigate(["/area", this.areaId]);
-	}
+  }
+
+  openNewWindow(contrato: Contrato): void {
+    const url = contrato.enderecoDocumento;
+  
+    window.open(url, '_blank');
+  }
+  
+  excluirContrato(contrato: Contrato)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Contrato",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Contrato ${contrato.objetoContrato}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusaoContrato(contrato);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusaoContrato(contrato: Contrato)
+    {
+        this.contratoService.excluirContrato(contrato.codContrato).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Contrato ${contrato.objetoContrato} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaContratos();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusaoContrato(contrato);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
+
+    excluirAtividade(atividade: Atividade)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Atividade",
+              msg: `Tem certeza que deseja prosseguir com exclusão da Atividade ${atividade.nomeAtividade}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusaoAtividade(atividade);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusaoAtividade(atividade: Atividade)
+    {
+        this.atividadeService.excluirAtividade(atividade.codAtividade).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Atividade ${atividade.nomeAtividade} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaAtividades();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusaoAtividade(atividade);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 
 }

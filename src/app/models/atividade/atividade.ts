@@ -8,4 +8,5 @@ export class Atividade {
     codUsuarioAlteracao: number;
     metadados: Array<Metadados>;
     indAutomatizado: number;
+    indRelacionamento: boolean;
 }

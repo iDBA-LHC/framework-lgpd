@@ -4,4 +4,5 @@ export class Processo {
     codArea: number;
     obsProcesso: string;
     codUsuarioAlteracao: number;
+    indRelacionamento: boolean;
 }

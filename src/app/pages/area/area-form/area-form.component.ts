@@ -5,7 +5,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AreaService } from 'src/app/services/area.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { emailValidator, cnpjValidator, cpfValidator } from 'src/app/shared/utils/app.validator';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { Area } from 'src/app/models/area/area';
 import { Observable } from 'rxjs';
@@ -14,6 +13,8 @@ import { Empresa } from 'src/app/models/empresa/empresa';
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { ProcessoService } from 'src/app/services/processo.service';
 import { Processo } from 'src/app/models/processo/processo';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-area-form',
@@ -21,6 +22,8 @@ import { Processo } from 'src/app/models/processo/processo';
   styleUrls: ['./area-form.component.css']
 })
 export class AreaFormComponent implements OnInit {
+
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   areaForm: FormGroup;
   areaId: number;
@@ -168,7 +171,8 @@ export class AreaFormComponent implements OnInit {
 
           this.dataSourceProcesso.paginator = this.paginator;
           this.dataSourceProcesso.sort = this.sort;
-        })
+        });
+        this.isLoading = false;
       }
     )
   }
@@ -223,5 +227,44 @@ export class AreaFormComponent implements OnInit {
 
     this.isLoading = false;
   }
+
+  excluirProcesso(processo: Processo)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Processo",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Processo ${processo.nomeProcesso}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusaoProcesso(processo);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusaoProcesso(processo:Processo)
+    {
+        this.processService.excluirProcesso(processo.codProcesso).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Processo ${processo.nomeProcesso} foi excluído com Sucesso.`,
+              null
+            );
+            this.pesquisaProcessos();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusaoProcesso(processo);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 
 }

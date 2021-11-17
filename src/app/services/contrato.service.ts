@@ -29,4 +29,8 @@ export class ContratoService {
   public alterarContrato(contrato: Contrato) {
     return this.http.put(`${environment.apiURL}${this.apiSufix}`, contrato, { observe: "response" });
   }
+
+  public excluirContrato(id: number) {
+    return this.http.delete(`${environment.apiURL}${this.apiSufix}${id}`, { observe: "response" });
+  }
 }
