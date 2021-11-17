@@ -11,5 +11,6 @@ export class Empresa {
     numeroCPFControlador: string;
     telefoneControlador: string;
     emailControlador: string;
+    indRelacionamento: boolean;
 
 }

@@ -50,6 +50,17 @@
                 [routerLink]="['/controladora', element.codigoEmpresa]">
                 Editar
               </button>
+              <button
+                *ngIf="permiteExclusao"
+                mat-raised-button
+                color="warn"          
+                [disabled]="element.indRelacionamento ? true : false"
+                (click)="excluir(element)">
+                <span matTooltip="Existe Ciclo de Monitoramento ou Área Associada. Não É Possível Excluir" 
+                      [matTooltipDisabled]="!element.indRelacionamento">
+                  Excluir
+                </span>
+              </button>
             </div>
           </td>
         </ng-container>
@@ -59,5 +70,3 @@
       </table>
     </div>
   </mat-card>
-  
-

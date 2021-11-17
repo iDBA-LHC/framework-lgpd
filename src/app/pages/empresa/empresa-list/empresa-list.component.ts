@@ -6,6 +6,8 @@ import { ExportPdfService } from 'src/app/services/export-pdf.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Empresa } from 'src/app/models/empresa/empresa';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-empresa-list',
@@ -13,6 +15,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
   styleUrls: ['./empresa-list.component.css']
 })
 export class EmpresaListComponent implements OnInit {
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   isLoading = false;
 
@@ -69,4 +72,43 @@ export class EmpresaListComponent implements OnInit {
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
+
+  excluir(empresa: Empresa)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Controladora",
+              msg: `Tem certeza que deseja prosseguir com exclusão da Controladora ${empresa.nomeEmpresa}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusao(empresa);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusao(empresa: Empresa)
+    {
+        this.empresaService.excluirEmpresa(empresa).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Controladora ${empresa.nomeEmpresa} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaEmpresas();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusao(empresa);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 }
