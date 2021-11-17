@@ -33,4 +33,9 @@ export class CicloMonitoramentoService {
   	buscarUltimoCicloMonitoramento(codigoEmpresa: number) {
 		return this.http.get<CicloMonitoramento>(`${environment.apiURL}${this.apiSuffix}lastone/${codigoEmpresa}`, { observe: "response" });
 	}
+
+	excluirCicloMonitoramento(id: number)
+	{
+	  return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`,{ observe: "response" })
+	}
 }

@@ -93,7 +93,7 @@ export class LocalArmazenamentoListComponent implements OnInit {
     {
         this.localArmazenamentoService.excluirLocalArmzenamento(localArmazenamento.codLocalArmazenamento).subscribe((response) => {
             this.snackBar.openSnackBar(
-              `Local de Armzenamento ${localArmazenamento.nomeLocalArmazenamento} foi excluída com Sucesso.`,
+              `Local de Armzenamento ${localArmazenamento.nomeLocalArmazenamento} foi excluído com Sucesso.`,
               null
             );
             this.pesquisaLocaisArmazenamento();

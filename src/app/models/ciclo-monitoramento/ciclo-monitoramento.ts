@@ -8,4 +8,5 @@ export class CicloMonitoramento {
 	codUsuarioInclusao: number;
 	usuarios: Array<Usuario>;
 	nomeEmpresa: string;
+	indRelacionamento: boolean;
 }

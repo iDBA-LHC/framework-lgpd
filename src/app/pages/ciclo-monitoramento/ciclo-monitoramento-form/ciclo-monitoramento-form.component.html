@@ -135,6 +135,13 @@
                       [routerLink]="['/ciclo-monitoramento', element.codCicloMonitoramento, 'documento-ciclo', element.codDocumentoCiclo]">
                       Editar
                     </button>
+                    <button
+                      *ngIf="permiteExclusao"
+                      mat-raised-button
+                      color="warn"          
+                      (click)="excluirDocumentoCiclo(element)">
+                      Excluir
+                    </button>
                   </div>
                 </td>
               </ng-container>

@@ -50,6 +50,17 @@
                 [routerLink]="['/metadados/', element.codMetadados]">
                 Editar
               </button>
+              <button
+                *ngIf="permiteExclusao"
+                mat-raised-button
+                color="warn"          
+                [disabled]="element.indRelacionamento ? true : false"
+                (click)="excluir(element)">
+                <span matTooltip="Existe Mapa ou Atividade Associada. Não É Possível Excluir" 
+                      [matTooltipDisabled]="!element.indRelacionamento">
+                  Excluir
+                </span>
+              </button>
             </div>
           </td>
         </ng-container>

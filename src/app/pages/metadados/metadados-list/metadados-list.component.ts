@@ -6,6 +6,8 @@ import { ExportPdfService } from 'src/app/services/export-pdf.service';
 import { MetadadosService } from 'src/app/services/metadados.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-metadados-list',
@@ -15,6 +17,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 
 export class MetadadosListComponent implements OnInit {
   isLoading = false;
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   displayedColumns: string[] = ["nomeMetadados", "indSensivel", "actions"];
 
@@ -69,5 +72,44 @@ export class MetadadosListComponent implements OnInit {
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
+
+  excluir(metadados: Metadados)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Metadados",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Metadados ${metadados.nomeMetadados}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusao(metadados);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusao(metadados: Metadados)
+    {
+        this.metadadosService.excluirMetadados(metadados.codMetadados).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Metadados ${metadados.nomeMetadados} foi excluído com Sucesso.`,
+              null
+            );
+            this.pesquisaMetadados();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusao(metadados);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 
 }

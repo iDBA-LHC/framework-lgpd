@@ -16,6 +16,8 @@ import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-ba
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { DocumentoCicloService } from 'src/app/services/documento-ciclo.service';
 import { DocumentoCiclo } from 'src/app/models/documento-ciclo/documento-ciclo';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-ciclo-monitoramento-form',
@@ -23,6 +25,8 @@ import { DocumentoCiclo } from 'src/app/models/documento-ciclo/documento-ciclo';
   styleUrls: ['./ciclo-monitoramento-form.component.css']
 })
 export class CicloMonitoramentoFormComponent implements OnInit {
+
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   cicloMonitoramentoForm: FormGroup;
   codCicloMonitoramento: number;
@@ -115,7 +119,9 @@ export class CicloMonitoramentoFormComponent implements OnInit {
 					) => data.desDocumentoCiclo.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
 					this.dataSourceDocumentoCiclo.paginator = this.paginator;
-					this.dataSourceDocumentoCiclo.sort = this.sort;
+          this.dataSourceDocumentoCiclo.sort = this.sort;
+          
+          this.isLoading = false;
 				})
 			}
 		)
@@ -258,6 +264,45 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   
     window.open(url, '_blank');
   }
+
+  excluirDocumentoCiclo(documentoCiclo: DocumentoCiclo)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Documento do Ciclo de Monitoramento",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Documento Ciclo de Monitoramento ${documentoCiclo.desDocumentoCiclo}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusao(documentoCiclo);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusao(documentoCiclo: DocumentoCiclo)
+    {
+        this.documentoCicloService.excluirDocumentoCiclo(documentoCiclo.codDocumentoCiclo).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Documento do Ciclo de Monitoramento ${documentoCiclo.desDocumentoCiclo} foi excluído com Sucesso.`,
+              null
+            );
+            this.pesquisaDocumentoCiclo();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusao(documentoCiclo);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 
 }
 

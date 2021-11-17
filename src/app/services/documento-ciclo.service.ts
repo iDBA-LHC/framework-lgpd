@@ -29,4 +29,8 @@ export class DocumentoCicloService {
   alterarDocumentoCiclo(documentoCiclo: DocumentoCiclo) {
     return this.http.put<DocumentoCiclo>(`${environment.apiURL}${this.apiSuffix}`, documentoCiclo, { observe: "response" });
   }
+
+  excluirDocumentoCiclo(id: number) {
+    return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`, { observe: "response" });
+  }
 }

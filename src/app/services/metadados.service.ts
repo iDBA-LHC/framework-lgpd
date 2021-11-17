@@ -36,4 +36,9 @@ export class MetadadosService {
             { observe: "response" }
         )
     }
+
+    excluirMetadados(id: number)
+	{
+	  return this.http.delete(`${environment.apiURL}${this.apiSufix}${id}`,{ observe: "response" })
+	}
 }
