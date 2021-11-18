@@ -30,4 +30,8 @@ export class DataFlowService {
 		return this.http.put<DataFlow>(`${environment.apiURL}${this.apiSuffix}`, DataFlow, { observe: "response" });
 	}
 
+	pesquisaDataFlowCicloAtividade(codigoClicloMonitoramento: number, codigoAtividade: number) {
+		return this.http.get<DataFlow>(`${environment.apiURL}${this.apiSuffix}ciclo_monitoramento/${codigoClicloMonitoramento}/atividade/${codigoAtividade}`, { observe: "response" });
+	}
+
 }

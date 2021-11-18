@@ -122,7 +122,7 @@ export class UsuarioFormComponent implements OnInit {
     if (this.usuarioForm.valid) {
       const usuario: Usuario = this.usuarioForm.getRawValue();        
       usuario.codigoUsuario = this.usuarioId;
-      usuario.codigoArea = this.usuarioForm.controls.area.value.codigoArea;
+      usuario.codigoArea = this.usuarioForm.controls.area.value.codArea;
       if (this.usuarioId) {     
         //Alteração
         if (this.meuUsuario)

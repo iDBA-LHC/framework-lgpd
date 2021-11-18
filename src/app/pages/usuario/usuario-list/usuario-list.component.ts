@@ -17,7 +17,7 @@ export class UsuarioListComponent implements OnInit {
 
   isLoading = false;
 
-  displayedColumns: string[] = ["nomeUsuario", "nomeEmpresa","actions"];
+  displayedColumns: string[] = ["nomeUsuario", "nomeEmpresa","nomeArea","actions"];
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -45,10 +45,12 @@ export class UsuarioListComponent implements OnInit {
         setTimeout(() => {
           this.dataSource.filterPredicate = (
             data: { nomeUsuario: string,
-                    nomeEmpresa: string },
+                    nomeEmpresa: string,
+                    nomeArea:string },
             filterValue: string
           ) => data.nomeUsuario.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-               data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ;
+               data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+               data.nomeArea.toString().trim().toLowerCase().indexOf(filterValue) !== - 1 ;
     
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;          

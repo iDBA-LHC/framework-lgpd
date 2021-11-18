@@ -35,6 +35,7 @@ import { AtividadeService } from './../../../services/atividade.service';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { environment } from 'src/environments/environment';
 import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
+import { DataFlowService } from 'src/app/services/data-flow.service';
 
 @Component({
 	selector: 'app-data-map-form',
@@ -114,6 +115,7 @@ export class DataMapFormComponent implements OnInit {
 		private processoService: ProcessoService,
 		private cicloMonitoramentoService: CicloMonitoramentoService,
 		private planoMitigacaoService: PlanoMitigacaoService,
+		private dataFlowService: DataFlowService,
 	) { }
 
 	ngOnInit() {
@@ -363,15 +365,23 @@ export class DataMapFormComponent implements OnInit {
 	}
 	
 	selectedMetadados(event: MatAutocompleteSelectedEvent): void {
-		this.metadadosDataMap.push(event.option.value);
+
+		var metadadosSelected: Metadados;
+		metadadosSelected = event.option.value;
+		this.metadadosDataMap.push(metadadosSelected);
 	
 		this.metadadosInput.nativeElement.value = '';
-		const index = this.listaMetadados.indexOf(event.option.value);
+		const index = this.listaMetadados.indexOf(metadadosSelected);
 	
 		if (index >= 0) {
 		  this.listaMetadados.splice(index, 1);
 		}
 		this.metadadosCtrl.setValue("");
+
+		if (metadadosSelected.indSensivel == 1)
+		{
+			this.dataMapForm.controls.indSensivel.setValue(1);
+		}
 	}
 
 	private pesquisaMetadados() {    
@@ -396,6 +406,7 @@ export class DataMapFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
+	//Remove os Metadados já selecionados da lista de todos os Metadados Cadastrados
 	removeSelecionados()
 	{
 		var index = -1;
@@ -415,7 +426,7 @@ export class DataMapFormComponent implements OnInit {
 
 			if (index===-1)
 			{
-			this.listaMetadados.push(meta);
+				this.listaMetadados.push(meta);
 			}
 		});
 		this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
@@ -426,7 +437,6 @@ export class DataMapFormComponent implements OnInit {
 
 	filtraMetadados(value: string): Metadados[] {
 		const filterValue = value.toLowerCase();
-
 		return this.listaMetadados.filter(item => item.nomeMetadados.trim().toLowerCase().includes(filterValue));
 	}	  
 
@@ -454,11 +464,48 @@ export class DataMapFormComponent implements OnInit {
 	selecionaAtividade(event) {
 		let selecionado: Atividade = event.option.value;
 		this.dataMapForm.controls.atividade.setValue(selecionado);
-		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);
+		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);		
 
-		this.metadadosDataMap = selecionado.metadados;    
-        
-        this.removeSelecionados();
+		if (!this.codDataMap)
+		{
+			this.isLoading = true;
+			this.dataFlowService.pesquisaDataFlowCicloAtividade(this.codCicloMonitoramento, selecionado.codAtividade).subscribe(
+				(retorno) => {
+					console.log(retorno);
+
+					let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == retorno.body[0].codCicloVida)[0];
+					if (cicloVida) {
+						this.dataMapForm.controls.cicloVida.setValue(cicloVida);
+						this.dataMapForm.controls.codCicloVida.setValue(cicloVida.codCicloVida);
+					}
+
+					this.dataMapForm.controls.indRisco.setValue(retorno.body[0].indRisco);
+					this.dataMapForm.controls.compartilhamentos.setValue(retorno.body[0].compartilhamentos);
+					this.dataMapForm.controls.armazenamentos.setValue(retorno.body[0].armazenamentos);
+					this.metadadosDataMap = retorno.body[0].metadados;
+					this.removeSelecionados();
+					this.testaMetadadosSensiveis();
+
+					this.isLoading = false;
+
+				});
+		}
+		else
+		{
+			this.metadadosDataMap = selecionado.metadados;
+			this.testaMetadadosSensiveis();
+			this.removeSelecionados();
+		}
+	}
+
+	private testaMetadadosSensiveis()
+	{
+		this.metadadosDataMap.forEach(metadados => {
+			if (metadados.indSensivel === 1 )
+			{
+				this.dataMapForm.controls.indSensivel.setValue(1);
+			}
+		});
 	}
 
 	private pesquisaBaselegal() {
@@ -497,8 +544,6 @@ export class DataMapFormComponent implements OnInit {
 			(retorno) => {
 				this.listaFormaColetasFiltrados = retorno.body;
 
-				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
-				//this.listaFormaColetasFiltrados = <FormaColeta []>this.listaFormaColetas.filter(model => model.codigoEmpresa == codigoEmpresa);
 			}
 		)
 		this.isLoading = false;
@@ -513,9 +558,6 @@ export class DataMapFormComponent implements OnInit {
 		this.localArmazenamentoService.listaTodosLocaisArmazenamento().subscribe(
 			(retorno) => {
 				this.listaArmazenamentosFiltrados = retorno.body;
-
-				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
-				//this.listaArmazenamentosFiltrados = <LocalArmazenamento []>this.listaArmazenamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
 			}
 		)
 		this.isLoading = false;
@@ -530,9 +572,6 @@ export class DataMapFormComponent implements OnInit {
 		this.compartilhamentoService.listarTodosCompartilhamentos().subscribe(
 			(retorno) => {
 				this.listaCompartilhamentosFiltrados = retorno.body;
-
-				//let codigoEmpresa = this.dataMapForm.controls.codigoEmpresa.value;
-				//this.listaCompartilhamentosFiltrados = <Compartilhamento []>this.listaCompartilhamentos.filter(model => model.codigoEmpresa == codigoEmpresa);
 			}
 		)
 		this.isLoading = false;

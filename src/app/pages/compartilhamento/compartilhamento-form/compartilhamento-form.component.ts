@@ -48,11 +48,11 @@ export class CompartilhamentoFormComponent implements OnInit {
   private createForm() {
     this.compartilhamentoForm = this.formBuilder.group({
       nomeCompartilhamento: ["", Validators.required],
-      nomeAplicacao: ["", Validators.required],
-      nomeModulo: ["", Validators.required],
-      nomeFornecedor: ["", Validators.required],
+      nomeAplicacao: ["", ],
+      nomeModulo: ["", ],
+      nomeFornecedor: ["", ],
       codLocalArmazenamento: [],
-      localArmazenamento: ["", Validators.required]
+      localArmazenamento: ["", ]
     })
   }
 
@@ -134,6 +134,11 @@ export class CompartilhamentoFormComponent implements OnInit {
     if (this.compartilhamentoForm.valid) {
       const compartilhamento: Compartilhamento = this.compartilhamentoForm.getRawValue();
       compartilhamento.codCompartilhamento = this.compartilhamentoCodigo;
+
+      if (compartilhamento.codLocalArmazenamento === null)
+      {
+        compartilhamento.codLocalArmazenamento = 0;
+      }
 
       if (this.compartilhamentoCodigo) {
         this.compartilhamentoService.alterarCompartilhamento(compartilhamento).subscribe(

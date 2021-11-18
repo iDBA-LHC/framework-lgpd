@@ -68,9 +68,6 @@ export class NovaSenhaComponent implements OnInit {
         var dataAux = new Date();
         var dataValidade = new Date(tokenData.dataLimite);
 
-        console.log(dataAux);
-        console.log(dataValidade);
-
         if (dataAux.getTime() > dataValidade.getTime())
         {
           this.snackBar.openSnackBar("Validade do Token Expirada. Solicite Novamente a Geração de Sua Senha","","Error");

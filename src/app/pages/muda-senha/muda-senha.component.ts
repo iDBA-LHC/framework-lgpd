@@ -38,8 +38,6 @@ export class MudaSenhaComponent implements OnInit {
 
     this.usuario = new Usuario();
 
-    console.log(this.activatedRoute.params);
-
     this.mudaSenhaForm = this.formBuilder.group({
       nomeUsuario: ["",],
       emailUsuario: ["",],

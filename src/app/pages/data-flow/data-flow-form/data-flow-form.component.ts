@@ -319,7 +319,8 @@ export class DataFlowFormComponent implements OnInit {
 			(retorno) => {
 				this.listaUsuarios = retorno.body;
 				let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
-				this.listaUsuariosFiltrados = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa);
+				let codArea    = this.dataFlowForm.controls.codArea.value;
+				this.listaUsuariosFiltrados = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa && usuario.codigoArea == codArea);
 			}
 		)
 		this.isLoading = false;
