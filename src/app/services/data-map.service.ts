@@ -29,4 +29,8 @@ export class DataMapService {
 	alterarDataMap(DataMap: DataMap) {
 		return this.http.put<DataMap>(`${environment.apiURL}${this.apiSuffix}`, DataMap, { observe: "response" });
 	}
+
+	pesquisaDataMapCicloAtividadeTipo(codigoClicloMonitoramento: number, codigoAtividade: number, indTipo: number) {
+		return this.http.get<DataMap>(`${environment.apiURL}${this.apiSuffix}ciclo_monitoramento/${codigoClicloMonitoramento}/atividade/${codigoAtividade}/tipo/${indTipo}`, { observe: "response" });
+	}
 }

@@ -32,8 +32,24 @@ export class AuthGuard implements CanActivate {
 
       map((isLoggedIn: boolean) => {
 
-        var menuItems: MenuItems = new MenuItems(this.authService);
+        var menuItems: MenuItems = new MenuItems(this.authService);      
+
         var menuItemButton:MenuItemButton = <MenuItemButton> menuItems.menuItems.filter(menuItem => menuItem.link == next.routeConfig.path)[0];
+
+        //Se não for parte do menu principal, procurar nos sub-menus
+        if (menuItemButton === undefined)
+        {
+          menuItems.menuItems.forEach(element => {
+            if (element.items != undefined)
+            {
+              var menuItemButtonaux:MenuItemButton = element.items.filter(aux => aux.link == next.routeConfig.path)[0];
+              if (menuItemButtonaux!==undefined)
+              {
+                menuItemButton = menuItemButtonaux;
+              }
+            }
+          });
+        }
 
         if ((!menuItemButton || menuItemButton.hidden) && 
              (next.routeConfig.path != "home") && 

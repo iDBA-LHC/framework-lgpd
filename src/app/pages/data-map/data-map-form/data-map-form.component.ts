@@ -469,29 +469,80 @@ export class DataMapFormComponent implements OnInit {
 		if (!this.codDataMap)
 		{
 			this.isLoading = true;
-			this.dataFlowService.pesquisaDataFlowCicloAtividade(this.codCicloMonitoramento, selecionado.codAtividade).subscribe(
-				(retorno) => {
-					console.log(retorno);
+			if (this.indTipo)
+			{
+				//Se for Data Analisys Map, buscar informações do Data Map
+				this.dataMapService.pesquisaDataMapCicloAtividadeTipo(this.codCicloMonitoramento, selecionado.codAtividade, 0).subscribe(
+					(retorno) => {
 
-					let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == retorno.body[0].codCicloVida)[0];
-					if (cicloVida) {
-						this.dataMapForm.controls.cicloVida.setValue(cicloVida);
-						this.dataMapForm.controls.codCicloVida.setValue(cicloVida.codCicloVida);
-					}
+						if (retorno.body[0])
+						{
+							this.metadadosDataMap = retorno.body[0].metadados;
 
-					this.dataMapForm.controls.indRisco.setValue(retorno.body[0].indRisco);
-					this.dataMapForm.controls.compartilhamentos.setValue(retorno.body[0].compartilhamentos);
-					this.dataMapForm.controls.armazenamentos.setValue(retorno.body[0].armazenamentos);
-					this.metadadosDataMap = retorno.body[0].metadados;
-					this.removeSelecionados();
-					this.testaMetadadosSensiveis();
+							let baseLegal: BaseLegal = <BaseLegal>this.listaBaseLegal.filter(baseLegal => baseLegal.codigoBase == retorno.body[0].codBaseLegal)[0];
+							if (baseLegal) {
+								this.dataMapForm.controls.baseLegal.setValue(baseLegal);
+								this.dataMapForm.controls.codBaseLegal.setValue(baseLegal.codigoBase);
+							}
 
-					this.isLoading = false;
+							this.dataMapForm.controls.indPrincipios.setValue(retorno.body[0].indPrincipios);
+							this.dataMapForm.controls.indSensivel.setValue(retorno.body[0].indSensivel);
+							this.dataMapForm.controls.indDadosMenores.setValue(retorno.body[0].indDadosMenores);
+							this.dataMapForm.controls.formaColetas.setValue(retorno.body[0].formaColetas);
+							this.dataMapForm.controls.indNecessitaConsentimento.setValue(retorno.body[0].indNecessitaConsentimento);
+							this.dataMapForm.controls.armazenamentos.setValue(retorno.body[0].armazenamentos);
+							this.dataMapForm.controls.indTransfInternacional.setValue(retorno.body[0].indTransfInternacional);
+							this.dataMapForm.controls.compartilhamentos.setValue(retorno.body[0].compartilhamentos);
+							this.dataMapForm.controls.indAnonimizacao.setValue(retorno.body[0].indAnonimizacao);
 
-				});
+							let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == retorno.body[0].codCicloVida)[0];
+							if (cicloVida) {
+								this.dataMapForm.controls.cicloVida.setValue(cicloVida);
+								this.dataMapForm.controls.codCicloVida.setValue(cicloVida.codCicloVida);
+							}
+
+							this.dataMapForm.controls.indRisco.setValue(retorno.body[0].indRisco);
+
+							this.dataMapForm.controls.desObservacoes.setValue(retorno.body[0].desObservacoes);
+						}
+
+						this.isLoading = false;
+					});
+			}
+			else
+			{
+				//Se for Data map, buscar informações do Data Flow
+				
+				this.dataFlowService.pesquisaDataFlowCicloAtividade(this.codCicloMonitoramento, selecionado.codAtividade).subscribe(
+					(retorno) => {
+
+						if (retorno.body[0])
+						{
+
+							let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == retorno.body[0].codCicloVida)[0];
+							if (cicloVida) {
+								this.dataMapForm.controls.cicloVida.setValue(cicloVida);
+								this.dataMapForm.controls.codCicloVida.setValue(cicloVida.codCicloVida);
+							}
+
+							this.dataMapForm.controls.indRisco.setValue(retorno.body[0].indRisco);
+							this.dataMapForm.controls.compartilhamentos.setValue(retorno.body[0].compartilhamentos);
+							this.dataMapForm.controls.armazenamentos.setValue(retorno.body[0].armazenamentos);
+							this.metadadosDataMap = retorno.body[0].metadados;
+							this.dataMapForm.controls.formaColetas.setValue(retorno.body[0].formaColetas);
+							this.removeSelecionados();
+							this.testaMetadadosSensiveis();
+
+						}
+
+						this.isLoading = false;
+
+					});
+			}
 		}
 		else
 		{
+
 			this.metadadosDataMap = selecionado.metadados;
 			this.testaMetadadosSensiveis();
 			this.removeSelecionados();

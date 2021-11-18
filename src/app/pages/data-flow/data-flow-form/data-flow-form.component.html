@@ -109,12 +109,15 @@
 					</mat-autocomplete>
 				</mat-form-field>
 
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Meio de Processamento</mat-label>
-					<input matInput formControlName="nomeProcessamento" placeholder="Meio de Processamento"
-						autocomplete="off" type="string" />
-					<mat-error *ngIf="dataFlowForm.controls.nomeProcessamento.errors?.required">Campo obrigatório
-					</mat-error>
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Forma de Coleta</mat-label>
+					<mat-select matInput formControlName="formaColetas" multiple placeholder="selecione..."
+						[compareWith]="compareFormaColeta" [(ngModel)]="formaColetaSelecionado">
+						<mat-option *ngFor="let formaColeta of listaFormaColetasFiltrados" [value]="formaColeta">
+							{{formaColeta.nomeFormaColeta}}
+						</mat-option>
+					</mat-select>
+					<mat-error *ngIf="dataFlowForm.controls.formaColetas.errors?.required">Campo obrigatório</mat-error>
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"

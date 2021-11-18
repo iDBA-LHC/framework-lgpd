@@ -2,6 +2,7 @@ import { Compartilhamento } from "../compartilhamento/compartilhamento";
 import { LocalArmazenamento } from "../local-armazenamento/local-armazenamento";
 import { Usuario } from '../usuario/usuario';
 import { Metadados } from '../metadados/metadados';
+import { FormaColeta } from '../forma-coleta/forma-coleta';
 
 export class DataFlow {
   codDataFlow: number;
@@ -12,6 +13,7 @@ export class DataFlow {
   indRisco: number;
   codCicloVida: number;
   codUsuarioInclusao: number;
+  formaColetas: Array<FormaColeta>;
   usuarios: Array<Usuario>;
   armazenamentos: Array<LocalArmazenamento>;
   compartilhamentos: Array<Compartilhamento>;

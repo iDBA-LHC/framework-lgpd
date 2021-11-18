@@ -30,6 +30,8 @@ import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-ba
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { Usuario2 } from './../../../models/usuario/usuario2';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { FormaColeta } from 'src/app/models/forma-coleta/forma-coleta';
+import { FormaColetaService } from 'src/app/services/forma-coleta.service';
 
 @Component({
 	selector: 'app-data-flow-form',
@@ -74,7 +76,11 @@ export class DataFlowFormComponent implements OnInit {
 	listaProcessos: Processo[];
 	listaProcessosFiltradas: Observable<Processo[]>;
 
+	listaFormaColetas: FormaColeta[];
+	listaFormaColetasFiltrados: FormaColeta[];
+
 	usuarioSelecionado: Usuario[];
+	formaColetaSelecionado: FormaColeta[];
 	armazenamentoSelecionado: LocalArmazenamento[];
 	compartilhamentoSelecionado: Compartilhamento[];
 
@@ -98,6 +104,7 @@ export class DataFlowFormComponent implements OnInit {
 		private cicloMonitoramentoService: CicloMonitoramentoService,
 		private areaService: AreaService,
 		private processoService: ProcessoService,
+		private formaColetaService: FormaColetaService,
 	) { }
 
 	ngOnInit() {
@@ -109,8 +116,6 @@ export class DataFlowFormComponent implements OnInit {
 
 	private createForm() {
 		this.dataFlowForm = this.formBuilder.group({
-
-			nomeProcessamento: ["", Validators.required],
 
 			codEmpresa: [0, Validators.required],
 			empresa: ["", Validators.required],
@@ -131,6 +136,7 @@ export class DataFlowFormComponent implements OnInit {
 			codCicloVida: ["", Validators.required],
 			cicloVida: ["", Validators.required],
 
+			formaColetas: ["", Validators.required],
 			usuarios: ["", Validators.required],
 			armazenamentos: ["", Validators.required],
 			compartilhamentos: ["", Validators.required]
@@ -148,7 +154,6 @@ export class DataFlowFormComponent implements OnInit {
 						(retorno) => {
 							this.dataFlowForm.patchValue({
 								codDataFlow: retorno.body[0].codDataFlow,
-								nomeProcessamento: retorno.body[0].nomeProcessamento,
 
 								codEmpresa: retorno.body[0].codEmpresa,								
 								dataCompetencia: retorno.body[0].dataCompetencia,
@@ -162,6 +167,7 @@ export class DataFlowFormComponent implements OnInit {
 
 								codCicloVida: retorno.body[0].codCicloVida,
 
+								formaColetas: retorno.body[0].formaColetas,
 								usuarios: retorno.body[0].usuarios,
 								armazenamentos: retorno.body[0].armazenamentos,
 								compartilhamentos: retorno.body[0].compartilhamentos
@@ -197,6 +203,7 @@ export class DataFlowFormComponent implements OnInit {
 
 		this.pesquisaEmpresas();
 
+		this.pesquisaFormaColetas();
 		this.pesquisaLocalArmazenamento();
 		this.pesquisaCompartilhamentos();
 		this.pesquisaCicloVida();
@@ -290,6 +297,21 @@ export class DataFlowFormComponent implements OnInit {
 	compareArmazenamento(o1: any, o2: any): boolean {
 		if (o2 != null)
 			return o1.codLocalArmazenamento === o2.codLocalArmazenamento;
+	}
+
+	private pesquisaFormaColetas() {
+		this.formaColetaService.listaTodasFormaColeta().subscribe(
+			(retorno) => {
+				this.listaFormaColetasFiltrados = retorno.body;
+
+			}
+		)
+		this.isLoading = false;
+	}
+
+	compareFormaColeta(o1: any, o2: any): boolean {
+		if (o2 != null)
+			return o1.codFormaColeta === o2.codFormaColeta;
 	}
 
 	private pesquisaCompartilhamentos() {
