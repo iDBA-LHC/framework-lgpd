@@ -6,4 +6,5 @@ export class Area {
     nomeEmpresa: string;
     nomeResponsavel: string;
     codUsuarioAlteracao: number;
+    indRelacionamento: boolean;
 }

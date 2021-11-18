@@ -70,10 +70,6 @@ export class AreaFormComponent implements OnInit {
     });
   }
 
-  private pesquisaTodasAreas() {
-
-  }
-
   applyFilterProcesso(value: string) {
     this.dataSourceProcesso.filter = value.trim().toLowerCase();
   }
@@ -266,5 +262,4 @@ export class AreaFormComponent implements OnInit {
             }
           });
     }
-
 }

@@ -30,4 +30,8 @@ export class AreaService {
 	alterarArea(area: Area) {
 		return this.http.put<Area>(`${environment.apiURL}area/`, area, { observe: "response" });
 	}
+
+	excluirArea(id: number) {
+		return this.http.delete(`${environment.apiURL}area/${id}`, { observe: "response" })
+	}
 }

@@ -6,6 +6,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ExportPdfService } from 'src/app/services/export-pdf.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-area-list',
@@ -15,6 +17,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class AreaListComponent implements OnInit {
 
   isLoading = false;
+  permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   displayedColumns: string[] = ["nomeEmpresa", "nomeArea", "nomeResponsavel", "actions"];
 
@@ -70,5 +73,44 @@ export class AreaListComponent implements OnInit {
   applyFilter(value: string) {
     this.dataSource.filter = value.trim().toLowerCase();
   }
+
+  excluirArea(area: Area)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Área",
+              msg: `Tem certeza que deseja prosseguir com exclusão da Área ${area.nomeArea}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusaoArea(area);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusaoArea(area:Area)
+    {
+        this.areaService.excluirArea(area.codArea).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Área ${area.nomeArea} foi excluída com Sucesso.`,
+              null
+            );
+            this.pesquisaAreas();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusaoArea(area);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 
 }

@@ -55,6 +55,17 @@
                 [routerLink]="['/area', element.codArea]">
                 Editar
               </button>
+              <button
+                *ngIf="permiteExclusao"
+                mat-raised-button
+                color="warn"          
+                [disabled]="element.indRelacionamento ? true : false"
+                (click)="excluirArea(element)">
+                <span matTooltip="Existe Usuário Associado. Não É Possível Excluir" 
+                      [matTooltipDisabled]="!element.indRelacionamento">
+                  Excluir
+                </span>
+              </button>
             </div>
           </td>
         </ng-container>
