@@ -29,4 +29,8 @@ export class DocumentoPlanoService {
   alterarDocumentoPlano(documentoPlano: DocumentoPlano) {
     return this.http.put<DocumentoPlano>(`${environment.apiURL}${this.apiSuffix}`, documentoPlano, { observe: "response" });
   }
+
+  excluirDocumentoPlano(id: number) {
+    return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`, { observe: "response" });
+  }
 }

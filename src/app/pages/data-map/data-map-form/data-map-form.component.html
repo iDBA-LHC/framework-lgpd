@@ -272,6 +272,13 @@
 									[routerLink]="['/data-analisys-map', element.codDataMapping, 'plano-mitigacao', element.codPlanoMitigacao]">
 									Editar
 								</button>
+								<button
+									*ngIf="permiteExclusao"
+									mat-raised-button
+									color="warn"          
+									(click)="excluirPlano(element)">
+									Excluir									
+								</button>
 							</div>
 						</td>
 					</ng-container>

@@ -33,6 +33,8 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 import { Atividade } from './../../../models/atividade/atividade';
 import { AtividadeService } from './../../../services/atividade.service';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
 	selector: 'app-data-map-form',
@@ -40,6 +42,8 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 	styleUrls: ['./data-map-form.component.css']
 })
 export class DataMapFormComponent implements OnInit {
+
+	permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
 	codDataMap: number;
 	dataMapForm: FormGroup;
@@ -729,9 +733,7 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	closeDatePicker(eventData: any, picker: any) {
-
 		this.dataMapForm.controls.dataCompetencia.setValue(eventData);
-
 		picker.close();
 	}
 
@@ -754,9 +756,49 @@ export class DataMapFormComponent implements OnInit {
 					this.dataSourcePlanoMitigacao.paginator = this.paginator;
 					this.dataSourcePlanoMitigacao.sort = this.sort;
 				})
+				this.isLoading = false;
 			}
 		)
 	}
+
+	excluirPlano(planoMitigacao: PlanoMitigacao)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão do Plano de Mitigação",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Plano de Mitigação ${planoMitigacao.desPlanoMitigacao}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusaoPlano(planoMitigacao);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusaoPlano(planoMitigacao: PlanoMitigacao)
+    {
+        this.planoMitigacaoService.excluirPlanoMitigacao(planoMitigacao.codPlanoMitigacao).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Plano de Mitigação ${planoMitigacao.desPlanoMitigacao} foi excluído com Sucesso.`,
+              null
+            );
+            this.pesquisaPlanoMitigacao(this.codDataMap);
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusaoPlano(planoMitigacao);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 
 	private showMessage(msg: string, type: string = "Success") {
     	this.snackBar.openSnackBar(msg, null, type);

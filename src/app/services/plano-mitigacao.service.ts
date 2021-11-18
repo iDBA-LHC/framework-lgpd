@@ -29,4 +29,8 @@ export class PlanoMitigacaoService {
 	alterarPlanoMitigacao(PlanoMitigacao: PlanoMitigacao) {
 		return this.http.put<PlanoMitigacao>(`${environment.apiURL}${this.apiSuffix}`, PlanoMitigacao, { observe: "response" });
 	}
+
+	excluirPlanoMitigacao(id: number) {
+		return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`, { observe: "response" });
+	}
 }

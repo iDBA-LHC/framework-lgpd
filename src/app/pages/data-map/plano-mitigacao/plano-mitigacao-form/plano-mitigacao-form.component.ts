@@ -10,6 +10,9 @@ import { DocumentoPlanoService } from 'src/app/services/documento-plano.service'
 import { PlanoMitigacaoService } from 'src/app/services/plano-mitigacao.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { environment } from 'src/environments/environment';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
+import { documentValidator } from 'src/app/shared/utils/app.validator';
 
 @Component({
 	selector: 'app-plano-mitigacao-form',
@@ -17,6 +20,8 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 	styleUrls: ['./plano-mitigacao-form.component.css']
 })
 export class PlanoMitigacaoFormComponent implements OnInit {
+
+	permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
 	planoMitigacaoForm: FormGroup;
 	codPlanoMitigacao: number;
@@ -125,6 +130,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 					this.dataSourceDocumentoPlano.paginator = this.paginator;
 					this.dataSourceDocumentoPlano.sort = this.sort;
 				})
+				this.isLoading = false;
 			}
 		)
 	}
@@ -192,4 +198,43 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 	
 		window.open(url, '_blank');
 	}
+
+	excluirDocumentoPlano(documentoPlano: DocumentoPlano)
+    {
+        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Confirmar Exclusão de Documento do Plano",
+              msg: `Tem certeza que deseja prosseguir com exclusão do Documento do Plano ${documentoPlano.desDocumentoPlano}?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.confirmaExclusaoDocumentoPlano(documentoPlano);
+              this.isLoading = true;
+            }
+          });  
+    }
+
+    confirmaExclusaoDocumentoPlano(documentoPlano: DocumentoPlano)
+    {
+        this.documentoplanoService.excluirDocumentoPlano(documentoPlano.codDocumentoPlano).subscribe((response) => {
+            this.snackBar.openSnackBar(
+              `Documento do Plano ${documentoPlano.desDocumentoPlano} foi excluído com Sucesso.`,
+              null
+            );
+            this.pesquisaDocumentoPlano();
+          },
+          (err) => {
+            if (err.status === 401)
+            {
+              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusaoDocumentoPlano(documentoPlano);}));
+            }
+            else
+            {
+              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+              this.isLoading = false;
+            }
+          });
+    }
 }
