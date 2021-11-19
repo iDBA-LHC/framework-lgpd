@@ -57,7 +57,7 @@ export class MenuItems {
 					icon: "mobile_screen_share",
 					hidden: false,
 				}, {
-					label: "Local Armazenamento",
+					label: "Armazenamento",
 					link: "local-armazenamento",
 					icon: "inventory_2",
 					hidden: false,
