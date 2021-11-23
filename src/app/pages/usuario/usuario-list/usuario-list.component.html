@@ -7,6 +7,14 @@
             (keyup)="applyFilter($event.target.value)"
             placeholder="Buscar Usuário"/>
         </mat-form-field>
+        <div fxFlex style="align-items: center; margin-left: 15px;">
+          <mat-slide-toggle
+            color="primary"
+            fxFlex="100"
+            (change)="applyValue($event)">
+              <span class="ng-tns-c15-3 ng-star-inserted">Buscar inativos</span>
+          </mat-slide-toggle>
+        </div>
       </div>
       <div fxLayout="row" fxLayoutGap="5px">
         <!--<div fxLayout="column" fxLayoutAlign="start end">

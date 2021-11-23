@@ -172,7 +172,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
   }
 
   private pesquisaUsuarios() {
-    this.usuarioService.listaTodosUsuarios().subscribe(
+    this.usuarioService.listaTodosUsuarios(false).subscribe(
       (retorno) => {
         this.listaUsuarios = retorno.body;
 

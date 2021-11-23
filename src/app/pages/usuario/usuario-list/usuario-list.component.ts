@@ -16,6 +16,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 export class UsuarioListComponent implements OnInit {
 
   isLoading = false;
+  mostraInativos = false;
 
   displayedColumns: string[] = ["nomeUsuario", "nomeEmpresa","nomeArea","actions"];
 
@@ -38,7 +39,7 @@ export class UsuarioListComponent implements OnInit {
 
   pesquisaUsuarios() {
     this.isLoading = true;
-    this.usuarioService.listaTodosUsuarios().subscribe(
+    this.usuarioService.listaTodosUsuarios(this.mostraInativos).subscribe(
       (response) => {
         this.isLoading = false;
         this.dataSource = new MatTableDataSource<Usuario>(response.body);
@@ -143,6 +144,7 @@ export class UsuarioListComponent implements OnInit {
   }
 
   applyValue(event) {  
+    this.mostraInativos = event.checked;
     this.pesquisaUsuarios();
   }
 

@@ -18,9 +18,9 @@ export class UsuarioService {
     private authService: AuthService,
   ) { }
 
-  listaTodosUsuarios()
+  listaTodosUsuarios(mostraInativos: boolean)
   {
-    return this.http.get<Usuario[]>(environment.apiURL + "usuario/", { observe: "response" });
+    return this.http.get<Usuario[]>(environment.apiURL + `usuario/status/${mostraInativos}`, { observe: "response" });
   }
 
   pesquisaUsuario(id: number)

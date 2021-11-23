@@ -337,7 +337,7 @@ export class DataFlowFormComponent implements OnInit {
 	}
 
 	private pesquisaUsuarios() {
-		this.usuarioService.listaTodosUsuarios().subscribe(
+		this.usuarioService.listaTodosUsuarios(false).subscribe(
 			(retorno) => {
 				this.listaUsuarios = retorno.body;
 				let codEmpresa = this.dataFlowForm.controls.codEmpresa.value;
