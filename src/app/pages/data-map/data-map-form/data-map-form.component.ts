@@ -924,6 +924,11 @@ export class DataMapFormComponent implements OnInit {
 			indRisco = 1;
 		}
 
+		if (indRisco>4)
+		{
+			indRisco = 4;
+		}
+
 		this.dataMapForm.controls.indRisco.setValue(indRisco);
 
 	}

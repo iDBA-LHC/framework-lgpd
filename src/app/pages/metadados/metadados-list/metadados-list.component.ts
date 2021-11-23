@@ -39,7 +39,7 @@ export class MetadadosListComponent implements OnInit {
   }
 
   pesquisaMetadados() {
-    this.isLoading = false;
+    this.isLoading = true;
     this.metadadosService.listaTodosMetadados().subscribe(
       (response) => {
         this.dataSource = new MatTableDataSource<Metadados>(response.body);
@@ -65,6 +65,7 @@ export class MetadadosListComponent implements OnInit {
             this.isLoading = false;
             TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
         }
+        this.isLoading = false;
     }
     )
   }
