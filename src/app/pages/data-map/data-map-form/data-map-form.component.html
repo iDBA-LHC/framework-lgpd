@@ -132,12 +132,12 @@
 				</mat-slide-toggle>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-					formControlName="indSensivel" style="width: 50%;">
+					formControlName="indSensivel" style="width: 50%;" (change)="calculaRisco()">
 					<span class="ng-tns-c15-3 ng-star-inserted">Dados Sensíveis</span>
 				</mat-slide-toggle>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-					formControlName="indDadosMenores" style="width: 50%;">
+					formControlName="indDadosMenores" style="width: 50%;" (change)="calculaRisco()">
 					<span class="ng-tns-c15-3 ng-star-inserted">Dados de Menores</span>
 				</mat-slide-toggle>
 
@@ -154,7 +154,7 @@
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-					formControlName="indNecessitaConsentimento" style="width: 50%;">
+					formControlName="indNecessitaConsentimento" style="width: 50%;" (change)="calculaRisco()">
 					<span class="ng-tns-c15-3 ng-star-inserted">Necessita Consentimento</span>
 				</mat-slide-toggle>
 
@@ -170,7 +170,7 @@
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-					formControlName="indTransfInternacional" style="width: 50%;">
+					formControlName="indTransfInternacional" style="width: 50%;" (change)="calculaRisco()">
 					<span class="ng-tns-c15-3 ng-star-inserted">Transferência Internacional</span>
 				</mat-slide-toggle>
 
@@ -188,7 +188,7 @@
 				</mat-form-field>
 
 				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-					formControlName="indAnonimizacao" style="width: 50%;">
+					formControlName="indAnonimizacao" style="width: 50%;" (change)="calculaRisco()">
 					<span class="ng-tns-c15-3 ng-star-inserted">Anonimização</span>
 				</mat-slide-toggle>
 

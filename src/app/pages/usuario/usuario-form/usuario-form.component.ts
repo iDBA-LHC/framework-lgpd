@@ -68,7 +68,7 @@ export class UsuarioFormComponent implements OnInit {
       emailUsuario: ["", Validators.compose([Validators.required, emailValidator])],
       codigoEmpresa: [0,],
       empresa: [Empresa, Validators.required],
-      chaveExternaUsuario: ["", Validators.required],
+      chaveExternaUsuario: ["", ],
       codigoArea: [0,],
       area: [Area, Validators.required ],
       indAtivo: [true, ],

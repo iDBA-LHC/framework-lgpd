@@ -890,6 +890,44 @@ export class DataMapFormComponent implements OnInit {
           });
     }
 
+	calculaRisco()
+	{
+		var indRisco: number = 0;
+
+		if (this.dataMapForm.controls.indSensivel.value == 1)
+		{
+			indRisco++;
+		}
+
+		if (this.dataMapForm.controls.indDadosMenores.value == 1)
+		{
+			indRisco++;
+		}
+
+		if (this.dataMapForm.controls.indNecessitaConsentimento.value == 1)
+		{
+			indRisco++;
+		}
+
+		if (this.dataMapForm.controls.indTransfInternacional.value == 1)
+		{
+			indRisco++;
+		}
+
+		if (this.dataMapForm.controls.indAnonimizacao.value == 1)
+		{
+			indRisco++;
+		}
+
+		if (indRisco===0)
+		{
+			indRisco = 1;
+		}
+
+		this.dataMapForm.controls.indRisco.setValue(indRisco);
+
+	}
+
 	private showMessage(msg: string, type: string = "Success") {
     	this.snackBar.openSnackBar(msg, null, type);
 	}
