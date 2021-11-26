@@ -33,4 +33,9 @@ export class DataMapService {
 	pesquisaDataMapCicloAtividadeTipo(codigoClicloMonitoramento: number, codigoAtividade: number, indTipo: number) {
 		return this.http.get<DataMap>(`${environment.apiURL}${this.apiSuffix}ciclo_monitoramento/${codigoClicloMonitoramento}/atividade/${codigoAtividade}/tipo/${indTipo}`, { observe: "response" });
 	}
+
+	geraRelatorioMapaTratamento(codigoEmpresa: number, codigoClicloMonitoramento: number, codigoArea: number, codigoProcesso: number, codigoAtividade: number, indTipo: number)
+	{
+		return this.http.get<DataMap[]>(`${environment.apiURL}${this.apiSuffix}empresa/${codigoEmpresa}/ciclo_monitoramento/${codigoClicloMonitoramento}/area/${codigoArea}/processo/${codigoProcesso}/atividade/${codigoAtividade}/tipo/${indTipo}`, { observe: "response" });
+	}
 }

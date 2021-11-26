@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "crypto":["node_modules/crypto-js"]
+      "crypto":["node_modules/crypto-js"],
+      "exceljs": ["node_modules/exceljs/dist/exceljs.min"]
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

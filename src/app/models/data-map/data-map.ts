@@ -2,6 +2,7 @@ import { Compartilhamento } from "../compartilhamento/compartilhamento";
 import { FormaColeta } from "../forma-coleta/forma-coleta";
 import { LocalArmazenamento } from "../local-armazenamento/local-armazenamento";
 import { Metadados } from '../metadados/metadados';
+import { PlanoMitigacao } from "../plano-mitigacao/plano-mitigacao";
 
 export class DataMap {
     codDataMap: number;
@@ -11,6 +12,7 @@ export class DataMap {
     indTipo: number;
 
     codBaseLegal: number;
+    nomeBaseLegal: string;
     indPrincipios: number;
     indSensivel: number;
     indDadosMenores: number;
@@ -22,6 +24,7 @@ export class DataMap {
     metadados: Array<Metadados>;
     indAnonimizacao: number;
   	codCicloVida: number;
+    nomeCicloVida: string;
     indRisco: number;
     desObservacoes: string;
 
@@ -35,4 +38,6 @@ export class DataMap {
     nomeArea: string;
     codEmpresa: number;
     nomeEmpresa: string;
+
+    planoMitigacao: Array<PlanoMitigacao>;
 }

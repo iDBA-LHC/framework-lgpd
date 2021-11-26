@@ -130,6 +130,22 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       },
+      {
+        path: "mapa-tratamento-dados",
+        loadChildren: () =>
+          import("./pages/relatorios/mapa-tratamento-dados/mapa-tratamento-dados.module").then(
+            (module) => module.MapaTratamentoDadosModule
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "inventario-contratos",
+        loadChildren: () =>
+          import("./pages/relatorios/inventario-contratos/inventario-contratos.module").then(
+            (module) => module.InventarioContratosModule
+          ),
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {

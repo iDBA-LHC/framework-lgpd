@@ -34,6 +34,10 @@ export class CicloMonitoramentoService {
 		return this.http.get<CicloMonitoramento>(`${environment.apiURL}${this.apiSuffix}lastone/${codigoEmpresa}`, { observe: "response" });
 	}
 
+	buscarCicloMonitoramentoPorEmpresa(codigoEmpresa: number) {
+		return this.http.get<CicloMonitoramento[]>(`${environment.apiURL}${this.apiSuffix}empresa/${codigoEmpresa}`, { observe: "response" });
+	}
+
 	excluirCicloMonitoramento(id: number)
 	{
 	  return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`,{ observe: "response" })
