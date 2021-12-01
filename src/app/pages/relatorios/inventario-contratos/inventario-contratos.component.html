@@ -1,1 +1,75 @@
-<p>inventario-contratos works!</p>
+<mat-card class="marginContent">
+	<div class="mat-elevation-z8">
+
+		<div *ngIf="isLoading" class="overlay-spinner">
+			<div class="center-spinner">
+				<mat-spinner style="align-self: center; margin: 0 auto;"></mat-spinner>
+			</div>
+		</div>
+
+		<div>
+			<form fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100"
+				fxFlex.gt-sm="100" [formGroup]="relatorioForm" #ngForm="ngForm">
+
+				<mat-card-header>
+					<mat-card-title>
+						<h2 >Inventário de Contratos</h2>
+					</mat-card-title>
+				</mat-card-header>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Controladora</mat-label>
+					<input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="!this.usuarioAdmin"/>
+
+					<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
+						(optionSelected)="selecionaEmpresa($event)">
+						<mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+							{{empresa.nomeEmpresa}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="relatorioForm.controls.empresa.errors?.required">Campo obrigatório</mat-error>
+				</mat-form-field>
+
+                <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Área</mat-label>
+					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea" [readonly]="!this.usuarioAdmin"/>
+
+					<mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea"
+						(optionSelected)="selecionaArea($event)">
+						<mat-option *ngFor="let area of listaAreasFiltradas | async" [value]="area">
+							{{area.nomeArea}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="relatorioForm.controls.area.errors?.required">Campo obrigatório</mat-error>
+				</mat-form-field>
+
+                <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Processo</mat-label>
+					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso"/>
+
+					<mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso"
+						(optionSelected)="selecionaProcesso($event)">
+						<mat-option *ngFor="let processo of listaProcessosFiltradas | async" [value]="processo">
+							{{processo.nomeProcesso}}
+						</mat-option>
+					</mat-autocomplete>
+				</mat-form-field>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Atividade</mat-label>
+					<input matInput formControlName="atividade" placeholder="Atividade" [matAutocomplete]="autoAtividade"/>
+					<mat-autocomplete #autoAtividade="matAutocomplete" [displayWith]="displayAtividade"
+						(optionSelected)="selecionaAtividade($event)">
+						<mat-option *ngFor="let atividade of listaAtividadesFiltradas | async" [value]="atividade">
+							{{atividade.nomeAtividade}}
+						</mat-option>
+					</mat-autocomplete>
+				</mat-form-field>
+
+                <mat-card-actions>
+					<button mat-raised-button color="accent" (click)="gerarRelatorio()">Gerar Relatório</button>
+				</mat-card-actions>
+			</form>
+		</div>
+	</div>
+</mat-card>

@@ -96,13 +96,13 @@ export class MenuItems {
 					label: "Tratamento Dados",
 					link: "mapa-tratamento-dados",
 					icon: "travel_explore",
-					hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
+					hidden: false,
 				}, 
 				{
 					label: "Contratos",
 					link: "inventario-contratos",
 					icon: "work",
-					hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
+					hidden: false,
 				}
 			]
 		}

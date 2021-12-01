@@ -23,6 +23,11 @@ export class AuthService {
   loggedUserId: number;
   loggedUserType: Number;
   loggedUserEmail: string;
+  loggedEmpresaUser: number;
+  loggedNomeEmpresaUser: string;
+  loggedAreaUser: number;
+  loggedNomeAreaUser: string;
+
   active: Boolean;
   loggedTime: Date;
   token: string;
@@ -65,6 +70,10 @@ export class AuthService {
       this.active = JSON.parse(token).indAtivo;
       this.loggedTime = JSON.parse(token).dataHoraLogin;
       this.loggedUserEmail = JSON.parse(token).emailUsuario;
+      this.loggedEmpresaUser = JSON.parse(token).codigoEmpresa;
+      this.loggedNomeEmpresaUser = JSON.parse(token).nomeEmpresa;
+      this.loggedAreaUser = JSON.parse(token).codigoArea;
+      this.loggedNomeAreaUser = JSON.parse(token).nomeArea;
       this.token = JSON.parse(token).token;
       this.loggedIn.next(true);
     }
@@ -107,6 +116,26 @@ export class AuthService {
   getLoggedUserEmail()
   {
     return this.loggedUserEmail;
+  }
+
+  getLoggedEmpresaUser()
+  {
+    return this.loggedEmpresaUser;
+  }
+
+  getLoggedEmpresaNomeUser()
+  {
+    return this.getLoggedEmpresaNomeUser;
+  }
+
+  getLoggedAreaUser()
+  {
+    return this.loggedAreaUser;
+  }
+
+  getLoggedAreaNomeUser()
+  {
+    return this.loggedNomeAreaUser;
   }
 
   getToken()

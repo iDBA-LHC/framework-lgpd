@@ -17,6 +17,9 @@ import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-ba
 import { Cell, Workbook } from 'exceljs';
 import * as fs from 'file-saver';
 import { DataMap } from 'src/app/models/data-map/data-map';
+import { ExcelUtils } from 'src/app/shared/utils/excel-utils';
+import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-mapa-tratamento-dados',
@@ -25,12 +28,13 @@ import { DataMap } from 'src/app/models/data-map/data-map';
 })
 export class MapaTratamentoDadosComponent implements OnInit {
 
-  isLoading = false;
+  	isLoading = false;
+	usuarioAdmin:boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
-  listaEmpresas: Empresa[];
+  	listaEmpresas: Empresa[];
 	listaEmpresasFiltradas: Observable<Empresa[]>;
 
-  listaCiclos: CicloMonitoramento[];
+  	listaCiclos: CicloMonitoramento[];
 	listaCiclosFiltrados: Observable<CicloMonitoramento[]>;
 
 	listaAreas: Area[];
@@ -39,29 +43,38 @@ export class MapaTratamentoDadosComponent implements OnInit {
 	listaProcessos: Processo[];
 	listaProcessosFiltradas: Observable<Processo[]>;
 
-  listaAtividade: Atividade[];
-  listaAtividadesFiltradas: Observable<Atividade[]>;
+  	listaAtividade: Atividade[];
+  	listaAtividadesFiltradas: Observable<Atividade[]>;
 
-  relatorioForm: FormGroup;
+  	relatorioForm: FormGroup;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private empresaService: EmpresaService,
-    private areaService: AreaService,
+  	constructor(
+    	private formBuilder: FormBuilder,
+	    private empresaService: EmpresaService,
+    	private areaService: AreaService,
 		private processoService: ProcessoService,
-    private atividadeService: AtividadeService,
-    private cicloMonitoarmentoService: CicloMonitoramentoService,
-    private dataMapService: DataMapService,
-    private snackBar: CustomSnackBarService,		
-  ) { }
+	    private atividadeService: AtividadeService,
+    	private cicloMonitoarmentoService: CicloMonitoramentoService,
+	    private dataMapService: DataMapService,
+    	private snackBar: CustomSnackBarService,	
+		private authService: AuthService,			
+  	) { }
 
-  ngOnInit() {
-    this.createForm();
+  	ngOnInit() {
+    	this.createForm();
 
-    this.pesquisaEmpresas();
-  }
+		if (!this.usuarioAdmin)
+		{
+		  this.relatorioForm.controls.codEmpresa.setValue(this.authService.getLoggedEmpresaUser());
+		  this.relatorioForm.controls.codArea.setValue(this.authService.getLoggedAreaUser());
+		}
+  
 
-  private createForm() {
+		this.pesquisaEmpresas();
+		
+  	}
+
+  	private createForm() {
 		this.relatorioForm = this.formBuilder.group({
 
 			codEmpresa: [0, Validators.required],
@@ -70,7 +83,7 @@ export class MapaTratamentoDadosComponent implements OnInit {
 			codArea: ["", Validators.required],
 			area: ["", Validators.required],
 
-      codCicloMonitoramento: ["", Validators.required],
+      		codCicloMonitoramento: ["", Validators.required],
 			cicloMonitoramento: ["", Validators.required],
 
 			codProcesso: ["", ],
@@ -82,9 +95,11 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		});
 	}
 
-  private pesquisaEmpresas() {
+ 	 private pesquisaEmpresas() {
+		this.isLoading = true;
 		this.empresaService.listaTodasEmpresas().subscribe(
 			(retorno) => {
+				this.isLoading = false;
 				this.listaEmpresas = retorno.body;
 
 				let codEmpresa = this.relatorioForm.controls.codEmpresa.value;
@@ -101,6 +116,12 @@ export class MapaTratamentoDadosComponent implements OnInit {
 						map(name => {
 							return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
 						}));
+
+				if (!this.usuarioAdmin)
+        		{          
+					this.pesquisaCicloMonitoramento(codEmpresa);
+          			this.pesquisaArea(codEmpresa);
+        		} 
 			}
 		)
 	}
@@ -119,23 +140,21 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		this.relatorioForm.controls.codProcesso.setValue(null);
 		this.relatorioForm.controls.processo.setValue(null);
 		this.relatorioForm.controls.codAtividade.setValue(null);
-    this.relatorioForm.controls.atividade.setValue(null);		
-
-		//this.buscarUltimoCicloMonitoramento(empresaSelecionada.codigoEmpresa);
+    	this.relatorioForm.controls.atividade.setValue(null);		
 
 		this.pesquisaArea(empresaSelecionada.codigoEmpresa);
-    this.pesquisaCicloMonitoramento(empresaSelecionada.codigoEmpresa);
+    	this.pesquisaCicloMonitoramento(empresaSelecionada.codigoEmpresa);
 	}
 
 	displayEmpresa(empresa: Empresa): string {
 		return empresa ? empresa.nomeEmpresa : "";
 	}
 
-  private pesquisaArea(codEmpresa: number) {
-    this.isLoading = true;
+  	private pesquisaArea(codEmpresa: number) {
+    	this.isLoading = true;
 		this.areaService.listaAreasPorEmpresa(codEmpresa).subscribe(
 			(retorno) => {
-        this.isLoading = false;
+        		this.isLoading = false;
 				this.listaAreas = retorno.body;
 
 				let codArea = this.relatorioForm.controls.codArea.value;
@@ -153,6 +172,11 @@ export class MapaTratamentoDadosComponent implements OnInit {
 						map(name => {
 							return name ? this.filtraArea(name) : this.listaAreas.slice();
 						}));
+
+				if (!this.usuarioAdmin)
+				{          
+					this.pesquisaProcesso(codArea);
+				} 						
 			}
 		)
 	}
@@ -179,11 +203,11 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		return area ? area.nomeArea : "";
 	}
 
-  private pesquisaCicloMonitoramento(codEmpresa: number) {
-    this.isLoading = true;
+  	private pesquisaCicloMonitoramento(codEmpresa: number) {
+    	this.isLoading = true;
 		this.cicloMonitoarmentoService.buscarCicloMonitoramentoPorEmpresa(codEmpresa).subscribe(
 			(retorno) => {
-        this.isLoading = false;
+        		this.isLoading = false;
 				this.listaCiclos = retorno.body;
 
 				this.listaCiclosFiltrados = this.relatorioForm.controls.cicloMonitoramento.valueChanges
@@ -213,7 +237,7 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		return cicloMonitoramento ? cicloMonitoramento.nomeCicloMonitoramento : "";
 	}
 
-  private pesquisaProcesso(codArea: number) {
+  	private pesquisaProcesso(codArea: number) {
 		this.isLoading = true;
 		this.processoService.listarProcessosPorArea(codArea).subscribe(
 			(retorno) => {
@@ -250,7 +274,7 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		this.relatorioForm.controls.codProcesso.setValue(processoSelecionada.codProcesso);
 
 		this.relatorioForm.controls.codAtividade.setValue(null);
-    this.relatorioForm.controls.atividade.setValue(null);
+    	this.relatorioForm.controls.atividade.setValue(null);
 
 		this.pesquisaAtividade(processoSelecionada.codProcesso);
 	}
@@ -259,7 +283,7 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		return processo ? processo.nomeProcesso : "";
 	}
 
-  private pesquisaAtividade(codProcesso: number) {
+  	private pesquisaAtividade(codProcesso: number) {
 		this.isLoading = true;
 		this.atividadeService.listaAtivadadesPorProcesso(codProcesso).subscribe(
 			(retorno) => {
@@ -285,7 +309,7 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		)
 	}
 
-  private filtraAtividade(value: string): Atividade[] {
+	private filtraAtividade(value: string): Atividade[] {
 		const filterValue = value.toLowerCase();
 		return this.listaAtividade.filter(item => item.nomeAtividade.trim().toLowerCase().includes(filterValue));
 	}
@@ -297,255 +321,288 @@ export class MapaTratamentoDadosComponent implements OnInit {
 	selecionaAtividade(event) {
 		let selecionado: Atividade = event.option.value;
 		this.relatorioForm.controls.atividade.setValue(selecionado);
-		this.relatorioForm.controls.codAtividade.setValue(selecionado.codAtividade);		
-		
+		this.relatorioForm.controls.codAtividade.setValue(selecionado.codAtividade);				
 	}
 
-  gerarRelatorio(event) {
+	gerarRelatorio(event) {
 
-    if (this.relatorioForm.valid)
-    {
-
-      this.isLoading = true;
-
-      this.dataMapService.geraRelatorioMapaTratamento(this.relatorioForm.controls.codEmpresa.value,
-                                                      this.relatorioForm.controls.codCicloMonitoramento.value,
-                                                      this.relatorioForm.controls.codArea.value,
-                                                      this.relatorioForm.controls.codProcesso.value,
-                                                      this.relatorioForm.controls.codAtividade.value,
-                                                      1).subscribe(
-        (retorno) => {
-          this.isLoading = false;
-
-          if (retorno.body.length===0)
-          {
-            this.showMessage("Não Existem Dados Para a Seleção Informada", "Warn");
-            return;
-          }
-
-          this.geraPlanilha(retorno.body);
-        });
-
-    } else {
-        this.showMessage("Campos obrigatórios não foram preenchidos", "Warn");
-    }
-  }
-
-  private geraPlanilha(listaDataMap: DataMap[]){
-
-    const header = ["Empresa", "Área", "Atividade", "Processo","Dados Tratados","Origem","Destino","Base Legal",
-                    "Dados Sensíveis","Dados de Menores","Necessidade Consentimento","Tranferência Internacional",
-                    "Necessidade de Anonimização","Ciclo de Vida","Risco","Ações Necessárias"];
-
-    let workbook = new Workbook();
-    let worksheet = workbook.addWorksheet('Tratamento de Dados');                    
-
-    let headerRow = worksheet.addRow(header);
-    // Cell Style : Fill and Border
-    headerRow.eachCell((cell, number) => {
-      cell.font = { name: 'Calibri', size: 11, bold: true, color: {argb : '222A35'} };
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '9CC2E5' },
-      }
-      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
-    });
-
-    listaDataMap.forEach((dataMap) => {
-      
-      let metadados:String = "";
-      let coleta: String = "";
-      let armazenamento: String = "";
-	  let plano:String = "";
-
-      dataMap.metadados.forEach((dado) => {
-        if (metadados.length!=0)
-        {
-          metadados = metadados + ",";
-        }
-        metadados = metadados + dado.nomeMetadados;
-      });
-
-      dataMap.formaColetas.forEach((dado) => {
-        if (coleta.length!=0)
-        {
-          coleta = coleta + ",";
-        }
-        coleta = coleta + dado.nomeFormaColeta;
-      });
-
-      dataMap.armazenamentos.forEach((dado) => {
-        if (armazenamento.length!=0)
-        {
-          armazenamento = armazenamento + ",";
-        }
-        armazenamento = armazenamento + dado.nomeLocalArmazenamento;
-      });
-
-	  dataMap.planoMitigacao.forEach((dado) => {
-		if (plano.length!=0)
+		if (this.relatorioForm.valid)
 		{
-			plano = plano + "\r\n";
+
+			this.isLoading = true;
+
+			this.dataMapService.geraRelatorioMapaTratamento(this.relatorioForm.controls.codEmpresa.value,
+															this.relatorioForm.controls.codCicloMonitoramento.value,
+															this.relatorioForm.controls.codArea.value,
+															this.relatorioForm.controls.codProcesso.value,
+															this.relatorioForm.controls.codAtividade.value,
+															1).subscribe(
+				(retorno) => {
+					this.isLoading = false;
+
+					if (retorno.body.length===0)
+					{
+						this.showMessage("Não Existem Dados Para a Seleção Informada", "Warn");
+						return;
+					}
+
+					this.geraPlanilha(retorno.body);
+				});
+
+		} else {
+			this.showMessage("Campos obrigatórios não foram preenchidos", "Warn");
 		}
-		plano = plano + dado.desPlanoMitigacao;
+	}
+
+  	private geraPlanilha(listaDataMap: DataMap[]){
+
+		const header = ["Empresa", "Área", "Atividade", "Processo","Dados Tratados","Origem","Destino","Base Legal",
+						"Dados Sensíveis","Dados de Menores","Necessidade Consentimento","Tranferência Internacional",
+						"Necessidade de Anonimização","Ciclo de Vida","Risco","Ações Necessárias"];
+
+		let workbook = new Workbook();
+		let worksheet = workbook.addWorksheet('Tratamento de Dados');                    
+
+		let headerRow = worksheet.addRow(header);
+		
+		headerRow.eachCell((cell, number) => {
+			cell.font = { name: 'Calibri', size: 11, bold: true, color: {argb : '222A35'} };
+			cell.fill = {
+				type: 'pattern',
+				pattern: 'solid',
+				fgColor: { argb: '9CC2E5' },
+			}
+			cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
 		});
 
-      let dado = 
-      [
-        dataMap.nomeEmpresa,
-        dataMap.nomeArea,
-        dataMap.nomeAtividade,
-        dataMap.nomeProcesso,
-        metadados,
-        coleta,
-        armazenamento,
-        dataMap.nomeBaseLegal,
-        dataMap.indSensivel === 1 ? "Sim":"Não",
-        dataMap.indDadosMenores === 1 ? "Sim":"Não",
-        dataMap.indNecessitaConsentimento === 1 ? "Sim":"Não",
-        dataMap.indTransfInternacional === 1 ? "Sim":"Não",
-        dataMap.indAnonimizacao === 1 ? "Sim":"Não",
-        dataMap.nomeCicloVida,
-        dataMap.indRisco === 1 ? "Baixo": 
-			dataMap.indRisco === 2 ? "Moderado": 
-				dataMap.indRisco === 3 ? "Elevado":"Extremo",
-		plano
-      ]
-      let row = worksheet.addRow(dado);
-	  let colPlano = row.getCell(16);
-	  colPlano.alignment =  { wrapText: true };
+		listaDataMap.forEach((dataMap) => {
+		
+		let metadados:String = "";
+		let coleta: String = "";
+		let armazenamento: String = "";
+		let plano:String = "";
 
-	  row.eachCell((cell, number) => {
+		dataMap.formaColetas.forEach((dado) => {
+			if (coleta.length!=0)
+			{
+			coleta = coleta + ",";
+			}
+			coleta = coleta + dado.nomeFormaColeta;
+		});
+
+		dataMap.armazenamentos.forEach((dado) => {
+			if (armazenamento.length!=0)
+			{
+			armazenamento = armazenamento + ",";
+			}
+			armazenamento = armazenamento + dado.nomeLocalArmazenamento;
+		});
+
+		dataMap.planoMitigacao.forEach((dado) => {
+			if (plano.length!=0)
+			{
+				plano = plano + "\r\n";
+			}
+			plano = plano + dado.desPlanoMitigacao;
+		});
+
+		let dado = 
+		[
+			dataMap.nomeEmpresa,
+			dataMap.nomeArea,
+			dataMap.nomeAtividade,
+			dataMap.nomeProcesso,
+			metadados,
+			coleta,
+			armazenamento,
+			dataMap.nomeBaseLegal,
+			dataMap.indSensivel === 1 ? "Sim":"Não",
+			dataMap.indDadosMenores === 1 ? "Sim":"Não",
+			dataMap.indNecessitaConsentimento === 1 ? "Sim":"Não",
+			dataMap.indTransfInternacional === 1 ? "Sim":"Não",
+			dataMap.indAnonimizacao === 1 ? "Sim":"Não",
+			dataMap.nomeCicloVida,
+			dataMap.indRisco === 1 ? "Baixo": 
+				dataMap.indRisco === 2 ? "Moderado": 
+					dataMap.indRisco === 3 ? "Elevado":"Extremo",
+			plano
+		]
+		let row = worksheet.addRow(dado);
+		let colPlano = row.getCell(16);
+		colPlano.alignment =  { wrapText: true };
+
+		row.eachCell((cell, number) => {
+			cell.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
+			cell.fill = {
+				type: 'pattern',
+				pattern: 'solid',
+				fgColor: { argb: '1F4E78' },
+			}
+			cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+		});
+
+		let colMetadados = row.getCell(5);
+		var richText = [];
+
+		dataMap.metadados.forEach((dado) => {
+
+			var rich = {};
+
+			//Incluir a virgula
+			if (richText.length!=0)
+			{
+				rich = { 
+					font: 
+					{
+						name: 'Calibri', 
+						size: 10,
+						bold: false,
+						color: 
+						{
+							argb : 'FFFFFF'
+						},
+
+					},
+					text: "," 
+				};
+				richText.push(rich);
+				rich = {};
+			}
+
+			if (dado.indSensivel)
+			{
+				rich = {					
+					font: 
+					{
+						name: 'Calibri', 
+						size: 10,
+						bold: true,
+						color: 
+						{
+							argb: '00FF0000',
+						},
+
+					},
+					text: dado.nomeMetadados
+				};
+			}
+			else
+			{
+				rich = {
+					font: 
+					{ 
+						name: 'Calibri', 
+						size: 10,
+						bold: false, 
+						color: 
+						{
+							argb : 'FFFFFF'
+						} 
+					},
+					text: dado.nomeMetadados
+				};
+			}
+
+			richText.push(rich);
+
+		});	
+
+		colMetadados.value = { richText };
+
+		if (dataMap.indSensivel===1)
+		{
+			this.trataFormatacao(row.getCell(9));
+		}
+
+		if (dataMap.indDadosMenores===1)
+		{
+			this.trataFormatacao(row.getCell(10));
+		}
+
+		if (dataMap.indNecessitaConsentimento===1)
+		{
+			this.trataFormatacao(row.getCell(11));
+		}
+
+		if (dataMap.indTransfInternacional===1)
+		{
+			this.trataFormatacao(row.getCell(12));
+		}
+
+		if (dataMap.indAnonimizacao===1)
+		{
+			this.trataFormatacao(row.getCell(13));
+		}
+
+		let colRisco = row.getCell(15);
+
+		switch(dataMap.indRisco)
+		{
+			case 1:
+			{
+				colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
+				colRisco.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: '92D050' },
+				}	
+				break;	
+			}
+			case 2:
+			{
+				colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
+				colRisco.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: '92D050' },
+				}	
+				break;	
+			}		
+			case 3:
+			{
+				colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : '000000'} };
+				colRisco.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'FFFF00' },
+				}
+				break;
+			}
+			case 4:
+			{
+				colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
+				colRisco.fill = {
+					type: 'pattern',
+					pattern: 'solid',
+					fgColor: { argb: 'FF0000' },
+				}
+				break;
+			}
+		}
+		});
+
+		ExcelUtils.autoWidth(worksheet);
+
+		workbook.xlsx.writeBuffer().then((data) => {
+			let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+			fs.saveAs(blob, 'TratamentoDados.xlsx');
+		});
+
+	}
+
+	private trataFormatacao(cell: Cell)
+	{
 		cell.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
-		cell.fill = {
-		  type: 'pattern',
-		  pattern: 'solid',
-		  fgColor: { argb: '1F4E78' },
-		}
-		cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
-	  });
-
-	  if (dataMap.indSensivel===1)
-	  {
-		this.trataFormatacao(row.getCell(9));
-	  }
-
-	  if (dataMap.indDadosMenores===1)
-	  {
-		this.trataFormatacao(row.getCell(10));
-	  }
-
-	  if (dataMap.indNecessitaConsentimento===1)
-	  {
-		this.trataFormatacao(row.getCell(11));
-	  }
-
-	  if (dataMap.indTransfInternacional===1)
-	  {
-		this.trataFormatacao(row.getCell(12));
-	  }
-
-	  if (dataMap.indAnonimizacao===1)
-	  {
-		this.trataFormatacao(row.getCell(13));
-	  }
-
-	  let colRisco = row.getCell(15);
-
-	  switch(dataMap.indRisco)
-	  {
-		case 1:
-		{
-			colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
-			colRisco.fill = {
-		  		type: 'pattern',
-		  		pattern: 'solid',
-		  		fgColor: { argb: '92D050' },
-			}	
-			break;	
-		}
-		case 2:
-		{
-			colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
-			colRisco.fill = {
-		  		type: 'pattern',
-		  		pattern: 'solid',
-		  		fgColor: { argb: '92D050' },
-			}	
-			break;	
-		}		
-		case 3:
-		{
-			colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : '000000'} };
-			colRisco.fill = {
-		  		type: 'pattern',
-		  		pattern: 'solid',
-		  		fgColor: { argb: 'FFFF00' },
+			cell.fill = {
+			type: 'pattern',
+			pattern: 'solid',
+			fgColor: { argb: 'FFC000' },
 			}
-			break;
-		}
-		case 4:
-		{
-			colRisco.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
-			colRisco.fill = {
-		  		type: 'pattern',
-		  		pattern: 'solid',
-		  		fgColor: { argb: 'FF0000' },
-			}
-			break;
-		}
-	  }
-    });
+			cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+	}
 
-	this.autoWidth(worksheet);
-
-    workbook.xlsx.writeBuffer().then((data) => {
-      let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      fs.saveAs(blob, 'TratamentoDados.xlsx');
-    });
-
- }
-
- private autoWidth = (worksheet, minimalWidth = 10) => {
-	worksheet.columns.forEach((column) => {
-		let maxColumnLength = 0;
-		column.eachCell({ includeEmpty: true }, (cell) => {
-			maxColumnLength = Math.max(
-				maxColumnLength,
-				minimalWidth,
-				cell.value ? cell.value.toString().length : 0
-			);
-		});
-		column.width = maxColumnLength + 2;
-	});
-};
-
-private autoHeight = (worksheet) => {
-	const lineHeight = 12 // height per line is roughly 12
-	worksheet.eachRow((row) => {
-		let maxLine = 1;
-		row.eachCell((cell) => {
-			maxLine = Math.max(cell.value.split('\n').length - 1, maxLine)
-		})
-		row.height = lineHeight * maxLine
-	})
-}
-
-
- private trataFormatacao(cell: Cell)
- {
-	cell.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
-		cell.fill = {
-		  type: 'pattern',
-		  pattern: 'solid',
-		  fgColor: { argb: 'FFC000' },
-		}
-		cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
- }
-
-  private showMessage(msg: string, type: string = "Success") {
-    this.snackBar.openSnackBar(msg, null, type);
-  }
+  	private showMessage(msg: string, type: string = "Success") {
+    	this.snackBar.openSnackBar(msg, null, type);
+  	}
 
 }

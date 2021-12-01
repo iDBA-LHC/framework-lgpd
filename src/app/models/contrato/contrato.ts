@@ -6,4 +6,9 @@ export class Contrato {
     codProcesso: number;
     codUsuarioAlteracao: number;
     enderecoDocumento: string;
+    codigoEmpresa: number;
+    nomeEmpresa: string;
+    codigoArea: number;
+    nomeArea: string;
+    nomeProcesso: string;
 }

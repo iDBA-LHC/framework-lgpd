@@ -33,4 +33,10 @@ export class ContratoService {
   public excluirContrato(id: number) {
     return this.http.delete(`${environment.apiURL}${this.apiSufix}${id}`, { observe: "response" });
   }
+
+  public geraRelatorioInventarioContrados(codEmpresa: number,
+                                          codArea: number,
+                                          processoId: number) {
+    return this.http.get<Contrato []>(`${environment.apiURL}${this.apiSufix}empresa/${codEmpresa}/area/${codArea}/processo/${processoId}`, { observe: "response" });
+  }
 }
