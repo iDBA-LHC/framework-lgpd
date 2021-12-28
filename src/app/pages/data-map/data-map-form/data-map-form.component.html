@@ -21,6 +21,11 @@
 						<h2 *ngIf="!codDataMap">Novo Data Analisys Map</h2>
 						<h2 *ngIf="codDataMap">Editar Data Analisys Map</h2>
 					</mat-card-title>
+
+					<mat-card-title *ngIf="indTipo == 2">
+						<h2 *ngIf="!codDataMap">Novo Data Governance Map</h2>
+						<h2 *ngIf="codDataMap">Editar Data Governance Map</h2>
+					</mat-card-title>
 				</mat-card-header>
 
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
@@ -95,8 +100,7 @@
 					  <span *ngIf="!metadados.indSensivel">
 						{{metadados.nomeMetadados}}
 					  </span>
-					  <mat-icon matChipRemove>cancel</mat-icon>  
-
+					  <mat-icon *ngIf="indTipo!=2" matChipRemove>cancel</mat-icon>  
 					</mat-chip>
 					  <input
 						placeholder="Metadados..."
@@ -104,7 +108,8 @@
 						[formControl]="metadadosCtrl"
 						[matAutocomplete]="autoMetadados"
 						[matChipInputFor]="chipListMetadados"
-						[matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+						[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+						[readonly]="indTipo === 2">
 					</mat-chip-list>
 					<mat-autocomplete #autoMetadados="matAutocomplete" [displayWith]="displayMetadados" (optionSelected) = "selectedMetadados($event)">
 					  <mat-option *ngFor="let metadados of listaMetadadosFiltrados | async" [value]="metadados">
@@ -116,7 +121,7 @@
 				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Base Legal</mat-label>
 					<input matInput formControlName="baseLegal" placeholder="Base Legal"
-						[matAutocomplete]="autoBaseLegal" />
+						[matAutocomplete]="autoBaseLegal" [readonly]="indTipo === 2"/>
 					<mat-autocomplete #autoBaseLegal="matAutocomplete" [displayWith]="displayBaseLegal"
 						(optionSelected)="selecionaBaseLegal($event)">
 						<mat-option *ngFor="let baseLegal of listaBaseLegal" [value]="baseLegal">
@@ -140,7 +145,6 @@
 					formControlName="indDadosMenores" style="width: 50%;" (change)="calculaRisco()">
 					<span class="ng-tns-c15-3 ng-star-inserted">Dados de Menores</span>
 				</mat-slide-toggle>
-
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="10px">
 					<mat-label>Forma de Coleta</mat-label>
@@ -195,7 +199,7 @@
 				<mat-form-field style="width: 50%;" fxFlexOffset="20px">
 					<mat-label>Ciclo Vida</mat-label>
 					<input matInput formControlName="cicloVida" placeholder="Ciclo Vida"
-						[matAutocomplete]="autoCicloVida" />
+						[matAutocomplete]="autoCicloVida" [readonly]="indTipo === 2" />
 					<mat-autocomplete #autoCicloVida="matAutocomplete" [displayWith]="displayCicloVida"
 						(optionSelected)="selecionaCicloVida($event)">
 						<mat-option *ngFor="let cicloVida of listaCicloVida" [value]="cicloVida">
@@ -218,8 +222,8 @@
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
 					<mat-label>Observações</mat-label>
 					<textarea matInput formControlName="desObservacoes" placeholder="Observações" autocomplete="off"
-						type="textField" resizeToFitContent="true" rows="5">
-			</textarea>
+						type="textField" resizeToFitContent="true" rows="5" [readonly]="indTipo === 2">
+					</textarea>
 				</mat-form-field>
 
 				<mat-card-actions>
@@ -231,7 +235,7 @@
 
 	<!-- Plano mitigacao -->
 
-	<mat-expansion-panel *ngIf="codDataMap && indTipo == 1" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
+	<mat-expansion-panel *ngIf="codDataMap && indTipo == 2" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
 				Plano Mitigação

@@ -35,7 +35,7 @@ export class DataMapListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-	this.indTipo = 0;
+	this.indTipo = 0; //Data Map
     this.pesquisaDataMap();
   }
 
@@ -43,8 +43,11 @@ export class DataMapListComponent implements OnInit {
     this.isLoading = true;
 	
 	if (this.router.url.includes('data-analisys-map')) {
-		this.indTipo = 1;
+		this.indTipo = 1; //Data Analys Map
 	}		
+  else if (this.router.url.includes('data-governance-map')) {
+		this.indTipo = 2; //Data Governance Map
+	}
 
     this.DataMapService.listaTodosDataMap(this.indTipo).subscribe(
       (response) => {

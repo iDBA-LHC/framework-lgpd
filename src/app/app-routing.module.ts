@@ -122,6 +122,14 @@ const routes: Routes = [
             (module) => module.DataMapModule
           ),
         canActivate: [AuthGuard],
+      },
+      {
+        path: "data-governance-map",
+        loadChildren: () =>
+          import("./pages/data-map/data-map.module").then(
+            (module) => module.DataMapModule
+          ),
+        canActivate: [AuthGuard],
       }, {
         path: "data-flow",
         loadChildren: () =>

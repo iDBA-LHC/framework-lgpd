@@ -169,7 +169,11 @@ export class DataMapFormComponent implements OnInit {
 
 		if (this.router.url.includes('data-analisys-map')) {
 			this.indTipo = 1;
+		}
+		else if (this.router.url.includes('data-governance-map')) {
+			this.indTipo = 2;
 		}		
+		
 
 		this.activatedRoute.params.subscribe(
 			(data) => {
@@ -185,9 +189,13 @@ export class DataMapFormComponent implements OnInit {
 								{
 									this.router.navigate(["/data-map"]);
 								}
-								else
+								else if (this.indTipo==1)
 								{
 									this.router.navigate(["/data-analisys-map"]);
+								}
+								else
+								{
+									this.router.navigate(["/data-governance-map"]);
 								}
 							}
 
@@ -225,6 +233,21 @@ export class DataMapFormComponent implements OnInit {
 
 							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
 
+							if (this.indTipo === 2)
+							{
+								this.dataMapForm.controls.indPrincipios.disable();
+								this.dataMapForm.controls.indSensivel.disable();
+								this.dataMapForm.controls.indDadosMenores.disable();
+								this.dataMapForm.controls.indAnonimizacao.disable();
+								this.dataMapForm.controls.indNecessitaConsentimento.disable();
+								this.dataMapForm.controls.indTransfInternacional.disable();
+								this.dataMapForm.controls.indRisco.disable();
+
+								this.dataMapForm.controls.armazenamentos.disable();
+								this.dataMapForm.controls.formaColetas.disable();
+								this.dataMapForm.controls.compartilhamentos.disable();
+							}
+
 							this.preencherCombos();
 
 							this.pesquisaArea(retorno.body[0].codEmpresa);
@@ -251,11 +274,9 @@ export class DataMapFormComponent implements OnInit {
 	preencherCombos() {
 
 		this.pesquisaEmpresas();
-
 		this.pesquisaBaselegal();
 		this.pesquisaMetadados();
 		this.pesquisaCicloVida();
-
 		this.pesquisaFormaColetas();
 		this.pesquisaLocalArmazenamento();
 		this.pesquisaCompartilhamentos();
@@ -302,7 +323,12 @@ export class DataMapFormComponent implements OnInit {
 							this.snackBar.openSnackBar(`Data Analisys Map Alterado com Sucesso`, null);
 							this.router.navigate(["/data-analisys-map"]);
 						}
-						else
+						else if (this.indTipo==2)
+						{
+							this.snackBar.openSnackBar(`Data Governance Map Alterado com Sucesso`, null);
+							this.router.navigate(["/data-governance-map"]);
+						}
+						else 
 						{
 							this.snackBar.openSnackBar(`Data Map Alterado com Sucesso`, null);
 							this.router.navigate(["/data-map"]);
@@ -325,6 +351,11 @@ export class DataMapFormComponent implements OnInit {
 						{
 							this.snackBar.openSnackBar(`Data Analisys Map Criado com Sucesso`, null);
 							this.router.navigate(["/data-analisys-map"]);
+						}
+						else if (this.indTipo==2)
+						{
+							this.snackBar.openSnackBar(`Data Governance Map Criado com Sucesso`, null);
+							this.router.navigate(["/data-governance-map"]);
 						}
 						else
 						{
@@ -469,10 +500,50 @@ export class DataMapFormComponent implements OnInit {
 		if (!this.codDataMap)
 		{
 			this.isLoading = true;
-			if (this.indTipo)
+			if (this.indTipo == 1)
 			{
 				//Se for Data Analisys Map, buscar informações do Data Map
 				this.dataMapService.pesquisaDataMapCicloAtividadeTipo(this.codCicloMonitoramento, selecionado.codAtividade, 0).subscribe(
+					(retorno) => {
+
+						if (retorno.body[0])
+						{
+							this.metadadosDataMap = retorno.body[0].metadados;
+
+							let baseLegal: BaseLegal = <BaseLegal>this.listaBaseLegal.filter(baseLegal => baseLegal.codigoBase == retorno.body[0].codBaseLegal)[0];
+							if (baseLegal) {
+								this.dataMapForm.controls.baseLegal.setValue(baseLegal);
+								this.dataMapForm.controls.codBaseLegal.setValue(baseLegal.codigoBase);
+							}
+
+							this.dataMapForm.controls.indPrincipios.setValue(retorno.body[0].indPrincipios);
+							this.dataMapForm.controls.indSensivel.setValue(retorno.body[0].indSensivel);
+							this.dataMapForm.controls.indDadosMenores.setValue(retorno.body[0].indDadosMenores);
+							this.dataMapForm.controls.formaColetas.setValue(retorno.body[0].formaColetas);
+							this.dataMapForm.controls.indNecessitaConsentimento.setValue(retorno.body[0].indNecessitaConsentimento);
+							this.dataMapForm.controls.armazenamentos.setValue(retorno.body[0].armazenamentos);
+							this.dataMapForm.controls.indTransfInternacional.setValue(retorno.body[0].indTransfInternacional);
+							this.dataMapForm.controls.compartilhamentos.setValue(retorno.body[0].compartilhamentos);
+							this.dataMapForm.controls.indAnonimizacao.setValue(retorno.body[0].indAnonimizacao);
+
+							let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == retorno.body[0].codCicloVida)[0];
+							if (cicloVida) {
+								this.dataMapForm.controls.cicloVida.setValue(cicloVida);
+								this.dataMapForm.controls.codCicloVida.setValue(cicloVida.codCicloVida);
+							}
+
+							this.dataMapForm.controls.indRisco.setValue(retorno.body[0].indRisco);
+
+							this.dataMapForm.controls.desObservacoes.setValue(retorno.body[0].desObservacoes);
+						}
+
+						this.isLoading = false;
+					});
+			}
+			else if (this.indTipo == 2)
+			{
+				//Se for Data Governance Map, buscar informações do Data Analisys Map
+				this.dataMapService.pesquisaDataMapCicloAtividadeTipo(this.codCicloMonitoramento, selecionado.codAtividade, 1).subscribe(
 					(retorno) => {
 
 						if (retorno.body[0])

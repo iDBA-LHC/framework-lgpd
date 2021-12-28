@@ -84,6 +84,11 @@ export class MenuItems {
 			link: "data-analisys-map",
 			icon: "travel_explore",
 			hidden: false,
+		}, {
+			label: "Data Governance Map",
+			link: "data-governance-map",
+			icon: "travel_explore",
+			hidden: false,
     	},
 		{
 			label: "Relatórios",
