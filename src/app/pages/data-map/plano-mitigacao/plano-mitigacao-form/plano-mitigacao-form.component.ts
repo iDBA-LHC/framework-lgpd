@@ -190,7 +190,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 
 	navigateToDataAnalasysMap()
 	{
-		this.router.navigate(["data-analisys-map", this.codDataMap]);
+		this.router.navigate(["data-governance-map", this.codDataMap]);
 	}
 
 	openNewWindow(documentoPlano: DocumentoPlano): void {

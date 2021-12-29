@@ -62,6 +62,21 @@ export class MenuItems {
 					icon: "inventory_2",
 					hidden: false,
 				}, {
+					label: "Risco",
+					link: "risco",
+					icon: "inventory_2",
+					hidden: false,
+				}, {
+					label: "Risco Associado",
+					link: "risco-associado",
+					icon: "inventory_2",
+					hidden: false,
+				}, {
+					label: "Ameaças",
+					link: "ameaca",
+					icon: "inventory_2",
+					hidden: false,
+				}, {
 					label: "Ciclo Monitoramento",
 					link: "ciclo-monitoramento",
 					icon: "settings_backup_restore",

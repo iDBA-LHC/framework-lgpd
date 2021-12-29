@@ -109,6 +109,26 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       }, {
+        path: "risco",
+        loadChildren: () =>
+          import("./pages/risco/risco.module").then(
+            (module) => module.RiscoModule),
+        canActivate: [AuthGuard],
+      }, {  
+        path: "risco-associado",
+        loadChildren: () =>
+          import("./pages/risco-associado/risco-associado.module").then(
+            (module) => module.RiscoAssociadoModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
+        path: "ameaca",
+        loadChildren: () =>
+          import("./pages/ameaca/ameaca.module").then(
+            (module) => module.AmeacaModule
+          ),
+        canActivate: [AuthGuard],
+      }, {
         path: "data-map",
         loadChildren: () =>
           import("./pages/data-map/data-map.module").then(

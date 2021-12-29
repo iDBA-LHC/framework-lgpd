@@ -226,6 +226,26 @@
 					</textarea>
 				</mat-form-field>
 
+				<mat-divider></mat-divider>
+				<h2 class="mat-h2" style="width: 50%; text-align: left;">Plano de Mitigação</h2>
+
+				<div class="section">
+					<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
+						formControlName="indDescarte" style="width: 50%;">
+						<span class="ng-tns-c15-3 ng-star-inserted">Descarte</span>
+					</mat-slide-toggle>
+
+					<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
+						formControlName="indRevisarPermissoes" style="width: 50%;">
+						<span class="ng-tns-c15-3 ng-star-inserted">Revisar Permissões</span>
+					</mat-slide-toggle>
+
+					<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
+						formControlName="indAnonimizar" style="width: 50%;">
+						<span class="ng-tns-c15-3 ng-star-inserted">Anonimizar</span>
+					</mat-slide-toggle>
+				</div>
+
 				<mat-card-actions>
 					<button mat-raised-button color="accent">Salvar</button>
 				</mat-card-actions>
@@ -238,24 +258,23 @@
 	<mat-expansion-panel *ngIf="codDataMap && indTipo == 2" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
-				Plano Mitigação
+				Ações
 			</mat-panel-title>
 		</mat-expansion-panel-header>
-
 
 		<div class="marginContent">
 			<div fxLayout="row">
 				<div fxFlex>
 					<mat-form-field fxFlex="30">
 						<input matInput (keyup)="applyFilterPlanoMitigacao($event.target.value)"
-							placeholder="Buscar Plano de Mitigação" />
+							placeholder="Buscar Ação" />
 					</mat-form-field>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px">
 					<div fxLayout="column" fxLayoutAlign="start end">
 						<a mat-raised-button color="accent"
 							[routerLink]="['/data-analisys-map', codDataMap, 'plano-mitigacao', '']" routerLinkActive="active">
-							<mat-icon>add</mat-icon>Novo Plano Mitigacao
+							<mat-icon>add</mat-icon>Nova Ação
 						</a>
 					</div>
 				</div>
@@ -292,6 +311,5 @@
 				</table>
 			</div>
 		</div>
-
 	</mat-expansion-panel>
 </mat-card>

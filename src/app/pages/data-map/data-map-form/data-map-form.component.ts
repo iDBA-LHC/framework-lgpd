@@ -119,6 +119,7 @@ export class DataMapFormComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+
 		this.indTipo = 0;
 		this.createForm();
 		this.pesquisaDataMap();
@@ -160,7 +161,11 @@ export class DataMapFormComponent implements OnInit {
 			cicloVida: ["", Validators.required],
 			
 			indRisco: ["", Validators.required],
-			desObservacoes: [""]
+			desObservacoes: [""],
+
+			indDescarte: ["",],
+			indRevisarPermissoes: ["",],
+			indAnonimizar: ["",]
 
 		});
 	}
@@ -573,7 +578,6 @@ export class DataMapFormComponent implements OnInit {
 							}
 
 							this.dataMapForm.controls.indRisco.setValue(retorno.body[0].indRisco);
-
 							this.dataMapForm.controls.desObservacoes.setValue(retorno.body[0].desObservacoes);
 						}
 
