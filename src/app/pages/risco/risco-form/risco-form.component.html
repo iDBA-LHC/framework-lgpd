@@ -1,1 +1,95 @@
-<p>risco-form works!</p>
+<mat-card class="marginContent">
+    <div class="mat-elevation-z8">
+      
+      <div *ngIf="isLoading" class="overlay-spinner">
+        <div class="center-spinner">
+          <mat-spinner style="align-self: center; margin: 0 auto;" ></mat-spinner>
+        </div>
+      </div>
+  
+        <div>
+            <form
+            fxLayout="row wrap"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxFlex="100"
+            fxFlex.gt-sm="100"
+            [formGroup]="form"
+            (submit)="salvar()">
+
+                <mat-card-header>
+                    <mat-card-title>
+                        <h2 *ngIf="!codigoRisco">Novo Risco</h2>
+                        <h2 *ngIf="codigoRisco">Editar Risco</h2>
+                    </mat-card-title>
+                </mat-card-header>
+
+                <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                    <mat-label>Nome</mat-label>
+                    <input
+                        matInput
+                        formControlName="nomeRisco"
+                        placeholder="Nome"
+                        autocomplete="off"
+                        type="text"/>
+                    <mat-error *ngIf="form.controls.nomeRisco.errors?.required">Nome é Obrigatório</mat-error>
+                </mat-form-field> 
+
+                <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                    <mat-label>Descrição</mat-label>
+                    <input
+                        matInput
+                        formControlName="descricaoRisco"
+                        placeholder="Nome"
+                        autocomplete="off"
+                        type="text"/>
+                    <mat-error *ngIf="form.controls.descricaoRisco.errors?.required">Descrição é Obrigatória</mat-error>
+                </mat-form-field>
+
+                <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
+                    <mat-label>Causas</mat-label>
+                    <textarea matInput formControlName="nomeCausas" placeholder="Causas" autocomplete="off"
+                        type="textField" resizeToFitContent="true" rows="5">
+                    </textarea>
+                    <mat-error *ngIf="form.controls.nomeCausas.errors?.required">Causa é Obrigatória</mat-error>
+                </mat-form-field>
+
+                <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
+                    <mat-label>Ameaças</mat-label>
+                    <textarea matInput formControlName="nomeAmeacas" placeholder="Ameças" autocomplete="off"
+                        type="textField" resizeToFitContent="true" rows="5">
+                    </textarea>
+                    <mat-error *ngIf="form.controls.nomeAmeacas.errors?.required">Ameaça é Obrigatória</mat-error>
+                </mat-form-field>
+
+                <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
+                    <mat-label>Interessados</mat-label>
+                    <textarea matInput formControlName="nomeInteressados" placeholder="Interessados" autocomplete="off"
+                        type="textField" resizeToFitContent="true" rows="5">
+                    </textarea>
+                    <mat-error *ngIf="form.controls.nomeInteressados.errors?.required">Interessado é Obrigatório</mat-error>
+                </mat-form-field>
+
+                <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
+                    <mat-label>Ações Sugeridas</mat-label>
+                    <textarea matInput formControlName="nomeAcoesSugeridas" placeholder="Ações Sugeridas" autocomplete="off"
+                        type="textField" resizeToFitContent="true" rows="5">
+                    </textarea>
+                    <mat-error *ngIf="form.controls.nomeAcoesSugeridas.errors?.required">Ação Sugerida é Obrigatória</mat-error>
+                </mat-form-field>
+
+                <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
+                    <mat-label>Tempo de Resposta</mat-label>
+                    <textarea matInput formControlName="nomeTempoResposta" placeholder="Tempo de Resposta" autocomplete="off"
+                        type="textField" resizeToFitContent="true" rows="5">
+                    </textarea>
+                    <mat-error *ngIf="form.controls.nomeTempoResposta.errors?.required">Tempo de Resposta é Obrigatório</mat-error>
+                </mat-form-field>
+
+                <mat-card-actions>
+                    <button mat-raised-button color="accent">Salvar</button>
+                </mat-card-actions>
+            </form>
+        </div>
+    </div>
+</mat-card>

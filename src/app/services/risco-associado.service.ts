@@ -12,8 +12,7 @@ export class RiscoAssociadoService {
 
   private suffix:string = "risco_associado/";
 
-  constructor(private http: HttpClient,
-              private authService: AuthService, ) {}
+  constructor(private http: HttpClient) {}
 
   listaTodosRiscoAssociado() {
     return this.http.get<RiscoAssociado[]>(`${environment.apiURL}${this.suffix}`, { observe: "response" });

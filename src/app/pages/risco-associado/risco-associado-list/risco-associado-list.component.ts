@@ -47,10 +47,10 @@ export class RiscoAssociadoListComponent implements OnInit {
               setTimeout(() => {
                   this.dataSource.filterPredicate = (
                       data: {
-                          nomeAmeaca: string
+                          nomeRiscoAssociado: string
                       },
                       filterValue: string
-                  ) => data.nomeAmeaca.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+                  ) => data.nomeRiscoAssociado.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
                   
                   this.dataSource.paginator = this.paginator;
                   this.dataSource.sort = this.sort;
@@ -92,7 +92,7 @@ export class RiscoAssociadoListComponent implements OnInit {
   {
       this.riscoAssociadoService.excluirRiscoAssociado(riscoAssociado.codigoRiscoAssociado).subscribe((response) => {
           this.snackBar.openSnackBar(
-            `RiscoAssociado ${riscoAssociado.nomeRiscoAssociado} foi excluída com Sucesso.`,
+            `Risco Associado ${riscoAssociado.nomeRiscoAssociado} foi excluído com Sucesso.`,
             null
           );
           this.pesquisaRiscoAssociados();

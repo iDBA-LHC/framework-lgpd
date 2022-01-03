@@ -64,17 +64,17 @@ export class MenuItems {
 				}, {
 					label: "Risco",
 					link: "risco",
-					icon: "inventory_2",
+					icon: "report",
 					hidden: false,
 				}, {
 					label: "Risco Associado",
 					link: "risco-associado",
-					icon: "inventory_2",
+					icon: "apps_outage",
 					hidden: false,
 				}, {
 					label: "Ameaças",
 					link: "ameaca",
-					icon: "inventory_2",
+					icon: "social_distance",
 					hidden: false,
 				}, {
 					label: "Ciclo Monitoramento",

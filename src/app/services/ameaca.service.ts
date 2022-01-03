@@ -2,15 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Ameaca } from '../models/ameaca/ameaca';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AmeacaService {
 
-  constructor(private http: HttpClient,
-              private authService: AuthService, ) {}
+  constructor(private http: HttpClient) {}
   
   listaTodosAmeaca() {
     return this.http.get<Ameaca[]>(environment.apiURL + "ameaca/", { observe: "response" });
