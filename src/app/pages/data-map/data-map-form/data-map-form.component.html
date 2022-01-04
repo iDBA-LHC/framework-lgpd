@@ -100,6 +100,7 @@
 					  <span *ngIf="!metadados.indSensivel">
 						{{metadados.nomeMetadados}}
 					  </span>
+					  
 					  <mat-icon *ngIf="indTipo!=2" matChipRemove>cancel</mat-icon>  
 					</mat-chip>
 					  <input
@@ -206,18 +207,8 @@
 							{{cicloVida.nomeCicloVida}}
 						</mat-option>
 					</mat-autocomplete>
-					<mat-error *ngIf="dataMapForm.controls.cicloVida.errors?.required">Campo obrigatório</mat-error>
+					<mat-error *ngIf="dataMapForm.controls.cicloVida.errors?.required">Ciclo de Vida é Obrigatório</mat-error>
 				</mat-form-field>
-
-				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px"
-					formControlName="indRisco">
-					<mat-label>Risco:</mat-label>
-					<mat-radio-button [value]="1">Baixo</mat-radio-button>
-					<mat-radio-button [value]="2">Moderado</mat-radio-button>
-					<mat-radio-button [value]="3">Elevado</mat-radio-button>
-					<mat-radio-button [value]="4">Extremo</mat-radio-button>					
-					<mat-error *ngIf="ngForm.submitted && dataMapForm.controls.indRisco.invalid">Campo obrigatório</mat-error>
-				</mat-radio-group>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="30px">
 					<mat-label>Observações</mat-label>
@@ -227,23 +218,74 @@
 				</mat-form-field>
 
 				<mat-divider></mat-divider>
-				<h2 class="mat-h2" style="width: 50%; text-align: left;">Plano de Mitigação</h2>
+				<h2 class="mat-h2" style="width: 50%; text-align: left;">Risco</h2>
 
-				<div class="section">
+				<mat-radio-group color="primary" fxFlex fxLayoutGap="30px" style="width: 50%;" fxFlexOffset="30px"
+					formControlName="indRisco">
+					<mat-label>Grau:</mat-label>
+					<mat-radio-button [value]="1">Baixo</mat-radio-button>
+					<mat-radio-button [value]="2">Moderado</mat-radio-button>
+					<mat-radio-button [value]="3">Elevado</mat-radio-button>
+					<mat-radio-button [value]="4">Extremo</mat-radio-button>					
+					<mat-error *ngIf="ngForm.submitted && dataMapForm.controls.indRisco.invalid">Grau de Risco é Obrigatório</mat-error>
+				</mat-radio-group>
+
+				<mat-form-field *ngIf="indTipo===2" style="width: 50%;" fxFlexOffset="20px">
+					<mat-label>Risco</mat-label>
+					<input matInput formControlName="risco" placeholder="Risco" [matAutocomplete]="autoRisco" />
+					<mat-autocomplete #autoRisco="matAutocomplete" [displayWith]="displayRisco"
+						(optionSelected)="selecionaRisco($event)">
+						<mat-option *ngFor="let risco of listaRiscosFiltrados | async" [value]="risco">
+							{{risco.nomeRisco}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="dataMapForm.controls.risco.errors?.required">Risco é Obrigatório</mat-error>
+				</mat-form-field>
+
+				<mat-form-field *ngIf="indTipo===2" style="width: 50%;" fxFlexOffset="20px">
+					<mat-label>Risco Associado</mat-label>
+					<input matInput formControlName="riscoAssociado" placeholder="Risco Associado" [matAutocomplete]="autoRiscoAssociado"/>
+					<mat-autocomplete #autoRiscoAssociado="matAutocomplete" [displayWith]="displayRiscoAssociado" 
+						(optionSelected)="selecionaRiscoAssociado($event)">
+						<mat-option *ngFor="let riscoAssociado of listaRiscosAssociadosFiltrados | async" [value]="riscoAssociado">
+							{{riscoAssociado.nomeRiscoAssociado}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="dataMapForm.controls.risco.errors?.required">Risco é Obrigatório</mat-error>
+				</mat-form-field>
+
+				<mat-form-field *ngIf="indTipo===2" style="width: 50%;" fxFlexOffset="20px">
+					<mat-label>Ameaça</mat-label>
+					<input matInput formControlName="ameaca" placeholder="Ameaça" [matAutocomplete]="autoAmeaca" />
+					<mat-autocomplete #autoAmeaca="matAutocomplete" [displayWith]="displayAmeaca" 
+						(optionSelected)="selecionaAmeaca($event)">
+						<mat-option *ngFor="let ameaca of listaAmeacasFiltradas | async" [value]="ameaca">
+							{{ameaca.nomeAmeaca}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="dataMapForm.controls.ameaca.errors?.required">Ameaça é Obrigatória</mat-error>
+				</mat-form-field>
+			
+				<br>
+				<mat-divider></mat-divider>
+				<div *ngIf="indTipo===2" fxLayout="column" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" style="width: 50%; text-align: left;" >
+					<h2 class="mat-h2" style="width: 50%; text-align: left;">Plano de Mitigação</h2>
+
 					<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-						formControlName="indDescarte" style="width: 50%;">
+						formControlName="indDescarte">
 						<span class="ng-tns-c15-3 ng-star-inserted">Descarte</span>
 					</mat-slide-toggle>
 
 					<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-						formControlName="indRevisarPermissoes" style="width: 50%;">
+						formControlName="indRevisarPermissoes">
 						<span class="ng-tns-c15-3 ng-star-inserted">Revisar Permissões</span>
 					</mat-slide-toggle>
 
 					<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30"
-						formControlName="indAnonimizar" style="width: 50%;">
+						formControlName="indAnonimizar">
 						<span class="ng-tns-c15-3 ng-star-inserted">Anonimizar</span>
 					</mat-slide-toggle>
+
 				</div>
 
 				<mat-card-actions>

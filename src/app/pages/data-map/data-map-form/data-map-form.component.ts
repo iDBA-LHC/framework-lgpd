@@ -36,6 +36,12 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { environment } from 'src/environments/environment';
 import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 import { DataFlowService } from 'src/app/services/data-flow.service';
+import { Risco } from 'src/app/models/risco/risco';
+import { RiscoService } from 'src/app/services/risco.service';
+import { AmeacaService } from 'src/app/services/ameaca.service';
+import { RiscoAssociadoService } from 'src/app/services/risco-associado.service';
+import { RiscoAssociado } from 'src/app/models/risco-associado/risco-associado';
+import { Ameaca } from 'src/app/models/ameaca/ameaca';
 
 @Component({
 	selector: 'app-data-map-form',
@@ -57,12 +63,25 @@ export class DataMapFormComponent implements OnInit {
 	displayedColumns: string[] = ["desPlanoMitigacao", "actions"];
 
 	listaAtividade: Atividade[];
+
 	listaBaseLegal: BaseLegal[];
+	listaBaseLegalFiltrada: Observable<BaseLegal[]>;
+
 	listaCicloVida: CicloDeVida[];
+	listaCicloVidaFiltrado: Observable<CicloDeVida[]>;
+
+	listaRisco: Risco[];
+	listaRiscosFiltrados: Observable<Risco[]>;
+
+	listaRiscosAssociados: RiscoAssociado[];
+	listaRiscosAssociadosFiltrados: Observable<RiscoAssociado[]>;
+
+	listaAmeacas: Ameaca[];
+	listaAmeacasFiltradas: Observable<Ameaca[]>;
 
 	listaMetadados: Metadados[];
 	metadados: Metadados[];
-	listaMetadadosFiltrados: Observable<Metadados []>;
+	listaMetadadosFiltrados: Observable<Metadados[]>;
   
 	separatorKeysCodes: number[] = [ENTER, COMMA];
 	metadadosCtrl = new FormControl();
@@ -107,6 +126,9 @@ export class DataMapFormComponent implements OnInit {
 		private atividadeService: AtividadeService,
 		private baseLegalService: BaseLegalService,
 		private cicloVidaService: CicloDeVidaService,
+		private riscoService: RiscoService,
+		private riscoAssociadoService: RiscoAssociadoService,
+		private ameacaService: AmeacaService,
 		private compartilhamentoService: CompartilhamentoService,
 		private formaColetaService: FormaColetaService,
 		private localArmazenamentoService: LocalArmazenamentoService,
@@ -121,6 +143,14 @@ export class DataMapFormComponent implements OnInit {
 	ngOnInit() {
 
 		this.indTipo = 0;
+
+		if (this.router.url.includes('data-analisys-map')) {
+			this.indTipo = 1;
+		}
+		else if (this.router.url.includes('data-governance-map')) {
+			this.indTipo = 2;
+		}
+
 		this.createForm();
 		this.pesquisaDataMap();
 	}
@@ -163,22 +193,39 @@ export class DataMapFormComponent implements OnInit {
 			indRisco: ["", Validators.required],
 			desObservacoes: [""],
 
-			indDescarte: ["",],
-			indRevisarPermissoes: ["",],
-			indAnonimizar: ["",]
+			codigoRisco: [,],
+			risco: ["", this.indTipo === 2 ? Validators.required : ""],
+
+			codigoRiscoAssociado: [,],
+			riscoAssociado: ["", this.indTipo === 2 ? Validators.required : ""],
+
+			codigoAmeaca: [,],
+			ameaca: ["", this.indTipo === 2 ? Validators.required : ""],
+
+			indDescarte: [,],
+			indRevisarPermissoes: [,],
+			indAnonimizar: [,]
 
 		});
+
+		
+		if (this.indTipo === 2)
+		{
+			this.dataMapForm.controls.indPrincipios.disable();
+			this.dataMapForm.controls.indSensivel.disable();
+			this.dataMapForm.controls.indDadosMenores.disable();
+			this.dataMapForm.controls.indAnonimizacao.disable();
+			this.dataMapForm.controls.indNecessitaConsentimento.disable();
+			this.dataMapForm.controls.indTransfInternacional.disable();
+			this.dataMapForm.controls.indRisco.disable();
+
+			this.dataMapForm.controls.armazenamentos.disable();
+			this.dataMapForm.controls.formaColetas.disable();
+			this.dataMapForm.controls.compartilhamentos.disable();
+		}
 	}
 
-	pesquisaDataMap() {
-
-		if (this.router.url.includes('data-analisys-map')) {
-			this.indTipo = 1;
-		}
-		else if (this.router.url.includes('data-governance-map')) {
-			this.indTipo = 2;
-		}		
-		
+	pesquisaDataMap() {		
 
 		this.activatedRoute.params.subscribe(
 			(data) => {
@@ -231,27 +278,20 @@ export class DataMapFormComponent implements OnInit {
 
 								codCicloVida: retorno.body[0].codCicloVida,
 								indRisco: retorno.body[0].indRisco,
-								desObservacoes: retorno.body[0].desObservacoes
+								desObservacoes: retorno.body[0].desObservacoes,
+
+								codigoRisco: retorno.body[0].codigoRisco,
+								codigoRiscoAssociado: retorno.body[0].codigoRiscoAssociado,
+								codigoAmeaca: retorno.body[0].codigoAmeaca,
+
+								indDescarte: retorno.body[0].indDescarte,
+								indRevisarPermissoes: retorno.body[0].indRevisarPermissoes,
+								indAnonimizar: retorno.body[0].indAnonimizar
 							});
 
 							this.metadadosDataMap = retorno.body[0].metadados;
 
 							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
-
-							if (this.indTipo === 2)
-							{
-								this.dataMapForm.controls.indPrincipios.disable();
-								this.dataMapForm.controls.indSensivel.disable();
-								this.dataMapForm.controls.indDadosMenores.disable();
-								this.dataMapForm.controls.indAnonimizacao.disable();
-								this.dataMapForm.controls.indNecessitaConsentimento.disable();
-								this.dataMapForm.controls.indTransfInternacional.disable();
-								this.dataMapForm.controls.indRisco.disable();
-
-								this.dataMapForm.controls.armazenamentos.disable();
-								this.dataMapForm.controls.formaColetas.disable();
-								this.dataMapForm.controls.compartilhamentos.disable();
-							}
 
 							this.preencherCombos();
 
@@ -282,9 +322,17 @@ export class DataMapFormComponent implements OnInit {
 		this.pesquisaBaselegal();
 		this.pesquisaMetadados();
 		this.pesquisaCicloVida();
+		
 		this.pesquisaFormaColetas();
 		this.pesquisaLocalArmazenamento();
 		this.pesquisaCompartilhamentos();
+
+		if (this.indTipo === 2)
+		{
+			this.pesquisaRisco();
+			this.pesquisaRiscoAssociado();
+			this.pesquisaAmeaca();
+		}
 	}
 
 	salvarDataMap() {
@@ -318,6 +366,13 @@ export class DataMapFormComponent implements OnInit {
 			DataMap.indTipo = this.indTipo;
 			DataMap.codCicloMonitoramento = this.codCicloMonitoramento;
 			DataMap.metadados = this.metadadosDataMap;
+
+			if (this.indTipo === 2)
+			{
+				DataMap.indDescarte = (this.dataMapForm.controls.indDescarte.value ? 1 : 0);
+				DataMap.indRevisarPermissoes = (this.dataMapForm.controls.indRevisarPermissoes.value ? 1 : 0);
+				DataMap.indAnonimizar = (this.dataMapForm.controls.indAnonimizar.value ? 1 : 0);
+			}
 
 			if (this.codDataMap) {
 				// Alteração
@@ -656,11 +711,6 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.codBaseLegal.setValue(selecionado.codigoBase);
 	}
 
-	compareBaseLegal(o1: any, o2: any): boolean {
-		if (o2 != null)
-			return o1.codBaseLegal === o2.codBaseLegal;
-	}
-
 	displayBaseLegal(baseLegal: BaseLegal): string {
 		return baseLegal ? baseLegal.nomeBase : "";
 	}
@@ -730,13 +780,128 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.codCicloVida.setValue(selecionado.codCicloVida);
 	}
 
-	compareCicloVida(o1: any, o2: any): boolean {
-		if (o2 != null)
-			return o1.codCicloVida === o2.codCicloVida;
-	}
-
 	displayCicloVida(cicloVida: CicloDeVida): string {
 		return cicloVida ? cicloVida.nomeCicloVida : "";
+	}
+
+	private pesquisaRisco() {
+		this.riscoService.listaTodos().subscribe(
+			(retorno) => {
+				this.listaRisco = retorno.body;
+
+				if (this.dataMapForm.controls.codigoRisco.value != 0) {
+					let risco: Risco = <Risco>this.listaRisco.filter(risco => risco.codigoRisco == this.dataMapForm.controls.codigoRisco.value)[0];
+					if (risco) {
+						this.dataMapForm.controls.risco.setValue(risco);
+					}
+				}
+
+				this.listaRiscosFiltrados = this.dataMapForm.controls.risco.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => typeof value === 'string' ? value : value.nomeRisco),
+						map(name => {
+							return name ? this.filtraRisco(name) : this.listaRisco.slice();
+						}));
+
+				this.isLoading = false;
+			}
+		)
+	}
+
+	private filtraRisco(value: string): Risco[] {
+		const filterValue = value.toLowerCase();
+		return this.listaRisco.filter(item => item.nomeRisco.trim().toLowerCase().includes(filterValue));
+	}
+
+	selecionaRisco(event) {
+		let selecionado: Risco = event.option.value;
+		this.dataMapForm.controls.risco.setValue(selecionado);
+		this.dataMapForm.controls.codigoRisco.setValue(selecionado.codigoRisco);
+	}
+
+	displayRisco(risco: Risco): string {
+		return risco ? risco.nomeRisco : "";
+	}
+
+	private pesquisaRiscoAssociado() {
+		this.riscoAssociadoService.listaTodosRiscoAssociado().subscribe(
+			(retorno) => {
+				this.listaRiscosAssociados = retorno.body;
+
+				if (this.dataMapForm.controls.codigoRiscoAssociado.value != 0) {
+					let riscoAssociado: RiscoAssociado = <RiscoAssociado>this.listaRiscosAssociados.filter(riscoAssociado => riscoAssociado.codigoRiscoAssociado == this.dataMapForm.controls.codigoRiscoAssociado.value)[0];
+					if (riscoAssociado) {
+						this.dataMapForm.controls.riscoAssociado.setValue(riscoAssociado);
+					}
+				}
+
+				this.listaRiscosAssociadosFiltrados = this.dataMapForm.controls.riscoAssociado.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => typeof value === 'string' ? value : value.nomeRiscoAssociado),
+						map(name => {
+							return name ? this.filtraRiscoAssociado(name) : this.listaRiscosAssociados.slice();
+						}));
+
+				this.isLoading = false;
+			}
+		)
+	}
+
+	private filtraRiscoAssociado(value: string): RiscoAssociado[] {
+		const filterValue = value.toLowerCase();
+		return this.listaRiscosAssociados.filter(item => item.nomeRiscoAssociado.trim().toLowerCase().includes(filterValue));
+	}
+
+	selecionaRiscoAssociado(event) {
+		let selecionado: RiscoAssociado = event.option.value;
+		this.dataMapForm.controls.riscoAssociado.setValue(selecionado);
+		this.dataMapForm.controls.codigoRiscoAssociado.setValue(selecionado.codigoRiscoAssociado);
+	}
+
+	displayRiscoAssociado(riscoAssociado: RiscoAssociado): string {
+		return riscoAssociado ? riscoAssociado.nomeRiscoAssociado : "";
+	}
+
+	private pesquisaAmeaca() {
+		this.ameacaService.listaTodosAmeaca().subscribe(
+			(retorno) => {
+				this.listaAmeacas = retorno.body;
+
+				if (this.dataMapForm.controls.codigoAmeaca.value != 0) {
+					let ameaca: Ameaca = <Ameaca>this.listaAmeacas.filter(ameaca => ameaca.codigoAmeaca == this.dataMapForm.controls.codigoAmeaca.value)[0];
+					if (ameaca) {
+						this.dataMapForm.controls.ameaca.setValue(ameaca);
+					}
+				}
+
+				this.listaAmeacasFiltradas = this.dataMapForm.controls.ameaca.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => typeof value === 'string' ? value : value.nomeAmeaca),
+						map(name => {
+							return name ? this.filtraAmeaca(name) : this.listaAmeacas.slice();
+						}));
+
+				this.isLoading = false;
+			}
+		)
+	}
+
+	private filtraAmeaca(value: string): Ameaca[] {
+		const filterValue = value.toLowerCase();
+		return this.listaAmeacas.filter(item => item.nomeAmeaca.trim().toLowerCase().includes(filterValue));
+	}
+
+	selecionaAmeaca(event) {
+		let selecionado: Ameaca = event.option.value;
+		this.dataMapForm.controls.ameaca.setValue(selecionado);
+		this.dataMapForm.controls.codigoAmeaca.setValue(selecionado.codigoAmeaca);
+	}
+
+	displayAmeaca(ameaca: Ameaca): string {
+		return ameaca ? ameaca.nomeAmeaca : "";
 	}
 
 	private pesquisaEmpresas() {

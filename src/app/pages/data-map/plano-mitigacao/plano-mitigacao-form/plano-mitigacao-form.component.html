@@ -13,18 +13,17 @@
 
 				<mat-card-header>
 					<mat-card-title>
-						<h2 *ngIf="!codPlanoMitigacao">Novo Plano de Mitigação</h2>
-						<h2 *ngIf="codPlanoMitigacao">Editar Plano de Mitigação</h2>
+						<h2 *ngIf="!codPlanoMitigacao">Nova Ação do Plano de Mitigação</h2>
+						<h2 *ngIf="codPlanoMitigacao">Editar Ação do Plano de Mitigação</h2>
 					</mat-card-title>
 				</mat-card-header>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Nome</mat-label>
-					<input matInput formControlName="desPlanoMitigacao" placeholder="Descrição Plano Mitigação"
+					<mat-label>Ação</mat-label>
+					<input matInput formControlName="desPlanoMitigacao" placeholder="Ação do Plano de Mitigação"
 						autocomplete="off" type="string" />
-					<mat-error *ngIf="planoMitigacaoForm.controls.desPlanoMitigacao.errors?.required">Descrição Plano
-						Mitigação é
-						Obrigatório</mat-error>
+					<mat-error *ngIf="planoMitigacaoForm.controls.desPlanoMitigacao.errors?.required">
+						Ação do Plano de Mitigação é Obrigatória</mat-error>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
@@ -39,7 +38,7 @@
 					<input matInput formControlName="dataLimite" placeholder="Data Limite" [matDatepicker]="picker6" />
 					<mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
 					<mat-datepicker #picker6></mat-datepicker>
-					<mat-error *ngIf="planoMitigacaoForm.controls.dataLimite.errors?.required">data limite é Obrigatória
+					<mat-error *ngIf="planoMitigacaoForm.controls.dataLimite.errors?.required">Data Limite é Obrigatória
 					</mat-error>
 				</mat-form-field>
 
@@ -47,7 +46,7 @@
 					<mat-label>Propõe Ajustes</mat-label>
 					<input matInput formControlName="nomePropoeAjustes" placeholder="Propõe Ajustes" autocomplete="off"
 						type="textfield" />
-					<mat-error *ngIf="planoMitigacaoForm.controls.nomePropoeAjustes.errors?.required">Nome propõe ajuste
+					<mat-error *ngIf="planoMitigacaoForm.controls.nomePropoeAjustes.errors?.required">Nome Propõe Ajustes
 						é
 						Obrigatório</mat-error>
 				</mat-form-field>
@@ -66,7 +65,7 @@
 						[matDatepicker]="picker5" />
 					<mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
 					<mat-datepicker #picker5></mat-datepicker>
-					<mat-error *ngIf="planoMitigacaoForm.controls.dataElaboracao.errors?.required">data Elaboração é
+					<mat-error *ngIf="planoMitigacaoForm.controls.dataElaboracao.errors?.required">Data Elaboração é
 						Obrigatória
 					</mat-error>
 				</mat-form-field>
