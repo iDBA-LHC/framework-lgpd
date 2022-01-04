@@ -63,7 +63,7 @@
             </mat-form-field> 
   
               <mat-card-actions>
-                <button mat-raised-button color="accent">Salvar</button>
+                <button mat-raised-button class="save-button">Salvar</button>
               </mat-card-actions>
         </form>
     </div>
@@ -92,7 +92,7 @@
           <div fxLayout="column" fxLayoutAlign="start end">
             <a
               mat-raised-button
-              color="accent"
+              class="add-button"
               [routerLink]="['/area', areaId, 'processo', '']"
               routerLinkActive="active">
               <mat-icon>add</mat-icon>Novo Processo</a>
@@ -113,14 +113,14 @@
               <div class="example-button-row">
                 <button
                   mat-raised-button
-                  color="accent"
+                  class="edit-button"
                   [routerLink]="['/area', element.codArea, 'processo', element.codProcesso]">
                   Editar
                 </button>
                 <button
                   *ngIf="permiteExclusao"
                   mat-raised-button
-                  color="warn"          
+                  class="delete-button"          
                   [disabled]="element.indRelacionamento ? true : false"
                   (click)="excluirProcesso(element)">
                   <span matTooltip="Existe Mapa Associado. Não É Possível Excluir" 

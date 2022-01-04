@@ -12,15 +12,12 @@
     <app-sidemenu></app-sidemenu>
   </mat-sidenav>
 
-  <mat-sidenav-content perfectScrollbar>
+  <mat-sidenav-content perfectScrollbar >
     <app-header
       *ngIf="isLoggedIn$ | async as isLoggedIn"
       (sideNav)="getSideNav()">
     </app-header>
     <router-outlet></router-outlet>
-    <!--<div class="bottom-img-wrapper" *ngIf="isLoggedIn$ | async as isLoggedIn">
-      <img src="./../assets/img/dark.png" class="bottom-img"/>
-    </div>-->
   </mat-sidenav-content>
 </mat-sidenav-container>
 

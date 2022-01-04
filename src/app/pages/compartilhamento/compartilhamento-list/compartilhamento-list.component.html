@@ -12,7 +12,7 @@
             <div fxLayout="column" fxLayoutAlign="start end">
               <a
                 mat-raised-button
-                color="accent"
+                class="add-button"
                 [routerLink]="['/compartilhamento', '']"
                 routerLinkActive="active">
                 <mat-icon>add</mat-icon>Novo Compartilhamento</a>
@@ -28,7 +28,7 @@
       <mat-spinner></mat-spinner>
     </div>
 
-    <div class="mat-elevation-z8" [hidden]="isLoading">
+    <div class="mat-elevation-z0" [hidden]="isLoading">
       <table mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="nomeCompartilhamento">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
@@ -56,14 +56,14 @@
             <div class="example-button-row">
               <button
                 mat-raised-button
-                color="accent"
+                class="edit-button"
                 [routerLink]="['/compartilhamento/', element.codCompartilhamento]">
                 Editar
               </button>
               <button
                 *ngIf="permiteExclusao"
                 mat-raised-button
-                color="warn"          
+                class="delete-button"         
                 [disabled]="element.indRelacionamento ? true : false"
                 (click)="excluir(element)">
                 <span matTooltip="Existe Mapa Associado. Não É Possível Excluir" 

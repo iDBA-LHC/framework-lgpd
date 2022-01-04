@@ -40,3 +40,61 @@ body {
   left:       0; 
   position:   fixed;
 }
+
+.add-button{
+  background-color: #606062; 
+  color:#F1F1F2; 
+  border-radius: 30px !important;
+}
+
+.edit-button{
+  background-color: #F5F594 ; 
+  color:#606062; 
+  border-radius: 30px !important;
+}
+
+.delete-button{
+  background-color: #F44336 ; 
+  color: #F1F1F2; 
+  border-radius: 30px !important;
+}
+
+.save-button{
+  background-color:#42C5AD; 
+  color:#F1F1F2; 
+  border-radius: 30px !important;
+}
+
+.action-button{
+  background-color:#4186C5; 
+  color:#F1F1F2; 
+  border-radius: 30px !important;
+}
+
+.exit-button{
+  background-color:#F58634; 
+  color:#F1F1F2; 
+  border-radius: 30px !important;
+}
+
+.mat-header-cell {
+  border: none!important;
+}
+
+.mat-card{
+  border-radius: 20px !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #F58634 !important;
+}
+.mat-slide-toggle .mat-slide-toggle-thumb {
+  background-color: #F1F1F2 !important;
+}
+
+/*
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: ;
+}*/
+
+

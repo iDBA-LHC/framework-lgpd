@@ -8,6 +8,21 @@
 }
 
 .toolbar {
-  background: #f0f2f7;
+  background-color: #F58634;
   color: #000;
+  height: 50px;
+}
+
+.white-icon {
+  color: white;
+}
+
+.avatar {
+  height: 35px; 
+  top: 0px; 
+}
+
+.ml-2
+{
+  top: 0px !important;
 }

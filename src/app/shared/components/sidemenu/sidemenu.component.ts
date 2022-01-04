@@ -1,9 +1,7 @@
 import { AuthService } from "./../../../services/auth.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { environment } from 'src/environments/environment';
 import { MenuItems } from './models/menu-items';
-import { MenuItemButton } from './models/buttons/menu-item-button';
 
 @Component({
   selector: "app-sidemenu",

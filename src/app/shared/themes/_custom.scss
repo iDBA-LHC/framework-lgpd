@@ -118,7 +118,7 @@ table {
   );
 }*/
 
-.authBackground {
+/*.authBackground {
   background: linear-gradient(
     90deg,
     rgba(26, 184, 210, 1) 0%,
@@ -126,4 +126,11 @@ table {
     rgba(65, 134, 197, 1) 99%,
     rgba(65, 134, 197, 1) 100%
   );
+}*/
+
+.authBackground {
+  background: url("../../../assets/img/bg-menu.png");
+  background-color:#606062;
+  
 }
+

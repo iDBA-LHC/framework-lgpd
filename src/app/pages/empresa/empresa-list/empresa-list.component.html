@@ -12,7 +12,7 @@
         <div fxLayout="column" fxLayoutAlign="start end">
           <a
             mat-raised-button
-            color="accent"
+            class="add-button"
             [routerLink]="['/controladora', '']"
             routerLinkActive="active">
             <mat-icon>add</mat-icon>Nova Controladora</a>
@@ -46,14 +46,14 @@
             <div class="example-button-row">
               <button
                 mat-raised-button
-                color="accent"
+                class="edit-button"
                 [routerLink]="['/controladora', element.codigoEmpresa]">
                 Editar
               </button>
               <button
                 *ngIf="permiteExclusao"
                 mat-raised-button
-                color="warn"          
+                class="delete-button"         
                 [disabled]="element.indRelacionamento ? true : false"
                 (click)="excluir(element)">
                 <span matTooltip="Existe Ciclo de Monitoramento ou Área Associada. Não É Possível Excluir" 

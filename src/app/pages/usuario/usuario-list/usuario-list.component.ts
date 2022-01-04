@@ -11,7 +11,8 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 @Component({
   selector: 'app-usuario-list',
   templateUrl: './usuario-list.component.html',
-  styleUrls: ['./usuario-list.component.css']
+  styleUrls: ['./usuario-list.component.css'],
+  
 })
 export class UsuarioListComponent implements OnInit {
 

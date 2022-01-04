@@ -123,11 +123,11 @@
             </mat-slide-toggle>
 
             <mat-card-actions>
-              <button mat-raised-button color="accent">Salvar</button>
-              <button *ngIf="!meuUsuario" mat-raised-button color="primary" 
+              <button mat-raised-button class="save-button">Salvar</button>
+              <button *ngIf="!meuUsuario" mat-raised-button class="action-button" 
                 (click)="gerarSenha($event);" 
                 [disabled]="usuarioId ? false : true">Gerar Senha</button>
-              <button *ngIf="meuUsuario" mat-raised-button color="primary" 
+              <button *ngIf="meuUsuario" mat-raised-button class="action-button"
                 (click)="alterarSenha($event);">Alterar Senha</button> 
             </mat-card-actions>
         </form>

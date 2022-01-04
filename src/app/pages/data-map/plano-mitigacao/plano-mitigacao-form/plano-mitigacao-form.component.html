@@ -106,13 +106,15 @@
 				</mat-form-field>
 
 				<mat-card-actions>
-					<button mat-raised-button color="accent">Salvar</button>
-					<button mat-raised-button color="primary"
-						(click)="navigateToDataAnalasysMap()">Voltar</button>
+					<button mat-raised-button class="save-button">Salvar</button>
+					<button mat-raised-button class="action-button"
+						(click)="navigateToDataGovernanceMap()">Voltar</button>
 				</mat-card-actions>
 			</form>
 		</div>
 	</div>
+
+	<br>
 
 	<mat-expansion-panel *ngIf="codPlanoMitigacao" [expanded]="true" class="nested-form mat-elevation-z8 marginContent">
 		<mat-expansion-panel-header>
@@ -131,8 +133,8 @@
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px">
 					<div fxLayout="column" fxLayoutAlign="start end">
-						<a mat-raised-button color="accent"
-							[routerLink]="['/data-analisys-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', '']"
+						<a mat-raised-button class="add-button"
+							[routerLink]="['/data-governance-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', '']"
 							routerLinkActive="active">
 							<mat-icon>add</mat-icon>Novo Documento
 						</a>
@@ -151,18 +153,18 @@
 						<th mat-header-cell *matHeaderCellDef></th>
 						<td mat-cell *matCellDef="let element">
 							<div class="example-button-row">
-								<button mat-raised-button color="primary"
+								<button mat-raised-button class="action-button"
 									(click)="openNewWindow(element)">
 									Visualizar Documento
 								</button>
-								<button mat-raised-button color="accent"
-									[routerLink]="['/data-analisys-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', element.codDocumentoPlano]">
+								<button mat-raised-button class="edit-button"
+									[routerLink]="['/data-governance-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', element.codDocumentoPlano]">
 									Editar
 								</button>
 								<button
 									*ngIf="permiteExclusao"
 									mat-raised-button
-									color="warn"          
+									class="delete-button"          
 									(click)="excluirDocumentoPlano(element)">
 									Excluir									
 								</button>

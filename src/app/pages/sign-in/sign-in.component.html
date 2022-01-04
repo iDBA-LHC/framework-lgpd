@@ -1,15 +1,16 @@
-<!--<div fxLayout="row" fxLayoutAlign="center center" class="top-img-wrapper authBackground">
-  <img src="./../../../assets/img/logo.png" class="top-img"/>
-</div>-->
-<div fxLayout="row" fxFill fxLayoutAlign="center center" class="authBackground">
+<div fxLayout="column" fxFill fxLayoutAlign="center center" class="authBackground">
   <mat-card class="w-30"> 
     <form 
       fxLayout="row wrap"
       fxLayout="column"
       fxLayoutAlign="space-between center"
       [formGroup]="signInForm"
-      (submit)="login(signInForm.value)"
-    >
+      (submit)="login(signInForm.value)">
+
+      <div fxLayout="row" fxLayoutAlign="center center" class="top-img-wrapper">
+        <img src="./../../../assets/img/logo.png" class="top-img"/>
+      </div>
+
       <mat-card-header *ngIf="ambiente">
         <mat-card-title>
           <h2 style="color: firebrick">{{this.ambiente}}</h2>
@@ -41,20 +42,18 @@
           formControlName="password"
           placeholder="Password"
           autocomplete="off"
-          type="password"
-        />
-        <mat-error *ngIf="signInForm.controls.password.errors?.required"
-          >Senha é obrigatória</mat-error>
+          type="password"/>
+        <mat-error *ngIf="signInForm.controls.password.errors?.required">Senha é obrigatória</mat-error>
       </mat-form-field>
 
       <mat-card-actions>
-        <button mat-raised-button color="primary">
+        <button mat-raised-button class="action-button">
           Acessar
         </button>
       </mat-card-actions>
     </form>
   </mat-card>
+  <div fxLayout="row" fxLayoutAlign="center center" class="bottom-img-wrapper">
+    <img src="./../../../assets/img/selo.png" class="bottom-img"/>
+  </div>
 </div>
-<!--<div fxLayout="row" fxLayoutAlign="center center" class="bottom-img-wrapper authBackground">
-  <img src="./../../../assets/img/light.png" class="bottom-img"/>
-</div>-->

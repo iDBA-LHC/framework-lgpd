@@ -12,7 +12,7 @@
         <div fxLayout="column" fxLayoutAlign="start end">
           <a
             mat-raised-button
-            color="accent"
+            class="add-button"
             [routerLink]="['/ciclo-monitoramento', '']"
             routerLinkActive="active">
             <mat-icon>add</mat-icon>Novo Ciclo Monitoramento</a>
@@ -28,7 +28,7 @@
       <mat-spinner></mat-spinner>
     </div>
 
-    <div class="mat-elevation-z8" [hidden]="isLoading">
+    <div class="mat-elevation-z0" [hidden]="isLoading">
       <table mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="nomeEmpresa">
@@ -52,14 +52,14 @@
             <div class="example-button-row">
               <button
                 mat-raised-button
-                color="accent"
+                class="edit-button"
                 [routerLink]="['/ciclo-monitoramento', element.codCicloMonitoramento]">
                 Editar
               </button>
               <button
                 *ngIf="permiteExclusao"
                 mat-raised-button
-                color="warn"          
+                class="delete-button"         
                 [disabled]="element.indRelacionamento ? true : false"
                 (click)="excluir(element)">
                 <span matTooltip="Existe Mapa Associado. Não É Possível Excluir" 

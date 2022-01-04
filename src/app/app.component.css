@@ -6,10 +6,6 @@
   right: 0;
 }
 
-mat-sidenav {
-  width: 250px;
-}
-
 .circle {
   border-radius: 50%;
 }
@@ -41,10 +37,6 @@ mat-sidenav {
   border-image: linear-gradient(to top, #c1c1c1, rgba(0, 0, 0, 0)) 1 100%;
 }
 
-mat-sidenav {
-  width: 250px;
-}
-
 .circle {
   border-radius: 50%;
 }
@@ -74,11 +66,6 @@ mat-sidenav {
   border-right: 1px;
   border-style: solid;
   border-image: linear-gradient(to top, #c1c1c1, rgba(0, 0, 0, 0)) 1 100%;
-}
-
-.sidemenu-back {
-  background-color: #35787e;
-  background-size: cover;
 }
 
 .bottom-img {
@@ -120,10 +107,11 @@ mat-sidenav {
   bottom: 0;
   left: 0;
   right: 0;
-}
-
-mat-sidenav {
-  width: 250px;
+  background: url("../assets/img/bg-central.png");
+  background-color:#F1F1F2;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position-y: bottom;
 }
 
 .circle {
@@ -189,14 +177,29 @@ mat-sidenav {
 
 .bottom-to-top {
   border: 0px;
-  border-right: 1px;
+  border-right: 0px;
   border-style: solid;
   border-image: linear-gradient(to top, #c1c1c1, rgba(0, 0, 0, 0)) 1 100%;
 }
 
 .sidemenu-back {
-  background: url("../assets/img/atacase-bg.png");
-  background-size: cover;
+  background: url("../assets/img/bg-menu.png");
+  background-color: #606062;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position-y: bottom;
+}
+
+.back-central{
+  background: url("../assets/img/bg-central.png");
+  background-color:#F1F1F2;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position-y: bottom;
+  position: absolute !important;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
 }
 
 
