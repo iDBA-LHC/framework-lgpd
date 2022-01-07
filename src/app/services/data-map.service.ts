@@ -38,4 +38,9 @@ export class DataMapService {
 	{
 		return this.http.get<DataMap[]>(`${environment.apiURL}${this.apiSuffix}empresa/${codigoEmpresa}/ciclo_monitoramento/${codigoClicloMonitoramento}/area/${codigoArea}/processo/${codigoProcesso}/atividade/${codigoAtividade}/tipo/${indTipo}`, { observe: "response" });
 	}
+
+	geraRelatorioRiscos(codigoEmpresa: number, codigoClicloMonitoramento: number, codigoArea: number, codigoProcesso: number, codigoAtividade: number, indGrauRisco: number, indDadosSensiveis: boolean, indTipo: number)
+	{
+		return this.http.get<DataMap[]>(`${environment.apiURL}${this.apiSuffix}empresa/${codigoEmpresa}/ciclo_monitoramento/${codigoClicloMonitoramento}/area/${codigoArea}/processo/${codigoProcesso}/atividade/${codigoAtividade}/graurisco/${indGrauRisco}/sensiveis/${indDadosSensiveis}/tipo/${indTipo}`, { observe: "response" });
+	}
 }

@@ -123,6 +123,12 @@ export class MenuItems {
 					link: "inventario-contratos",
 					icon: "work",
 					hidden: false,
+				},
+				{
+					label: "Riscos",
+					link: "mapa-riscos",
+					icon: "travel_explore",
+					hidden: false,
 				}
 			]
 		}

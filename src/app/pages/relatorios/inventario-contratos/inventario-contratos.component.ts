@@ -323,11 +323,11 @@ export class InventarioContratosComponent implements OnInit {
 		let headerRow = worksheet.addRow(header);
 		
 		headerRow.eachCell((cell, number) => {
-			cell.font = { name: 'Calibri', size: 11, bold: true, color: {argb : '222A35'} };
+			cell.font = { name: 'Calibri', size: 11, bold: true, color: {argb : 'F8F8F8'} };
 			cell.fill = {
 				type: 'pattern',
 				pattern: 'solid',
-				fgColor: { argb: '9CC2E5' },
+				fgColor: { argb: 'F58634' },
 			}
 			cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
 		});
@@ -350,7 +350,7 @@ export class InventarioContratosComponent implements OnInit {
         cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: '1F4E78' },
+        fgColor: { argb: '606062' },
         }
         cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
       });

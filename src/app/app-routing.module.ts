@@ -174,6 +174,14 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       },
+      {
+        path: "mapa-riscos",
+        loadChildren: () =>
+          import("./pages/relatorios/mapa-riscos/mapa-riscos.module").then(
+            (module) => module.MapaRiscosModule
+          ),
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {

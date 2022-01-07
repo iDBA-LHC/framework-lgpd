@@ -1,6 +1,8 @@
+
+
 export class ExcelUtils {
 
-    public static autoWidth = (worksheet, minimalWidth = 10) => {
+    static autoWidth = (worksheet, minimalWidth = 10) => {
         worksheet.columns.forEach((column) => {
             let maxColumnLength = 0;
             column.eachCell({ includeEmpty: true }, (cell) => {

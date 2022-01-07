@@ -1,0 +1,105 @@
+<mat-card class="marginContent">
+	<div class="mat-elevation-z8">
+
+		<div *ngIf="isLoading" class="overlay-spinner">
+			<div class="center-spinner">
+				<mat-spinner style="align-self: center; margin: 0 auto;"></mat-spinner>
+			</div>
+		</div>
+
+		<div>
+			<form fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100"
+				fxFlex.gt-sm="100" [formGroup]="relatorioForm" #ngForm="ngForm">
+
+				<mat-card-header>
+					<mat-card-title>
+						<h2 >Relatório de Riscos</h2>
+					</mat-card-title>
+				</mat-card-header>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Controladora</mat-label>
+					<input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="!this.usuarioAdmin"/>
+
+					<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
+						(optionSelected)="selecionaEmpresa($event)">
+						<mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+							{{empresa.nomeEmpresa}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="relatorioForm.controls.empresa.errors?.required">Campo obrigatório</mat-error>
+				</mat-form-field>
+
+                <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Ciclo de Monitoramento</mat-label>
+					<input matInput formControlName="cicloMonitoramento" placeholder="Ciclo de Monitoramento" [matAutocomplete]="autoCiclo"/>
+
+					<mat-autocomplete #autoCiclo="matAutocomplete" [displayWith]="displayCicloMonitoramento"
+						(optionSelected)="selecionaCicloMonitoramento($event)">
+						<mat-option *ngFor="let ciclo of listaCiclosFiltrados | async" [value]="ciclo">
+							{{ciclo.nomeCicloMonitoramento}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="relatorioForm.controls.cicloMonitoramento.errors?.required">Campo obrigatório</mat-error>
+				</mat-form-field>
+
+                <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Área</mat-label>
+					<input matInput formControlName="area" placeholder="Area" [matAutocomplete]="autoArea" [readonly]="!this.usuarioAdmin"/>
+
+					<mat-autocomplete #autoArea="matAutocomplete" [displayWith]="displayArea"
+						(optionSelected)="selecionaArea($event)">
+						<mat-option *ngFor="let area of listaAreasFiltradas | async" [value]="area">
+							{{area.nomeArea}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="relatorioForm.controls.area.errors?.required">Campo obrigatório</mat-error>
+				</mat-form-field>
+
+                <mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Processo</mat-label>
+					<input matInput formControlName="processo" placeholder="Processo" [matAutocomplete]="autoProcesso"/>
+
+					<mat-autocomplete #autoProcesso="matAutocomplete" [displayWith]="displayProcesso"
+						(optionSelected)="selecionaProcesso($event)">
+						<mat-option *ngFor="let processo of listaProcessosFiltradas | async" [value]="processo">
+							{{processo.nomeProcesso}}
+						</mat-option>
+					</mat-autocomplete>
+				</mat-form-field>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Atividade</mat-label>
+					<input matInput formControlName="atividade" placeholder="Atividade" [matAutocomplete]="autoAtividade"/>
+					<mat-autocomplete #autoAtividade="matAutocomplete" [displayWith]="displayAtividade"
+						(optionSelected)="selecionaAtividade($event)">
+						<mat-option *ngFor="let atividade of listaAtividadesFiltradas | async" [value]="atividade">
+							{{atividade.nomeAtividade}}
+						</mat-option>
+					</mat-autocomplete>
+				</mat-form-field>
+
+                <mat-radio-group color="primary" fxFlex fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between left" fxLayoutGap="30px" xFlexOffset="30px"
+                    formControlName="indRisco" style="  display: flex; flex-direction: column; margin: 15px 0; width: 50%;">
+                    <mat-label>Grau de Risco:</mat-label>
+                    <mat-radio-button [value]="0">Todos</mat-radio-button>
+                    <mat-radio-button [value]="1">Baixo</mat-radio-button>
+                    <mat-radio-button [value]="2">Moderado</mat-radio-button>
+                    <mat-radio-button [value]="3">Elevado</mat-radio-button>
+                    <mat-radio-button [value]="4">Extremo</mat-radio-button>					
+                    <mat-error *ngIf="relatorioForm.submitted && relatorioForm.controls.indRisco.invalid">Grau de Risco é Obrigatório</mat-error>
+                </mat-radio-group>
+
+
+                <mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="30px" fxFlex="30"
+                    formControlName="indDadosSensiveis" style="width: 50%;" >
+                    <span class="ng-tns-c15-3 ng-star-inserted">Exibir Somente Com Dados Sensíveis</span>
+                </mat-slide-toggle>
+
+                <mat-card-actions fxFlexOffset="30px" >
+					<button mat-raised-button class="action-button" (click)="gerarRelatorio($event)">Gerar Relatório</button>
+				</mat-card-actions>
+			</form>
+		</div>
+	</div>
+</mat-card>

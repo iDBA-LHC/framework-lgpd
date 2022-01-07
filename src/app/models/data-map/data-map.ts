@@ -27,9 +27,13 @@ export class DataMap {
     nomeCicloVida: string;
     indRisco: number;
     desObservacoes: string;
+
     codigoRisco: number;
+    nomeRisco: string;
     codigoRiscoAssociado: number;
+    nomeRiscoAssociado: number;
     codigoAmeaca: number;
+    nomeAmeaca: number;
     indDescarte: number;
     indRevisarPermissoes: number;
     indAnonimizar: number;

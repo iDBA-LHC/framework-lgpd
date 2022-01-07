@@ -22,13 +22,13 @@ import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-mapa-tratamento-dados',
-  templateUrl: './mapa-tratamento-dados.component.html',
-  styleUrls: ['./mapa-tratamento-dados.component.css']
+  selector: 'app-mapa-riscos',
+  templateUrl: './mapa-riscos.component.html',
+  styleUrls: ['./mapa-riscos.component.css']
 })
-export class MapaTratamentoDadosComponent implements OnInit {
+export class MapaRiscosComponent implements OnInit {
 
-  	isLoading = false;
+  isLoading = false;
 	usuarioAdmin:boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
   	listaEmpresas: Empresa[];
@@ -83,14 +83,18 @@ export class MapaTratamentoDadosComponent implements OnInit {
 			codArea: ["", Validators.required],
 			area: ["", Validators.required],
 
-      		codCicloMonitoramento: ["", Validators.required],
+      codCicloMonitoramento: ["", Validators.required],
 			cicloMonitoramento: ["", Validators.required],
 
 			codProcesso: ["", ],
 			processo: ["", ],
 
 			codAtividade: ["", ],
-			atividade: ["", ],	
+			atividade: ["", ],
+      
+      indRisco: [0, Validators.required],
+      
+      indDadosSensiveis: [false,]
 
 		});
 	}
@@ -331,12 +335,14 @@ export class MapaTratamentoDadosComponent implements OnInit {
 
 			this.isLoading = true;
 
-			this.dataMapService.geraRelatorioMapaTratamento(this.relatorioForm.controls.codEmpresa.value,
-															this.relatorioForm.controls.codCicloMonitoramento.value,
-															this.relatorioForm.controls.codArea.value,
-															this.relatorioForm.controls.codProcesso.value,
-															this.relatorioForm.controls.codAtividade.value,
-															2).subscribe(
+			this.dataMapService.geraRelatorioRiscos(this.relatorioForm.controls.codEmpresa.value,
+                                              this.relatorioForm.controls.codCicloMonitoramento.value,
+                                              this.relatorioForm.controls.codArea.value,
+                                              this.relatorioForm.controls.codProcesso.value,
+                                              this.relatorioForm.controls.codAtividade.value,
+                                              this.relatorioForm.controls.indRisco.value,
+                                              this.relatorioForm.controls.indDadosSensiveis.value,
+                                              2).subscribe(
 				(retorno) => {
 					this.isLoading = false;
 
@@ -356,12 +362,12 @@ export class MapaTratamentoDadosComponent implements OnInit {
 
   	private geraPlanilha(listaDataMap: DataMap[]){
 
-		const header = ["Empresa", "Área", "Atividade", "Processo","Dados Tratados","Origem","Destino","Base Legal",
-						"Dados Sensíveis","Dados de Menores","Necessidade Consentimento","Tranferência Internacional",
-						"Necessidade de Anonimização","Ciclo de Vida","Risco","Ações Necessárias"];
+		const header = ["Empresa", "Área", "Atividade", "Processo","Tipos de Dados",
+						"Dados Sensíveis","Grau de Risco","Risco","Risco Associado","Ameaça","Descarte",
+            "Revisar Permissões", "Anonimizar","Outras Ações"];
 
 		let workbook = new Workbook();
-		let worksheet = workbook.addWorksheet('Tratamento de Dados');                    
+		let worksheet = workbook.addWorksheet('Riscos');                    
 
 		let headerRow = worksheet.addRow(header);
 		
@@ -378,25 +384,7 @@ export class MapaTratamentoDadosComponent implements OnInit {
 		listaDataMap.forEach((dataMap) => {
 		
 		let metadados:String = "";
-		let coleta: String = "";
-		let armazenamento: String = "";
 		let plano:String = "";
-
-		dataMap.formaColetas.forEach((dado) => {
-			if (coleta.length!=0)
-			{
-			coleta = coleta + ",";
-			}
-			coleta = coleta + dado.nomeFormaColeta;
-		});
-
-		dataMap.armazenamentos.forEach((dado) => {
-			if (armazenamento.length!=0)
-			{
-			armazenamento = armazenamento + ",";
-			}
-			armazenamento = armazenamento + dado.nomeLocalArmazenamento;
-		});
 
 		dataMap.planoMitigacao.forEach((dado) => {
 			if (plano.length!=0)
@@ -413,22 +401,20 @@ export class MapaTratamentoDadosComponent implements OnInit {
 			dataMap.nomeAtividade,
 			dataMap.nomeProcesso,
 			metadados,
-			coleta,
-			armazenamento,
-			dataMap.nomeBaseLegal,
 			dataMap.indSensivel === 1 ? "Sim":"Não",
-			dataMap.indDadosMenores === 1 ? "Sim":"Não",
-			dataMap.indNecessitaConsentimento === 1 ? "Sim":"Não",
-			dataMap.indTransfInternacional === 1 ? "Sim":"Não",
-			dataMap.indAnonimizacao === 1 ? "Sim":"Não",
-			dataMap.nomeCicloVida,
 			dataMap.indRisco === 1 ? "Baixo": 
 				dataMap.indRisco === 2 ? "Moderado": 
 					dataMap.indRisco === 3 ? "Elevado":"Extremo",
+      dataMap.nomeRisco,
+      dataMap.nomeRiscoAssociado,
+      dataMap.nomeAmeaca,   
+      dataMap.indDescarte === 1 ? "Sim":"Não",
+      dataMap.indRevisarPermissoes === 1 ? "Sim":"Não",
+      dataMap.indAnonimizar === 1 ? "Sim":"Não", 
 			plano
 		]
 		let row = worksheet.addRow(dado);
-		let colPlano = row.getCell(16);
+		let colPlano = row.getCell(14);
 		colPlano.alignment =  { wrapText: true };
 
 		row.eachCell((cell, number) => {
@@ -511,30 +497,25 @@ export class MapaTratamentoDadosComponent implements OnInit {
 
 		if (dataMap.indSensivel===1)
 		{
-			this.trataFormatacao(row.getCell(9));
+			this.trataFormatacao(row.getCell(6));
 		}
 
-		if (dataMap.indDadosMenores===1)
-		{
-			this.trataFormatacao(row.getCell(10));
-		}
-
-		if (dataMap.indNecessitaConsentimento===1)
+    if (dataMap.indDescarte===1)
 		{
 			this.trataFormatacao(row.getCell(11));
 		}
 
-		if (dataMap.indTransfInternacional===1)
+    if (dataMap.indRevisarPermissoes===1)
 		{
 			this.trataFormatacao(row.getCell(12));
 		}
 
-		if (dataMap.indAnonimizacao===1)
+    if (dataMap.indAnonimizar===1)
 		{
 			this.trataFormatacao(row.getCell(13));
 		}
 
-		let colRisco = row.getCell(15);
+		let colRisco = row.getCell(7);
 
 		switch(dataMap.indRisco)
 		{
@@ -585,7 +566,7 @@ export class MapaTratamentoDadosComponent implements OnInit {
 
 		workbook.xlsx.writeBuffer().then((data) => {
 			let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-			fs.saveAs(blob, 'TratamentoDados.xlsx');
+			fs.saveAs(blob, 'Risco.xlsx');
 		});
 
 	}
