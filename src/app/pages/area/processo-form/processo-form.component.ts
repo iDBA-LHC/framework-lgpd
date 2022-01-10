@@ -187,6 +187,9 @@ export class ProcessoFormComponent implements OnInit {
         )
       }
     }
+    else {
+      this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+    }
   }
 
   navigateToArea()

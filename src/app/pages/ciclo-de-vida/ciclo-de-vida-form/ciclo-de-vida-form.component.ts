@@ -115,6 +115,9 @@ export class CicloDeVidaFormComponent implements OnInit {
         );
       }
     }
+    else {
+      this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+    }
   }
 
 }

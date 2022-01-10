@@ -112,6 +112,9 @@ export class AmeacaFormComponent implements OnInit {
         );
       }
     }
+    else {
+      this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+    }
   }
 }
 

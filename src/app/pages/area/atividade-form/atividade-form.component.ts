@@ -138,6 +138,9 @@ export class AtividadeFormComponent implements OnInit {
         )
       }
     }
+    else {
+      this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
+    }
   }
 
   private pesquisaMetadados() {    
