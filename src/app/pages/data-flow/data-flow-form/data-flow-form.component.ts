@@ -527,7 +527,6 @@ export class DataFlowFormComponent implements OnInit {
 							return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
 						}));
 
-				this.pesquisaUsuarios();
 			}
 		)
 	}
@@ -547,8 +546,6 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.processo.setValue(null);
 		this.dataFlowForm.controls.codAtividade.setValue(null);
     	this.dataFlowForm.controls.atividade.setValue(null);
-
-		this.pesquisaUsuarios();
 
 		this.buscarUltimoCicloMonitoramento(empresaSelecionada.codigoEmpresa);
 
@@ -615,6 +612,7 @@ export class DataFlowFormComponent implements OnInit {
 		this.dataFlowForm.controls.processo.setValue(null);
 		this.dataFlowForm.controls.codAtividade.setValue(null);
 		this.dataFlowForm.controls.atividade.setValue(null);
+		this.pesquisaUsuarios();
 
 		this.pesquisaProcesso(areaSelecionada.codArea);
 	}
