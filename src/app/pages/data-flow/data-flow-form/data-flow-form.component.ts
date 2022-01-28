@@ -180,6 +180,7 @@ export class DataFlowFormComponent implements OnInit {
 							this.preencherCombos();
 
 							this.pesquisaArea(retorno.body[0].codEmpresa);
+							this.pesquisaUsuarios();
 							this.pesquisaProcesso(retorno.body[0].codArea);
 							this.pesquisaAtividade(retorno.body[0].codProcesso);
 						},
