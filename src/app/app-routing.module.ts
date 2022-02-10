@@ -182,6 +182,22 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       },
+      {
+        path: "incidente",
+        loadChildren: () =>
+          import("./pages/incidente/incidente.module").then(
+            (module) => module.IncidenteModule
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "solicitacao-titular",
+        loadChildren: () =>
+          import("./pages/solicitacao-titular/solicitacao-titular.module").then(
+            (module) => module.SolicitacaoTitularModule
+          ),
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {

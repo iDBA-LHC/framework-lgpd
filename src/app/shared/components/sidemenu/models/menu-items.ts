@@ -106,6 +106,18 @@ export class MenuItems {
 			hidden: false,
     	},
 		{
+			label: "Registro de Incidente",
+			link: "incidente",
+			icon: "report_problem",
+			hidden: false,
+    	},
+		{
+			label: "Solicitação de Titulares",
+			link: "solicitacao-titular",
+			icon: "list_alt",
+			hidden: false,
+    	},
+		{
 			label: "Relatórios",
 			icon: "menu",
 			link: "",

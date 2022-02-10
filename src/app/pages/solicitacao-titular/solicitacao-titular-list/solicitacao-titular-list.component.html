@@ -1,0 +1,148 @@
+<mat-card class="marginContent">
+
+    <div fxLayout="row">
+  
+      <form [formGroup]="form" style="width: 100%;">
+
+        <div>
+            <mat-form-field style="width: 35%;">
+            <mat-label>Controladora</mat-label>
+            <input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="!this.usuarioAdmin"/>
+    
+            <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
+                (optionSelected)="selecionaEmpresa($event)">
+                <mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+                {{empresa.nomeEmpresa}}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="form.controls.empresa.errors?.required">Campo obrigatório</mat-error>
+            </mat-form-field>
+    
+            <mat-form-field style="width: 30%;" fxFlexOffset="10px">
+                <mat-label>Data de Inclusão</mat-label>  
+                <input matInput
+                    placeholder="Selecione o Intervalo de Datas"
+                    [satDatepicker]="picker1"
+                    formControlName="datas">
+                <sat-datepicker #picker1 [rangeMode]="true"
+                                [selectFirstDateOnClose]="true">
+                </sat-datepicker>
+                <sat-datepicker-toggle matSuffix [for]="picker1"></sat-datepicker-toggle>
+            </mat-form-field>
+    
+            <mat-form-field style="width: 30%;" fxFlexOffset="10px">
+            <mat-label>Status</mat-label>
+            <mat-select
+                placeholder="Status"
+                formControlName="indStatus">
+    
+                <mat-option
+                *ngFor="let button of statusSolicitacaoButtons.buttons"
+                [value]="button.cod">{{ button.description }}
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
+
+        </div>
+        <div>
+
+            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>CPF</mat-label>
+                <input
+                    matInput
+                    formControlName="cpfTitular"
+                    placeholder="CPF"
+                    mask="000.000.000-00"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="form.controls['cpfTitular'].hasError('invalidCPF')">CPF Informado não é Válido</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>CPF</mat-label>
+                <input
+                    matInput
+                    formControlName="cpfRepresentante"
+                    placeholder="CPF"
+                    mask="000.000.000-00"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="form.controls['cpfRepresentante'].hasError('invalidCPF')">CPF Informado não é Válido</mat-error>
+            </mat-form-field>
+    
+            <button mat-raised-button class="action-button" style="width: 150px; align-self: center;">
+                <mat-icon>search</mat-icon>Pesquisar
+            </button>
+
+        </div>
+  
+      </form>
+  
+    </div>
+  
+  
+    <div fxLayout="row" style="padding-top: 5px;">
+        <div fxFlex>
+            <mat-form-field fxFlex="30">
+              <input
+                matInput
+                (keyup)="applyFilter($event.target.value)"
+                placeholder="Buscar Solicitação"/>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="5px" style="align-self: center;">
+            <div fxLayout="column" fxLayoutAlign="start end" >
+              <a
+                mat-raised-button
+                class="add-button"
+                [routerLink]="['/solicitacao-titular', '']"
+                routerLinkActive="active">
+                <mat-icon>add</mat-icon>Nova Solicitação</a>
+            </div>
+          </div>
+    </div>
+  
+    <div
+      *ngIf="isLoading"
+      fxLayout="row"
+      fxLayoutAlign="center"
+      fxLayoutGap="gappx">
+      <mat-spinner></mat-spinner>
+    </div>
+  
+    <div class="mat-elevation-z0" [hidden]="isLoading">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="numeroProtocolo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header># Incidente</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.numeroProtocolo }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="dataIncidente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Incidente</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.dataIncidente }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="statusIncidente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.statusIncidente }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="example-button-row">
+              <button
+                mat-raised-button
+                class="edit-button"
+                [routerLink]="['/solicitacao-titular/', element.codigoIncidente]">
+                Editar
+              </button>
+            </div>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-card>

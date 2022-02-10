@@ -10,6 +10,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { CdkStepperModule } from "@angular/cdk/stepper";
 import { CdkTableModule } from "@angular/cdk/table";
 import { CdkTreeModule } from "@angular/cdk/tree";
+import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import {
   MatAutocompleteModule,
   MatToolbarModule,
@@ -105,6 +106,8 @@ import { CpfCnpjPipeModule } from './components/pipe/cpf-cnpj-pipe.module';
     CustomSnackBarModule,
     MatTableExporterModule, 
     CpfCnpjPipeModule,
+    SatDatepickerModule, 
+    SatNativeDateModule
   ],
 })
 export class SharedModule {}

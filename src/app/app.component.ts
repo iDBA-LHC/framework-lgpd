@@ -75,6 +75,7 @@ export class AppComponent {
       this.showOverlay = false;
     }
     if (event instanceof NavigationError) {
+      console.log(event);
       this.showOverlay = false;
     }
   }

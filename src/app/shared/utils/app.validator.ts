@@ -106,6 +106,8 @@ export function cpfValidator(control: FormControl) {
       return { invalidCPF: true };
     }
   }
+
+  return null;
 }
 
 export function cnpjValidator(control: FormControl) {
