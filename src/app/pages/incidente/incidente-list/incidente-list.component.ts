@@ -106,8 +106,6 @@ private pesquisaEmpresas() {
                 this.form.controls.empresa.setValue(empresaSel);
         }
 
-        console.log(this.listaEmpresas);
-
         this.listaEmpresasFiltradas = this.form.controls.empresa.valueChanges
             .pipe(
                 startWith(''),

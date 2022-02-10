@@ -21,7 +21,7 @@ export class SolicitacaoTitularListComponent implements OnInit {
   isLoading = false;
   usuarioAdmin:boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
   
-  displayedColumns: string[] = ["numeroProtocolo","dataIncidente","statusIncidente","actions"];
+  displayedColumns: string[] = ["numeroProtocolo","dataSolicitacao","statusSolicitacao","actions"];
   statusSolicitacaoButtons = new StatusSolicitacaoTitularButtons();
 
   form: FormGroup;
