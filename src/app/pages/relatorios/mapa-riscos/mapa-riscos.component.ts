@@ -20,6 +20,7 @@ import { DataMap } from 'src/app/models/data-map/data-map';
 import { ExcelUtils } from 'src/app/shared/utils/excel-utils';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-mapa-riscos',
@@ -238,7 +239,7 @@ export class MapaRiscosComponent implements OnInit {
 	}
 
 	displayCicloMonitoramento(cicloMonitoramento: CicloMonitoramento): string {
-		return cicloMonitoramento ? cicloMonitoramento.nomeCicloMonitoramento : "";
+		return cicloMonitoramento ? (new DatePipe("en-US").transform(cicloMonitoramento.dataCompetencia,'MM/yyyy')) : "";
 	}
 
   	private pesquisaProcesso(codArea: number) {

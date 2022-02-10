@@ -37,7 +37,7 @@
 					<mat-autocomplete #autoCiclo="matAutocomplete" [displayWith]="displayCicloMonitoramento"
 						(optionSelected)="selecionaCicloMonitoramento($event)">
 						<mat-option *ngFor="let ciclo of listaCiclosFiltrados | async" [value]="ciclo">
-							{{ciclo.nomeCicloMonitoramento}}
+							{{ciclo.dataCompetencia | date:'MM/yyyy'}}
 						</mat-option>
 					</mat-autocomplete>
 					<mat-error *ngIf="relatorioForm.controls.cicloMonitoramento.errors?.required">Campo obrigatório</mat-error>
