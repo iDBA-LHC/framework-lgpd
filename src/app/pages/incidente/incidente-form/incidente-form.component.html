@@ -1,1 +1,258 @@
 
+<mat-card class="marginContent">
+	<div class="mat-elevation-z8">
+
+		<div *ngIf="isLoading" class="overlay-spinner">
+			<div class="center-spinner">
+				<mat-spinner style="align-self: center; margin: 0 auto;"></mat-spinner>
+			</div>
+		</div>
+
+		<div>
+			<form fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100"
+				fxFlex.gt-sm="100" [formGroup]="form" (submit)="salvar()">
+
+				<mat-card-header>
+					<mat-card-title>
+						<h2 *ngIf="!codigoIncidente">Novo Incidente</h2>
+						<h2 *ngIf="codigoIncidente">Editar Incidente</h2>
+					</mat-card-title>
+				</mat-card-header>
+
+				<div style="width: 50%;" fxFlexOffset="10px">
+
+					<mat-form-field style="width: 60%;">
+						<mat-label>Controladora</mat-label>
+						<input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="codigoIncidente > 0"/>
+
+						<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
+							(optionSelected)="selecionaEmpresa($event)">
+							<mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+								{{empresa.nomeEmpresa}}
+							</mat-option>
+						</mat-autocomplete>
+						<mat-error *ngIf="form.controls.empresa.errors?.required">Controladora é Obrigatória</mat-error>
+					</mat-form-field>
+
+					<mat-form-field style="width: 40%;" fxFlexOffset="5px">
+						<mat-label>CNPJ</mat-label>
+						<input matInput formControlName="numeroCNPJ" placeholder="CNPJ" 
+								[readonly]="true"
+								type="text"
+								mask="00.000.000/0000-00"/>
+					</mat-form-field>
+
+				</div>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Operador</mat-label>
+					<input matInput formControlName="usuarioOperador" placeholder="Operador" [matAutocomplete]="autoOperador" [readonly]="codigoIncidente > 0"/>
+
+					<mat-autocomplete #autoOperador="matAutocomplete" [displayWith]="displayUsuario"
+						(optionSelected)="selecionaUsuario('usuarioOperador','codigoUsuarioOperador',$event)">
+						<mat-option *ngFor="let usuario of listaUsuariosOperadorFiltrados | async" [value]="usuario">
+							{{usuario.nomeUsuario}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="form.controls.usuarioOperador.errors?.required">Operador é Obrigatório</mat-error>
+				</mat-form-field>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Encarregado</mat-label>
+					<input matInput formControlName="usuarioEncarregado" placeholder="Encarregado" [matAutocomplete]="autoEncarregado" [readonly]="codigoIncidente > 0"/>
+
+					<mat-autocomplete #autoEncarregado="matAutocomplete" [displayWith]="displayUsuario"
+						(optionSelected)="selecionaUsuario('usuarioEncarregado','codigoUsuarioEncarregado',$event)">
+						<mat-option *ngFor="let usuario of listaUsuariosEncarregadosFiltrados | async" [value]="usuario">
+							{{usuario.nomeUsuario}}
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error *ngIf="form.controls.usuarioEncarregado.errors?.required">Encarregado é Obrigatório</mat-error>
+				</mat-form-field>	
+
+				<div style="width: 50%;" fxFlexOffset="5px">
+				
+					<mat-form-field fxFlex style="width: 50%;" >
+						<mat-label>Data/Hora de Registro</mat-label>
+						<input matInput [ngxMatDatetimePicker]="pickerRegistro" 
+							placeholder="Selecione a Data/Hora de Registro do Incidente"                             
+							[formControl]="form.controls.dataHoraRegistro">
+							<mat-datepicker-toggle matSuffix [for]="pickerRegistro"></mat-datepicker-toggle>
+							<ngx-mat-datetime-picker #pickerRegistro
+								[showSpinners]="true" 
+								[stepHour]="1" [stepMinute]="5"></ngx-mat-datetime-picker>
+							<mat-error *ngIf="form.controls.dataHoraRegistro.errors?.required">Data de Registro do Incidente é Obrigatória</mat-error>
+					</mat-form-field>
+
+					<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+						<mat-label>Data/Hora do Incidente</mat-label>
+						<input matInput [ngxMatDatetimePicker]="pickerIncidente" 
+							placeholder="Selecione a Data/Hora do Incidente"                             
+							[formControl]="form.controls.dataHoraIncidente">
+							<mat-datepicker-toggle matSuffix [for]="pickerIncidente"></mat-datepicker-toggle>
+							<ngx-mat-datetime-picker #pickerIncidente
+								[showSpinners]="true" 
+								[stepHour]="1" [stepMinute]="5"></ngx-mat-datetime-picker>
+							<mat-error *ngIf="form.controls.dataHoraIncidente.errors?.required">Data do Incidente é Obrigatória</mat-error>
+					</mat-form-field>
+
+				</div>
+
+				<div style="width: 50%;" fxFlexOffset="5px">
+					<mat-form-field fxFlex style="width: 50%;" >
+						<mat-label>Data Comunicação do Incidente</mat-label>
+						<input
+							matInput
+							formControlName="dataComunicacao"
+							placeholder="Data Comunicação"
+							type="date"/>
+						<mat-error *ngIf="form.controls.dataComunicacao.errors?.required">Data de Comunicação do Incidente é Obrigatória</mat-error>
+					</mat-form-field>
+					<span style="width: 50%; align-self: center; color: green;" fxFlexOffset="5px">No Prazo</span>
+					<span style="width: 50%; align-self: center; color: red;" fxFlexOffset="5px">Fora do Prazo</span>
+				</div>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Justificativa</mat-label>
+					<textarea matInput formControlName="desJustificativa" placeholder="Justificativa Para Comunicação Fora do Prazo" autocomplete="off"
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
+				</mat-form-field>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Status</mat-label>
+					<mat-select
+						placeholder="Status"
+						formControlName="indStatus">
+			
+						<mat-option
+							*ngFor="let button of statusIncidenteButtons.buttonsForm"
+							[value]="button.cod">{{ button.description }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Tipo de Comunicação</mat-label>
+					<input
+						matInput
+						formControlName="desTipoComunicacao"
+						placeholder="Tipo de Comunicação"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Dados do Agente de Tratamento</mat-label>
+					<input
+						matInput
+						formControlName="dadosAgenteTratamento"
+						placeholder="Dados do Agente de Tratamento"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Dados do Notificante</mat-label>
+					<input
+						matInput
+						formControlName="dadosNotificante"
+						placeholder="Dados do Notificante"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Dados Encarregado</mat-label>
+					<input
+						matInput
+						formControlName="dadosEncarregado"
+						placeholder="Dados Encarregado"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Detalhes</mat-label>
+					<textarea matInput formControlName="desDetalhes" placeholder="Detalhes do Incidente de Segurança" autocomplete="off"
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Natureza dos Dados Afetados</mat-label>
+					<input
+						matInput
+						formControlName="desNaturezaDados"
+						placeholder="Natureza dos Dados Afetados"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Tipo Titulares Afetados</mat-label>
+					<input
+						matInput
+						formControlName="desTipoTitulares"
+						placeholder="Tipo dos Titulares Afetados"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Medidas Preventivas</mat-label>
+					<input
+						matInput
+						formControlName="desMedidasPreventivas"
+						placeholder="Medidas Preventivas"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Medidas Mitigatórias</mat-label>
+					<input
+						matInput
+						formControlName="desMedidasMitigatorias"
+						placeholder="Medidas Mitigatórias"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Relatório de Impacto</mat-label>
+					<input
+						matInput
+						formControlName="indRelatorioImpacto"
+						placeholder="Relatorio de Impacto"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Consequências</mat-label>
+					<input
+						matInput
+						formControlName="desConsequencias"
+						placeholder="Consequencias"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Link Documento Incidente</mat-label>
+					<input
+						matInput
+						formControlName="desLinkDocumento"
+						placeholder="Link Documento Incidente"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-card-actions>
+					<button mat-raised-button class="save-button">Salvar</button>
+				</mat-card-actions>
+			</form>
+		</div>
+	</div>
+</mat-card>

@@ -52,6 +52,7 @@ import {
 import { CancelJobModalModule } from "./components/cancel-job-modal/cancel-job-modal.module";
 import { MatTableExporterModule } from "mat-table-exporter";
 import { CpfCnpjPipeModule } from './components/pipe/cpf-cnpj-pipe.module';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from "@angular-material-components/datetime-picker";
 
 @NgModule({
   declarations: [],
@@ -107,7 +108,9 @@ import { CpfCnpjPipeModule } from './components/pipe/cpf-cnpj-pipe.module';
     MatTableExporterModule, 
     CpfCnpjPipeModule,
     SatDatepickerModule, 
-    SatNativeDateModule
+    SatNativeDateModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
   ],
 })
 export class SharedModule {}

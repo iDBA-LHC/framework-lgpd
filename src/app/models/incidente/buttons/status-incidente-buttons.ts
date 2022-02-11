@@ -14,5 +14,16 @@ export class StatusIncidenteButtons {
             cod: 0,
             description: "Todos"
         },
+    ];
+
+    buttonsForm: AbstractButton[] = [
+        {
+            cod: 1,
+            description: "Em Andamento"
+        },
+        {
+            cod: 2,
+            description: "Solucionado"
+        },
     ]
 }

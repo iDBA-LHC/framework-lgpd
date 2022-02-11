@@ -267,7 +267,7 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   displayEmpresa(empresa: Empresa): string {
-    return empresa && empresa.nomeEmpresa ? empresa.nomeEmpresa : '';
+    return empresa ? empresa.nomeEmpresa : "";
   }
 
   selecionaEmpresa(event){
