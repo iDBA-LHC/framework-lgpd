@@ -15,15 +15,31 @@
 				<mat-card-header>
 					<mat-card-title>
 						<h2 *ngIf="!codigoIncidente">Novo Incidente</h2>
-						<h2 *ngIf="codigoIncidente">Editar Incidente</h2>
+						<h2 *ngIf="codigoIncidente && indStatus === 1">Editar Incidente</h2>
+						<h2 *ngIf="codigoIncidente && indStatus === 2">Visualizar Incidente</h2>
 					</mat-card-title>
 				</mat-card-header>
+				
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Protocolo</mat-label>
+					<input
+						matInput
+						formControlName="numeroProtocolo"
+						placeholder="Protocolo"
+						autocomplete="off"
+						readonly="true"
+						type="text"/>
+				</mat-form-field>
 
 				<div style="width: 50%;" fxFlexOffset="10px">
 
 					<mat-form-field style="width: 60%;">
 						<mat-label>Controladora</mat-label>
-						<input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="codigoIncidente > 0"/>
+						<input matInput 
+							formControlName="empresa" 
+							placeholder="Controladora" 
+							[matAutocomplete]="autoEmpresa" 
+							[readonly]="codigoIncidente > 0 || usuarioAdmin === false"/>
 
 						<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
 							(optionSelected)="selecionaEmpresa($event)">
@@ -68,53 +84,81 @@
 						</mat-option>
 					</mat-autocomplete>
 					<mat-error *ngIf="form.controls.usuarioEncarregado.errors?.required">Encarregado é Obrigatório</mat-error>
-				</mat-form-field>	
+				</mat-form-field>
+				
+				<div style="width: 50%;" fxFlexOffset="10px">
+					<mat-form-field style="width: 70%;">
+						<mat-label>E-Mail Encarregado</mat-label>
+						<input matInput formControlName="emailEncarregado" placeholder="E-Mail Encarregado" 
+								[readonly]="true"
+								type="text"/>
+					</mat-form-field>
+					<mat-form-field style="width: 30%;" fxFlexOffset="5px">
+						<mat-label>Telefone Controladora</mat-label>
+						<input matInput formControlName="telefoneControlador" placeholder="Telefone Controladora" 
+								[readonly]="true"
+								type="text"/>
+					</mat-form-field>
+				</div>
 
 				<div style="width: 50%;" fxFlexOffset="5px">
 				
 					<mat-form-field fxFlex style="width: 50%;" >
 						<mat-label>Data/Hora de Registro</mat-label>
 						<input matInput [ngxMatDatetimePicker]="pickerRegistro" 
-							placeholder="Selecione a Data/Hora de Registro do Incidente"                             
-							[formControl]="form.controls.dataHoraRegistro">
+							placeholder="Selecione a Data/Hora de Registro do Incidente" 
+							[readonly]="codigoIncidente > 0"                            
+							[formControl]="form.controls.dataRegistro">
 							<mat-datepicker-toggle matSuffix [for]="pickerRegistro"></mat-datepicker-toggle>
 							<ngx-mat-datetime-picker #pickerRegistro
 								[showSpinners]="true" 
+								[disabled]="codigoIncidente > 0" 
 								[stepHour]="1" [stepMinute]="5"></ngx-mat-datetime-picker>
-							<mat-error *ngIf="form.controls.dataHoraRegistro.errors?.required">Data de Registro do Incidente é Obrigatória</mat-error>
+							<mat-error *ngIf="form.controls.dataRegistro.errors?.required">Data de Registro do Incidente é Obrigatória</mat-error>
 					</mat-form-field>
 
 					<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 						<mat-label>Data/Hora do Incidente</mat-label>
 						<input matInput [ngxMatDatetimePicker]="pickerIncidente" 
-							placeholder="Selecione a Data/Hora do Incidente"                             
-							[formControl]="form.controls.dataHoraIncidente">
-							<mat-datepicker-toggle matSuffix [for]="pickerIncidente"></mat-datepicker-toggle>
+							placeholder="Selecione a Data/Hora do Incidente"
+							[readonly]="codigoIncidente > 0"
+							(blur)="verificaComunicacaoNoPrazo()"                             
+							[formControl]="form.controls.dataIncidente">
+							<mat-datepicker-toggle  matSuffix [for]="pickerIncidente"></mat-datepicker-toggle>
 							<ngx-mat-datetime-picker #pickerIncidente
-								[showSpinners]="true" 
+								[showSpinners]="true"
+								[disabled]="codigoIncidente > 0" 
 								[stepHour]="1" [stepMinute]="5"></ngx-mat-datetime-picker>
-							<mat-error *ngIf="form.controls.dataHoraIncidente.errors?.required">Data do Incidente é Obrigatória</mat-error>
+							<mat-error *ngIf="form.controls.dataIncidente.errors?.required">Data do Incidente é Obrigatória</mat-error>
 					</mat-form-field>
 
 				</div>
 
 				<div style="width: 50%;" fxFlexOffset="5px">
 					<mat-form-field fxFlex style="width: 50%;" >
-						<mat-label>Data Comunicação do Incidente</mat-label>
+						<mat-label>Data de Comunicação</mat-label>
 						<input
 							matInput
 							formControlName="dataComunicacao"
+							[readonly]="codigoIncidente > 0"
 							placeholder="Data Comunicação"
+							(blur)="verificaComunicacaoNoPrazo()"
 							type="date"/>
 						<mat-error *ngIf="form.controls.dataComunicacao.errors?.required">Data de Comunicação do Incidente é Obrigatória</mat-error>
 					</mat-form-field>
-					<span style="width: 50%; align-self: center; color: green;" fxFlexOffset="5px">No Prazo</span>
-					<span style="width: 50%; align-self: center; color: red;" fxFlexOffset="5px">Fora do Prazo</span>
+					<div style="width: 50%;" fxFlexOffset="5px">
+						<span *ngIf="this.indNoPrazo!= undefined && this.indNoPrazo" style="width: 100%; align-self: center; color: green;" fxFlexOffset="5px">Comunicação No Prazo</span>
+						<span *ngIf="this.indNoPrazo!= undefined && !this.indNoPrazo" style="width: 100%; align-self: center; color: red;" fxFlexOffset="5px">Comunicação Fora do Prazo</span>
+					</div>
+
 				</div>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Justificativa</mat-label>
-					<textarea matInput formControlName="desJustificativa" placeholder="Justificativa Para Comunicação Fora do Prazo" autocomplete="off"
+					<textarea matInput formControlName="desJustificativa" 
+						[readonly]="codigoIncidente > 0" 
+						placeholder="Justificativa Para Comunicação Fora do Prazo"
+						autocomplete="off"
 						type="textField" resizeToFitContent="true" rows="5">
 					</textarea>
 				</mat-form-field>
@@ -139,6 +183,7 @@
 						formControlName="desTipoComunicacao"
 						placeholder="Tipo de Comunicação"
 						autocomplete="off"
+						[readonly]="codigoIncidente > 0"
 						type="text"/>
 				</mat-form-field>
 
@@ -149,6 +194,7 @@
 						formControlName="dadosAgenteTratamento"
 						placeholder="Dados do Agente de Tratamento"
 						autocomplete="off"
+						[readonly]="codigoIncidente > 0"
 						type="text"/>
 				</mat-form-field>
 
@@ -159,22 +205,17 @@
 						formControlName="dadosNotificante"
 						placeholder="Dados do Notificante"
 						autocomplete="off"
-						type="text"/>
-				</mat-form-field>
-
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Dados Encarregado</mat-label>
-					<input
-						matInput
-						formControlName="dadosEncarregado"
-						placeholder="Dados Encarregado"
-						autocomplete="off"
+						[readonly]="codigoIncidente > 0"
 						type="text"/>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Detalhes</mat-label>
-					<textarea matInput formControlName="desDetalhes" placeholder="Detalhes do Incidente de Segurança" autocomplete="off"
+					<textarea matInput 
+						formControlName="desDetalhes" 
+						placeholder="Detalhes do Incidente de Segurança" 
+						autocomplete="off"
+						[readonly]="indStatus === 2"
 						type="textField" resizeToFitContent="true" rows="5">
 					</textarea>
 				</mat-form-field>
@@ -186,6 +227,7 @@
 						formControlName="desNaturezaDados"
 						placeholder="Natureza dos Dados Afetados"
 						autocomplete="off"
+						[readonly]="codigoIncidente > 0"
 						type="text"/>
 				</mat-form-field>
 
@@ -196,47 +238,45 @@
 						formControlName="desTipoTitulares"
 						placeholder="Tipo dos Titulares Afetados"
 						autocomplete="off"
+						[readonly]="codigoIncidente > 0"
 						type="text"/>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Medidas Preventivas</mat-label>
-					<input
-						matInput
-						formControlName="desMedidasPreventivas"
-						placeholder="Medidas Preventivas"
+					<textarea matInput 
+						formControlName="desMedidasPreventivas" 
+						placeholder="Medidas Preventivas do Incidente de Segurança" 
 						autocomplete="off"
-						type="text"/>
+						[readonly]="codigoIncidente > 0"
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Medidas Mitigatórias</mat-label>
-					<input
-						matInput
-						formControlName="desMedidasMitigatorias"
-						placeholder="Medidas Mitigatórias"
+					<textarea matInput 
+						formControlName="desMedidasMitigatorias" 
+						placeholder="Medidas Mitigatórias do Incidente de Segurança" 
 						autocomplete="off"
-						type="text"/>
+						[readonly]="codigoIncidente > 0"
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
 				</mat-form-field>
 
-				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
-					<mat-label>Relatório de Impacto</mat-label>
-					<input
-						matInput
-						formControlName="indRelatorioImpacto"
-						placeholder="Relatorio de Impacto"
-						autocomplete="off"
-						type="text"/>
-				</mat-form-field>
+				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indRelatorioImpacto" style="width: 50%;">
+					<span class="ng-tns-c15-3 ng-star-inserted">Relatório de Impacto</span>
+				</mat-slide-toggle>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Consequências</mat-label>
-					<input
-						matInput
-						formControlName="desConsequencias"
-						placeholder="Consequencias"
+					<textarea matInput 
+						formControlName="desConsequencias" 
+						placeholder="Consequências do Incidente de Segurança" 
 						autocomplete="off"
-						type="text"/>
+						[readonly]="codigoIncidente > 0"
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
 				</mat-form-field>
 
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
@@ -246,11 +286,14 @@
 						formControlName="desLinkDocumento"
 						placeholder="Link Documento Incidente"
 						autocomplete="off"
+						[readonly]="indStatus === 2"
 						type="text"/>
 				</mat-form-field>
 
 				<mat-card-actions>
-					<button mat-raised-button class="save-button">Salvar</button>
+					<button *ngIf="indStatus != 2 || codigoIncidente===0" mat-raised-button class="save-button">Salvar</button>
+					<button *ngIf="indStatus === 2 && codigoIncidente!=0" mat-raised-button class="action-button"
+						    (click)="navigateToIncidenteList()">Voltar</button>
 				</mat-card-actions>
 			</form>
 		</div>

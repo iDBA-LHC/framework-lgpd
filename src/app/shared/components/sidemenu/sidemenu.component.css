@@ -52,12 +52,16 @@ mat-sidenav {
 .logo {
   display: block;
   max-height: 50px;
+  height: 80%;
+  padding-top: 5px;
 }
 
 .bottom-img {
   display: block;
   max-height: 230px;
   max-width: 230px;
+  width: 80%;
+  padding-left: 20px;
 }
 
 .bottom-img-wrapper {
@@ -65,6 +69,7 @@ mat-sidenav {
   bottom: 10px;
   left: 10px;
   right: 10px;
+  padding-bottom: 30px;
 }
 
 .logo-bkg{

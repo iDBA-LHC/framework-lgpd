@@ -1,17 +1,22 @@
-<div
+
+<div fxLayout="row" fxLayoutAlign="start end">
+  <div
   fxLayout="row"
   fxLayoutAlign="center"
   fxLayoutGap="gappx"
   class="logo-bkg">
   <img [routerLink]="['/home']" src="./../../../../assets/img/logo.png" class="logo"/>
 </div>
-
-<ng-material-multilevel-menu
-  [configuration]="config"
-  [items]="this.menu"
-  (selectedItem)="selectedItem($event)">
-</ng-material-multilevel-menu>
+<div>
+  <ng-material-multilevel-menu
+    [configuration]="config"
+    [items]="this.menu"
+    (selectedItem)="selectedItem($event)">
+  </ng-material-multilevel-menu>
+</div>
 
 <div class="bottom-img-wrapper">
   <img src="./../../../../assets/img/selo.png" class="bottom-img"/>
+</div>
+
 </div>

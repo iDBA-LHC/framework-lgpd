@@ -16,6 +16,7 @@
     <img src="../../../../assets/img/avatar.png" class="avatar" >
     &nbsp;
     <span class="ml-2">{{ name }}</span>
+    <mat-icon>arrow_drop_down</mat-icon>
   </button>
   <button
     mat-icon-button
@@ -23,15 +24,18 @@
     fxShow.lt-md="true"
     fxShow.gt-sm="false">
     <img src="../../../../assets/img/avatar.png" class="avatar" >
-  </button>  
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
 
   <mat-menu #menu="matMenu" overlapTrigger="false" style="background-color: white;">
-    <button mat-menu-item [routerLink]="['/meu-usuario',userId]">
+    <div style="width: 150px;">
+    <button mat-menu-item [routerLink]="['/meu-usuario',userId]" style="text-align: center;">
       <span>Meu perfil</span>
     </button>
-    <button mat-raised-button class="exit-button" style="left: 24px;" (click)="onLogout()">
+    <button mat-raised-button class="exit-button" style="left: 42px;" (click)="onLogout()">
       <span>Sair</span>
     </button>
+  </div>
   </mat-menu>
   <!--<mat-icon class="ml-3" title="Logout" (click)="onLogout()">exit_to_app</mat-icon>-->
 </mat-toolbar>

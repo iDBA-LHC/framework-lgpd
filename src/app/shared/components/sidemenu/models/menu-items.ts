@@ -109,13 +109,15 @@ export class MenuItems {
 			label: "Registro de Incidente",
 			link: "incidente",
 			icon: "report_problem",
-			hidden: false,
+			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
+					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Solicitação de Titulares",
 			link: "solicitacao-titular",
 			icon: "list_alt",
-			hidden: false,
+			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
+					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Relatórios",

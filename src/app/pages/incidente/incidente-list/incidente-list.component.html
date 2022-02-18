@@ -41,7 +41,7 @@
         </mat-select>
       </mat-form-field>
 
-      <button mat-raised-button class="action-button" style="width: 150px; align-self: center;">
+      <button mat-raised-button class="action-button" style="width: 150px; align-self: center;" (click)="pesquisaIncidentes()">
         <mat-icon>search</mat-icon>Pesquisar
       </button>
 
@@ -60,8 +60,14 @@
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="5px" style="align-self: center;">
-          <div fxLayout="column" fxLayoutAlign="start end" >
-            <a
+          <div fxLayout="row" fxLayoutAlign="start end" >
+            <button 
+               *ngIf="this.dataSource.data.length > 0" 
+               mat-raised-button
+               class="action-button"
+               (click)="gerarRelatorio($event)">Imprimir</button> 
+
+            <a fxFlexOffset="15px"
               mat-raised-button
               class="add-button"
               [routerLink]="['/incidente', '']"
@@ -88,23 +94,31 @@
 
       <ng-container matColumnDef="dataIncidente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Incidente</th>
-        <td mat-cell *matCellDef="let element; let i = index">{{ element.dataIncidente }}</td>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.dataIncidente | date:'dd/MM/yyyy' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="statusIncidente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-        <td mat-cell *matCellDef="let element; let i = index">{{ element.statusIncidente }}</td>
+        <td mat-cell *matCellDef="let element; let i = index">{{ statusIncidenteButtons.buttonsForm[element.indStatus - 1]['description'] }}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <div class="example-button-row">
-            <button
+            <button *ngIf="element.indStatus === 1"
               mat-raised-button
               class="edit-button"
               [routerLink]="['/incidente/', element.codigoIncidente]">
               Editar
+            </button>
+          </div>
+          <div class="example-button-row">
+            <button *ngIf="element.indStatus === 2"
+              mat-raised-button
+              class="action-button"
+              [routerLink]="['/incidente/', element.codigoIncidente]">
+              Visualizar
             </button>
           </div>
         </td>

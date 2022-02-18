@@ -28,7 +28,13 @@ export class HeaderComponent implements OnInit {
   }
 
   public get name() {
-    return this.authService.getLoggedUserName();
+    var nomeAux = this.authService.getLoggedUserName();
+    var iAux = nomeAux.indexOf(" ");
+    if (iAux != -1)
+    {
+      nomeAux = nomeAux.substring(0,iAux);
+    }
+    return nomeAux;
   }
 
   public get userId()
