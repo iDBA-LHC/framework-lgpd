@@ -149,6 +149,12 @@ export class IncidenteFormComponent implements OnInit {
 
 				this.indStatus = retorno.body[0].indStatus;
 				this.form.controls['indRelatorioImpacto'].disable();
+
+				if (this.indStatus === 2)
+				{
+					this.form.controls['indStatus'].disable();
+				}
+
 				this.preencherCombos();
 				this.verificaComunicacaoNoPrazo();
 				
@@ -174,6 +180,7 @@ export class IncidenteFormComponent implements OnInit {
 		{
 			this.form.controls['desJustificativa'].setErrors(null);
 		}
+
 		if (this.form.valid)
 		{
 			const registro: Incidente = this.form.getRawValue();
@@ -307,6 +314,7 @@ export class IncidenteFormComponent implements OnInit {
 						if (usuarioSel)
 						{
 							this.form.controls.usuarioEncarregado.setValue(usuarioSel);
+							this.form.controls.codigoUsuarioEncarregado.setValue(usuarioSel.codigoUsuario);
 							this.form.controls.emailEncarregado.setValue(usuarioSel.emailUsuario);
 						}
 					}
@@ -329,6 +337,7 @@ export class IncidenteFormComponent implements OnInit {
 						if (usuarioSel)
 						{
 							this.form.controls.usuarioOperador.setValue(usuarioSel);
+							this.form.controls.codigoUsuarioOperador.setValue(usuarioSel.codigoUsuario);
 						}
 					}	
 				}
