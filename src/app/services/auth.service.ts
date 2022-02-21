@@ -199,22 +199,25 @@ export class AuthService {
 
   private setSession(authData: AuthData)
   {
-    var token: string = JSON.stringify(authData);
-    if (environment.production)
-    {
-      token = this.aesService.encrypt(token);
-    }
-    localStorage.setItem(this.jwtTokenName, token);
+    var token: string = JSON.stringify(authData);  
     this.loggedUserName  = authData.nomeUsuario;
     this.loggedUserId    = authData.codigoUsuario;
     this.loggedUserType  = authData.indTipoUsuario;
     this.loggedTime      = authData.dataHoraLogin;
-    this.token           = authData.token;
     this.loggedUserEmail = authData.emailUsuario;
     this.loggedEmpresaUser     = JSON.parse(token).codigoEmpresa;
     this.loggedNomeEmpresaUser = JSON.parse(token).nomeEmpresa;
     this.loggedAreaUser        = JSON.parse(token).codigoArea;
     this.loggedNomeAreaUser    = JSON.parse(token).nomeArea;
+
+    if (environment.production)
+    {
+      token = this.aesService.encrypt(token);
+    }
+
+    this.token           = authData.token;
+    localStorage.setItem(this.jwtTokenName, token);
+
     this.loggedIn.next(true);
   }
 
