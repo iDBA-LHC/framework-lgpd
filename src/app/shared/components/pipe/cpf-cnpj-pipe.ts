@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({name: 'cpfCnpj'})
+@Pipe({name: 'cpfCnpjPipe'})
 export class CpfCnpjPipe implements PipeTransform {
 
   transform(value: string): string {

@@ -16,6 +16,7 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 import { environment } from 'src/environments/environment';
 import * as fs from 'file-saver';
 import { DatePipe } from '@angular/common';
+import { CpfCnpjPipe } from 'src/app/shared/components/pipe/cpf-cnpj-pipe';
 
 @Component({
   selector: 'app-incidente-list',
@@ -38,6 +39,8 @@ export class IncidenteListComponent implements OnInit {
 
   listaEmpresas: Empresa[];
   listaEmpresasFiltradas: Observable<Empresa[]>;
+
+  cnpjCpfPipe: CpfCnpjPipe = new CpfCnpjPipe();
 
 
   constructor(
@@ -176,7 +179,7 @@ export class IncidenteListComponent implements OnInit {
             [
                 incidente.numeroProtocolo,
                 incidente.nomeEmpresa,
-                incidente.numeroCNPJEmpresa,
+                this.cnpjCpfPipe.transform(incidente.numeroCNPJEmpresa),
                 incidente.nomeUsuarioOperador,
                 incidente.nomeUsuarioEncarregado,
                 incidente.emailUsuarioEncarregado,
