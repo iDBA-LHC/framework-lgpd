@@ -15,7 +15,6 @@ import { ExcelUtils } from 'src/app/shared/utils/excel-utils';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { environment } from 'src/environments/environment';
 import * as fs from 'file-saver';
-import { DateFormatPipe } from 'src/app/shared/utils/date-format-pipe';
 import { DatePipe } from '@angular/common';
 
 @Component({

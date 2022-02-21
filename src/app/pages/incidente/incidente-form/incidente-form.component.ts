@@ -13,7 +13,7 @@ import { EmpresaService } from 'src/app/services/empresa.service';
 import { IncidenteService } from 'src/app/services/incidente.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
-import { DateFormatPipe } from 'src/app/shared/utils/date-format-pipe';
+import { DateFormatPipe } from 'src/app/shared/components/pipe/date-format-pipe';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { environment } from 'src/environments/environment';
 
