@@ -64,7 +64,7 @@ export class IncidenteListComponent implements OnInit {
 
       if (!this.usuarioAdmin)
       {
-          this.form.controls.codigoEmpresa.setValue(this.authService.getLoggedEmpresaUser());
+          this.form.controls['codigoEmpresa'].setValue(this.authService.getLoggedEmpresaUser());
       }
 
       this.pesquisaIncidentes();

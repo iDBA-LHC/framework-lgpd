@@ -75,6 +75,7 @@ export class AuthService {
       this.loggedAreaUser = JSON.parse(token).codigoArea;
       this.loggedNomeAreaUser = JSON.parse(token).nomeArea;
       this.token = JSON.parse(token).token;
+
       this.loggedIn.next(true);
     }
   }
@@ -210,6 +211,10 @@ export class AuthService {
     this.loggedTime      = authData.dataHoraLogin;
     this.token           = authData.token;
     this.loggedUserEmail = authData.emailUsuario;
+    this.loggedEmpresaUser     = JSON.parse(token).codigoEmpresa;
+    this.loggedNomeEmpresaUser = JSON.parse(token).nomeEmpresa;
+    this.loggedAreaUser        = JSON.parse(token).codigoArea;
+    this.loggedNomeAreaUser    = JSON.parse(token).nomeArea;
     this.loggedIn.next(true);
   }
 
