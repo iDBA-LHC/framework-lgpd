@@ -137,13 +137,18 @@
 				<div style="width: 50%;" fxFlexOffset="5px">
 					<mat-form-field fxFlex style="width: 50%;" >
 						<mat-label>Data de Comunicação</mat-label>
-						<input
-							matInput
-							formControlName="dataComunicacao"
-							[readonly]="codigoIncidente > 0"
-							placeholder="Data Comunicação"
-							(blur)="verificaComunicacaoNoPrazo()"
-							type="date"/>
+							<input matInput [matDatepicker]="pickerComunicacao" 
+								placeholder="Selecione a de Comunicação"
+								[readonly]="codigoIncidente > 0"
+								(blur)="verificaComunicacaoNoPrazo()"                           
+								[formControl]="form.controls.dataComunicacao">
+								<mat-datepicker-toggle  matSuffix [for]="pickerComunicacao"></mat-datepicker-toggle>
+								<ngx-mat-datetime-picker #pickerComunicacao
+									[showSpinners]="false"
+									[hideTime]="true"
+									(closed)="verificaComunicacaoNoPrazo()"
+									[disabled]="codigoIncidente > 0"></ngx-mat-datetime-picker>	
+
 						<mat-error *ngIf="form.controls.dataComunicacao.errors?.required">Data de Comunicação do Incidente é Obrigatória</mat-error>
 					</mat-form-field>
 					<div style="width: 50%;" fxFlexOffset="5px">

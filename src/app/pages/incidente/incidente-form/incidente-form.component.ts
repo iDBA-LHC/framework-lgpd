@@ -390,9 +390,7 @@ export class IncidenteFormComponent implements OnInit {
 		var dataComunicacao = new Date(this.form.controls['dataComunicacao'].value);
 		var dataHoraIncidente = new Date(this.form.controls['dataIncidente'].value);
 
-		dataComunicacao.setHours(dataComunicacao.getHours() + 3);
-
-		if (this.datediff(dataHoraIncidente, dataComunicacao) >= 2)
+		if (this.datediff(dataHoraIncidente, dataComunicacao) > 2)
 		{
 			this.indNoPrazo = false;
 		}
