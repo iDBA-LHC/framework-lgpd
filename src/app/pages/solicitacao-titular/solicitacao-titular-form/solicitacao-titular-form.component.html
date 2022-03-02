@@ -1,0 +1,239 @@
+
+<mat-card class="marginContent">
+	<div class="mat-elevation-z8">
+
+		<div *ngIf="isLoading" class="overlay-spinner">
+			<div class="center-spinner">
+				<mat-spinner style="align-self: center; margin: 0 auto;"></mat-spinner>
+			</div>
+		</div>
+
+		<div>
+			<form fxLayout="row wrap" fxLayout="column" fxLayoutAlign="space-between center" fxFlex="100"
+				fxFlex.gt-sm="100" [formGroup]="form" (submit)="salvar()">
+
+				<mat-card-header>
+					<mat-card-title>
+						<h2 *ngIf="!codigoSolicitacaoTitular">Novo Solicitação de Titular</h2>
+						<h2 *ngIf="codigoSolicitacaoTitular && indStatus === 1">Editar Solicitação de Titular</h2>
+						<h2 *ngIf="codigoSolicitacaoTitular && indStatus === 2">Visualizar Solicitação de Titular</h2>
+					</mat-card-title>
+				</mat-card-header>
+				
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Protocolo</mat-label>
+					<input
+						matInput
+						formControlName="numeroProtocolo"
+						placeholder="Protocolo"
+						autocomplete="off"
+						readonly="true"
+						type="text"/>
+				</mat-form-field>
+
+				<div style="width: 50%;" fxFlexOffset="10px">
+
+					<mat-form-field style="width: 60%;">
+						<mat-label>Controladora</mat-label>
+						<input matInput 
+							formControlName="empresa" 
+							placeholder="Controladora" 
+							[matAutocomplete]="autoEmpresa" 
+							[readonly]="codigoSolicitacaoTitular > 0 || usuarioAdmin === false"/>
+
+						<mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
+							(optionSelected)="selecionaEmpresa($event)">
+							<mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+								{{empresa.nomeEmpresa}}
+							</mat-option>
+						</mat-autocomplete>
+						<mat-error *ngIf="form.controls.empresa.errors?.required">Controladora é Obrigatória</mat-error>
+					</mat-form-field>
+
+					<mat-form-field style="width: 40%;" fxFlexOffset="5px">
+						<mat-label>CNPJ</mat-label>
+						<input matInput formControlName="numeroCNPJ" placeholder="CNPJ" 
+								[readonly]="true"
+								type="text"
+								mask="00.000.000/0000-00"/>
+					</mat-form-field>
+
+				</div>
+				
+				<div style="width: 50%;" fxFlexOffset="10px">
+					<mat-form-field style="width: 70%;">
+						<mat-label>E-Mail Encarregado</mat-label>
+						<input matInput formControlName="emailEncarregado" placeholder="E-Mail Encarregado" 
+								[readonly]="true"
+								type="text"/>
+					</mat-form-field>
+					<mat-form-field style="width: 30%;" fxFlexOffset="5px">
+						<mat-label>Telefone Controladora</mat-label>
+						<input matInput formControlName="telefoneControlador" placeholder="Telefone Controladora" 
+								[readonly]="true"
+								type="text"/>
+					</mat-form-field>
+				</div>
+
+				<div style="width: 50%;" fxFlexOffset="5px">
+					<mat-form-field fxFlex style="width: 50%;" >
+						<mat-label>Data de Comunicação</mat-label>
+							<input matInput [matDatepicker]="pickerComunicacao" 
+								placeholder="Selecione a de Comunicação"
+                      
+								[formControl]="form.controls.dataComunicacao">
+								<mat-datepicker-toggle  matSuffix [for]="pickerComunicacao"></mat-datepicker-toggle>
+								<ngx-mat-datetime-picker #pickerComunicacao
+									[showSpinners]="false"
+									[hideTime]="true"></ngx-mat-datetime-picker>	
+
+						<mat-error *ngIf="form.controls.dataComunicacao.errors?.required">Data de Comunicação do Incidente é Obrigatória</mat-error>
+					</mat-form-field>
+
+				</div>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Justificativa</mat-label>
+					<textarea matInput formControlName="desJustificativa" 
+
+						placeholder="Justificativa Para Comunicação Fora do Prazo"
+						autocomplete="off"
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
+				</mat-form-field>
+
+				<mat-form-field style="width: 50%;" fxFlexOffset="10px">
+					<mat-label>Status</mat-label>
+					<mat-select
+						placeholder="Status"
+						formControlName="indStatus">
+			
+						<mat-option
+							*ngFor="let button of statusSolicitacaoTitularButtons.buttonsForm"
+							[value]="button.cod">{{ button.description }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Tipo de Comunicação</mat-label>
+					<input
+						matInput
+						formControlName="desTipoComunicacao"
+						placeholder="Tipo de Comunicação"
+						autocomplete="off"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Dados do Agente de Tratamento</mat-label>
+					<input
+						matInput
+						formControlName="dadosAgenteTratamento"
+						placeholder="Dados do Agente de Tratamento"
+						autocomplete="off"
+						
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Dados do Notificante</mat-label>
+					<input
+						matInput
+						formControlName="dadosNotificante"
+						placeholder="Dados do Notificante"
+						autocomplete="off"
+						
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Detalhes</mat-label>
+					<textarea matInput 
+						formControlName="desDetalhes" 
+						placeholder="Detalhes do Incidente de Segurança" 
+						autocomplete="off"
+						[readonly]="indStatus === 2"
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Natureza dos Dados Afetados</mat-label>
+					<input
+						matInput
+						formControlName="desNaturezaDados"
+						placeholder="Natureza dos Dados Afetados"
+						autocomplete="off"
+						
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Tipo Titulares Afetados</mat-label>
+					<input
+						matInput
+						formControlName="desTipoTitulares"
+						placeholder="Tipo dos Titulares Afetados"
+						autocomplete="off"
+						
+						type="text"/>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Medidas Preventivas</mat-label>
+					<textarea matInput 
+						formControlName="desMedidasPreventivas" 
+						placeholder="Medidas Preventivas do Incidente de Segurança" 
+						autocomplete="off"
+						
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Medidas Mitigatórias</mat-label>
+					<textarea matInput 
+						formControlName="desMedidasMitigatorias" 
+						placeholder="Medidas Mitigatórias do Incidente de Segurança" 
+						autocomplete="off"
+						
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
+				</mat-form-field>
+
+				<mat-slide-toggle color="primary" fxLayoutGap="10px" fxFlexOffset="10px" fxFlex="30" formControlName="indRelatorioImpacto" style="width: 50%;">
+					<span class="ng-tns-c15-3 ng-star-inserted">Relatório de Impacto</span>
+				</mat-slide-toggle>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Consequências</mat-label>
+					<textarea matInput 
+						formControlName="desConsequencias" 
+						placeholder="Consequências do Incidente de Segurança" 
+						autocomplete="off"
+						
+						type="textField" resizeToFitContent="true" rows="5">
+					</textarea>
+				</mat-form-field>
+
+				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+					<mat-label>Link Documento Incidente</mat-label>
+					<input
+						matInput
+						formControlName="desLinkDocumento"
+						placeholder="Link Documento Incidente"
+						autocomplete="off"
+						[readonly]="indStatus === 2"
+						type="text"/>
+				</mat-form-field>
+
+				<mat-card-actions>
+					<button *ngIf="indStatus != 2 || codigoSolicitacaoTitular===0" mat-raised-button class="save-button">Salvar</button>
+					<button *ngIf="indStatus === 2 && codigoSolicitacaoTitular!=0" mat-raised-button class="action-button"
+						    (click)="navigateToSolicitacaoList()">Voltar</button>
+				</mat-card-actions>
+			</form>
+		</div>
+	</div>
+</mat-card>

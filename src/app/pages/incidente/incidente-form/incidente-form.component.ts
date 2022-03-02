@@ -6,7 +6,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Empresa } from 'src/app/models/empresa/empresa';
 import { StatusIncidenteButtons } from 'src/app/models/incidente/buttons/status-incidente-buttons';
 import { Incidente } from 'src/app/models/incidente/incidente';
-import { Protocolo } from 'src/app/models/incidente/protocolo';
+import { Protocolo } from 'src/app/models/protocolo/protocolo';
 import { Usuario } from 'src/app/models/usuario/usuario';
 import { AuthService } from 'src/app/services/auth.service';
 import { EmpresaService } from 'src/app/services/empresa.service';

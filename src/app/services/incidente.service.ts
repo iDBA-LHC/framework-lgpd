@@ -1,10 +1,9 @@
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Data } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Incidente } from '../models/incidente/incidente';
-import { Protocolo } from '../models/incidente/protocolo';
+import { Protocolo } from '../models/protocolo/protocolo';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -13,8 +12,7 @@ import { AuthService } from './auth.service';
 export class IncidenteService {
 
   apiSuffix = "incidente/";
-  constructor(private http: HttpClient,
-    private authService: AuthService) { }
+  constructor(private http: HttpClient) { }
 
   pesquisaProximoProtocolo() {
     return this.http.get<Protocolo>(`${environment.apiURL}${this.apiSuffix}protocolo/1`, { observe: "response" });

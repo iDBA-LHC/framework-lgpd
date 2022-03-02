@@ -18,5 +18,20 @@ export class StatusSolicitacaoTitularButtons {
             cod:0,
             description: "Todas"
         }
+    ];
+
+    buttonsForm: AbstractButton[] = [
+        {
+            cod: 1,
+            description: "Em Andamento"
+        },
+        {
+            cod: 2,
+            description: "Fechada"
+        },
+        {
+            cod: 3,
+            description: "Indeferida"
+        },
     ]
 }
