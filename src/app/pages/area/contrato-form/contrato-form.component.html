@@ -59,12 +59,11 @@
 
               <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
                 <mat-label>Observações</mat-label>
-                <input
-                    matInput
-                    formControlName="obsContrato"
-                    placeholder="Observações"
-                    autocomplete="off"
-                    type="text"/>
+                <textarea matInput formControlName="obsContrato" 
+						          placeholder="Observações"
+						          autocomplete="off"
+						          type="textField" resizeToFitContent="true" rows="5">
+                </textarea>
             </mat-form-field>
   
             <mat-card-actions>
