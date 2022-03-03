@@ -7,7 +7,7 @@ import { SolicitacaoTitularRoutingModule } from './solicitacao-titular-routing.m
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule, SolicitacaoTitularRoutingModule
+    CommonModule, SolicitacaoTitularRoutingModule,
   ]
 })
 export class SolicitacaoTitularModule { }

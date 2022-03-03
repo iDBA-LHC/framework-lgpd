@@ -70,14 +70,11 @@
                 <mat-error *ngIf="form.controls['cpfRepresentante'].hasError('invalidCPF')">CPF Informado não é Válido</mat-error>
             </mat-form-field>
     
-            <button mat-raised-button class="action-button" style="width: 150px; align-self: center;">
+            <button mat-raised-button class="action-button" style="width: 150px; align-self: center;" (click)="pesquisaSolicitaoesTitular()">
                 <mat-icon>search</mat-icon>Pesquisar
             </button>
-
         </div>
-  
       </form>
-  
     </div>
   
   
@@ -92,6 +89,13 @@
           </div>
           <div fxLayout="row" fxLayoutGap="5px" style="align-self: center;">
             <div fxLayout="column" fxLayoutAlign="start end" >
+              <button 
+                *ngIf="this.dataSource.data.length > 0" 
+                mat-raised-button
+                class="action-button"
+                style="align-self: baseline;"
+                (click)="gerarRelatorio($event)">Imprimir</button> 
+
               <a
                 mat-raised-button
                 class="add-button"
@@ -119,23 +123,31 @@
   
         <ng-container matColumnDef="dataSolicitacao">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Solicitação</th>
-          <td mat-cell *matCellDef="let element; let i = index">{{ element.dataSolicitacao }}</td>
+          <td mat-cell *matCellDef="let element; let i = index">{{ element.dataInclusao | date:'dd/MM/yyyy' }}</td>
         </ng-container>
   
         <ng-container matColumnDef="statusSolicitacao">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-          <td mat-cell *matCellDef="let element; let i = index">{{ element.statusSolicitacao }}</td>
+          <td mat-cell *matCellDef="let element; let i = index">{{ statusSolicitacaoButtons.buttonsForm[element.indStatus - 1]['description'] }}</td>
         </ng-container>
   
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
             <div class="example-button-row">
-              <button
+              <button *ngIf="element.indStatus === 1"
                 mat-raised-button
                 class="edit-button"
-                [routerLink]="['/solicitacao-titular/', element.codigoIncidente]">
+                [routerLink]="['/solicitacao-titular/', element.codigoSolicitacaoTitular]">
                 Editar
+              </button>
+            </div>
+            <div class="example-button-row">
+              <button *ngIf="element.indStatus === 2 || element.indStatus === 3"
+                mat-raised-button
+                class="action-button"
+                [routerLink]="['/solicitacao-titular/', element.codigoSolicitacaoTitular]">
+                Visualizar
               </button>
             </div>
           </td>

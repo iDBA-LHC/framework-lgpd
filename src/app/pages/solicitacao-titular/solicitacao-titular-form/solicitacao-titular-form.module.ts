@@ -7,8 +7,17 @@ import { SolicitacaoTitularFormRoutingModule } from './solicitacao-titular-form-
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
+import localeBr from '@angular/common/locales/br';
+import { registerLocaleData } from '@angular/common';
 
+registerLocaleData(localeBr, 'pt-BR');
 
+export const options: Partial<IConfig> = {
+  decimalMarker: ",",
+  validation: false,
+  showMaskTyped: true,
+};
 
 @NgModule({
   declarations: [SolicitacaoTitularFormComponent],
@@ -17,7 +26,8 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
     ReactiveFormsModule,
     SharedModule,
     NgxMatMomentModule,
-    SolicitacaoTitularFormRoutingModule
+    SolicitacaoTitularFormRoutingModule,
+    NgxMaskModule.forRoot(options),
   ],
   providers:
   [
