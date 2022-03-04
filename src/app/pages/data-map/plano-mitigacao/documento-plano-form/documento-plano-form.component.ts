@@ -132,6 +132,6 @@ export class DocumentoPlanoFormComponent implements OnInit {
 
   navigateToPlanoMitigacao()
 	{
-    this.router.navigate(["data-analisys-map", this.codDataMap, "plano-mitigacao", this.codPlanoMitigacao]);
+    this.router.navigate(["/priva/data-analisys-map", this.codDataMap, "plano-mitigacao", this.codPlanoMitigacao]);
 	}
 }

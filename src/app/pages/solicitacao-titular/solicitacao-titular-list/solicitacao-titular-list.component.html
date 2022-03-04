@@ -99,7 +99,7 @@
               <a
                 mat-raised-button
                 class="add-button"
-                [routerLink]="['/solicitacao-titular', '']"
+                [routerLink]="['/priva/solicitacao-titular', '']"
                 routerLinkActive="active">
                 <mat-icon>add</mat-icon>Nova Solicitação</a>
             </div>
@@ -138,7 +138,7 @@
               <button *ngIf="element.indStatus === 1"
                 mat-raised-button
                 class="edit-button"
-                [routerLink]="['/solicitacao-titular/', element.codigoSolicitacaoTitular]">
+                [routerLink]="['/priva/solicitacao-titular/', element.codigoSolicitacaoTitular]">
                 Editar
               </button>
             </div>
@@ -146,7 +146,7 @@
               <button *ngIf="element.indStatus === 2 || element.indStatus === 3"
                 mat-raised-button
                 class="action-button"
-                [routerLink]="['/solicitacao-titular/', element.codigoSolicitacaoTitular]">
+                [routerLink]="['/priva/solicitacao-titular/', element.codigoSolicitacaoTitular]">
                 Visualizar
               </button>
             </div>

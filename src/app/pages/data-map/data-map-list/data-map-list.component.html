@@ -14,17 +14,17 @@
             
 			<a *ngIf="indTipo == 0"
 			  mat-raised-button class="add-button"
-              [routerLink]="['/data-map', '']" routerLinkActive="active">
+              [routerLink]="['/priva/data-map', '']" routerLinkActive="active">
               <mat-icon>add</mat-icon>Novo Data Map</a>
 
 			<a *ngIf="indTipo == 1"
 			  mat-raised-button class="add-button"
-              [routerLink]="['/data-analisys-map', '']" routerLinkActive="active">
+              [routerLink]="['/priva/data-analisys-map', '']" routerLinkActive="active">
               <mat-icon>add</mat-icon>Novo Data Analisys Map</a>
 
       <a *ngIf="indTipo == 2"
 			  mat-raised-button class="add-button"
-              [routerLink]="['/data-governance-map', '']" routerLinkActive="active">
+              [routerLink]="['/priva/data-governance-map', '']" routerLinkActive="active">
               <mat-icon>add</mat-icon>Novo Data Governance Map</a>        
 
           </div>
@@ -71,9 +71,9 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
             <div class="example-button-row">
-              <button *ngIf="indTipo == 0" mat-raised-button class="edit-button" [routerLink]="['/data-map', element.codDataMap]">Editar</button>
-			        <button *ngIf="indTipo == 1" mat-raised-button class="edit-button" [routerLink]="['/data-analisys-map', element.codDataMap]">Editar</button>
-              <button *ngIf="indTipo == 2" mat-raised-button class="edit-button" [routerLink]="['/data-governance-map', element.codDataMap]">Editar</button>
+              <button *ngIf="indTipo == 0" mat-raised-button class="edit-button" [routerLink]="['/priva/data-map', element.codDataMap]">Editar</button>
+			        <button *ngIf="indTipo == 1" mat-raised-button class="edit-button" [routerLink]="['/priva/data-analisys-map', element.codDataMap]">Editar</button>
+              <button *ngIf="indTipo == 2" mat-raised-button class="edit-button" [routerLink]="['/priva/data-governance-map', element.codDataMap]">Editar</button>
             </div>
           </td>
         </ng-container>

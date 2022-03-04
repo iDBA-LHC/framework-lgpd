@@ -84,7 +84,7 @@ export class BaseLegalFormComponent implements OnInit {
         this.baseLegalService.alterarBaseLegal(baseLegal).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Base Legal ${baseLegal.nomeBase} foi atualizada com sucesso!`,null);
-            this.router.navigate(["/base-legal"]);
+            this.router.navigate(["/priva/base-legal"]);
           },
           (err) => {
             if (err.status === 401)
@@ -102,7 +102,7 @@ export class BaseLegalFormComponent implements OnInit {
         this.baseLegalService.incluirBaseLegal(baseLegal).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Base Legal ${baseLegal.nomeBase} foi criada com sucesso!`,null);
-            this.router.navigate(["/base-legal"]);
+            this.router.navigate(["/priva/base-legal"]);
           },
           (err) => {
             if (err.status === 401)

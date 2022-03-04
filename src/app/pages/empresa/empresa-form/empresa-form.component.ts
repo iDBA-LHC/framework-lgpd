@@ -177,7 +177,7 @@ export class EmpresaFormComponent implements OnInit {
         this.empresaService.alterarEmpresa(empresa).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Controladora ${empresa.nomeEmpresa} Foi Atualizada com Sucesso!`,null);
-            this.router.navigate(["/controladora"]);
+            this.router.navigate(["/priva/controladora"]);
           },
           (err) => {
             if (err.status === 401)
@@ -197,7 +197,7 @@ export class EmpresaFormComponent implements OnInit {
         this.empresaService.incluirEmpresa(empresa).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Controladora ${empresa.nomeEmpresa} foi Criada com Sucesso!`,null);
-            this.router.navigate(["/controladora"]);
+            this.router.navigate(["/priva/controladora"]);
           },
           (err) => {
             if (err.status === 401)

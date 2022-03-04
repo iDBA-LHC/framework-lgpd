@@ -132,7 +132,7 @@ export class NovaSenhaComponent implements OnInit {
         this.isLoading = false;
         this.snackBar.openSnackBar(
           `Senha do Usuário ${this.usuario.nomeUsuario} foi alterada com sucesso.`, null);
-          this.router.navigate(["/home"]);
+          this.router.navigate(["/public/sign-in"]);
       },
       (err) => {
         {

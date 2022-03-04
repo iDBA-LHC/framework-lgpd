@@ -86,7 +86,7 @@ export class ContratoFormComponent implements OnInit {
         this.contratoService.alterarContrato(contrato).subscribe(
           (retorno) => {
             this.snackBar.openSnackBar(`O Contrato ${contrato.objetoContrato} foi atualizado com sucesso!`,null);
-            this.router.navigate(["area", this.areaId, "processo", this.processoId]);
+            this.router.navigate(["/priva/area", this.areaId, "processo", this.processoId]);
           },
           (err) => {
             if (err.status === 401)
@@ -103,7 +103,7 @@ export class ContratoFormComponent implements OnInit {
         this.contratoService.incluirContrato(contrato).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Contrato ${contrato.objetoContrato} for criado com sucesso!`, null);
-            this.router.navigate(["area", this.areaId, "processo", this.processoId])
+            this.router.navigate(["/priva/area", this.areaId, "processo", this.processoId])
           },
           (err) => {
             if (err.status === 401)
@@ -125,7 +125,7 @@ export class ContratoFormComponent implements OnInit {
 
   navigateToProcesso()
 	{
-    this.router.navigate(["area", this.areaId, "processo", this.processoId])
+    this.router.navigate(["/priva/area", this.areaId, "processo", this.processoId])
 	}
 
 }

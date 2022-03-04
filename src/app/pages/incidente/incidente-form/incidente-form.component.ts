@@ -424,7 +424,7 @@ export class IncidenteFormComponent implements OnInit {
 
 	navigateToIncidenteList()
 	{
-		this.router.navigate(["/incidente"]);
+		this.router.navigate(["/priva/incidente"]);
 	}
 
 	private requiredIfValidator(predicate) {

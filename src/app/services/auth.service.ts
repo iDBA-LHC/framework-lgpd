@@ -94,7 +94,7 @@ export class AuthService {
         this.setSession(authData);
         this.loggedIn.next(true);
         this.snackBar.openSnackBar("Bem vindo!", null);
-        this.router.navigate(["/"]);
+        this.router.navigate(["/priva/"]);
       },
       err=>{
         TrataExcessaoConexao.TrataExcessao(err, this.snackBar);

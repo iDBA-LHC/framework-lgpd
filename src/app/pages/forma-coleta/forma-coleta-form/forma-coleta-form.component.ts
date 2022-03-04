@@ -82,7 +82,7 @@ export class FormaColetaFormComponent implements OnInit {
         this.formaColetaService.alterarFormaColeta(formaColeta).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Forma Coleta ${formaColeta.nomeFormaColeta} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/forma-coleta"]);
+            this.router.navigate(["/priva/forma-coleta"]);
           },
           (err) => {
             if (err.status === 401)
@@ -100,7 +100,7 @@ export class FormaColetaFormComponent implements OnInit {
         this.formaColetaService.incluirFormaColeta(formaColeta).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Forma Coleta ${formaColeta.nomeFormaColeta} foi criada com sucesso!`,null);
-            this.router.navigate(["/forma-coleta"]);
+            this.router.navigate(["/priva/forma-coleta"]);
           },
           (err) => {
             if (err.status === 401)

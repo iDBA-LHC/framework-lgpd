@@ -68,7 +68,7 @@
             <a fxFlexOffset="15px"
               mat-raised-button
               class="add-button"
-              [routerLink]="['/incidente', '']"
+              [routerLink]="['/priva/incidente', '']"
               routerLinkActive="active">
               <mat-icon>add</mat-icon>Novo Incidente</a>
           </div>
@@ -107,7 +107,7 @@
             <button *ngIf="element.indStatus === 1"
               mat-raised-button
               class="edit-button"
-              [routerLink]="['/incidente/', element.codigoIncidente]">
+              [routerLink]="['/priva/incidente/', element.codigoIncidente]">
               Editar
             </button>
           </div>
@@ -115,7 +115,7 @@
             <button *ngIf="element.indStatus === 2"
               mat-raised-button
               class="action-button"
-              [routerLink]="['/incidente/', element.codigoIncidente]">
+              [routerLink]="['/priva/incidente/', element.codigoIncidente]">
               Visualizar
             </button>
           </div>

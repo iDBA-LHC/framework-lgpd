@@ -90,7 +90,7 @@ export class MudaSenhaComponent implements OnInit {
           `Senha do Usuário ${this.authService.loggedUserName} foi alterada com sucesso.`, null);
         if (this.authService.isLoggedIn)
         {
-          this.router.navigate(["/meu-usuario",usuario.codigoUsuario]);
+          this.router.navigate(["/priva/meu-usuario",usuario.codigoUsuario]);
         }
       },
       (err) => {

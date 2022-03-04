@@ -82,7 +82,7 @@ export class CicloDeVidaFormComponent implements OnInit {
         this.cicloDeVidaService.alterarCicloDeVida(cicloDeVida).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Ciclo De Vida ${cicloDeVida.nomeCicloVida} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/ciclo-de-vida"]);
+            this.router.navigate(["/priva/ciclo-de-vida"]);
           },
           (err) => {
             if (err.status === 401)
@@ -100,7 +100,7 @@ export class CicloDeVidaFormComponent implements OnInit {
         this.cicloDeVidaService.incluirCicloDeVida(cicloDeVida).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Ciclo De Vida ${cicloDeVida.nomeCicloVida} foi criada com sucesso!`,null);
-            this.router.navigate(["/ciclo-de-vida"]);
+            this.router.navigate(["/priva/ciclo-de-vida"]);
           },
           (err) => {
             if (err.status === 401)

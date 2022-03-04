@@ -149,7 +149,7 @@ export class UsuarioFormComponent implements OnInit {
           this.usuarioService.alterarUsuario(usuario).subscribe(
             (response) => {
               this.snackBar.openSnackBar(`O Usuário ${usuario.nomeUsuario} foi atualizado com sucesso!`,null);
-              this.router.navigate(["/usuario"]);
+              this.router.navigate(["/priva/usuario"]);
             },
             (err) => {
               if (err.status === 401)
@@ -170,7 +170,7 @@ export class UsuarioFormComponent implements OnInit {
         this.usuarioService.incluirUsuario(usuario).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Usuário ${usuario.nomeUsuario} foi criado com sucesso!`,null);
-            this.router.navigate(["/usuario"]);
+            this.router.navigate(["/priva/usuario"]);
           },
           (err) => {
             if (err.status === 401)
@@ -193,7 +193,7 @@ export class UsuarioFormComponent implements OnInit {
   alterarSenha($event)
   {
     $event.preventDefault();
-    this.router.navigate(["/muda-senha"]);
+    this.router.navigate(["/priva/muda-senha"]);
   }
 
   gerarSenha($event)

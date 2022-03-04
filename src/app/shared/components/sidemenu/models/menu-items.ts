@@ -17,68 +17,68 @@ export class MenuItems {
 			[
 				{
 					label: "Usuário",
-					link: "usuario",
+					link: "priva/usuario",
 					icon: "account_circle",
 					hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
 				}, 
 				{
 					label: "Controladora",
-					link: "controladora",
+					link: "priva/controladora",
 					icon: "work",
 					hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ? false : true,
 				}, {
 					label: "Área",
-					link: "area",
+					link: "priva/area",
 					icon: "event_seat",
 					hidden: false,
 				}, {
 					label: "Base Legal",
-					link: "base-legal",
+					link: "priva/base-legal",
 					icon: "account_balance",
 					hidden: false,
 				}, {
 					label: "Ciclo de Vida",
-					link: "ciclo-de-vida",
+					link: "priva/ciclo-de-vida",
 					icon: "donut_large",
 					hidden: false,
 				}, {
 					label: "Forma de Coleta",
-					link: "forma-coleta",
+					link: "priva/forma-coleta",
 					icon: "wifi_protected_setup",
 					hidden: false,
 				}, {
 					label: "Metadados",
-					link: "metadados",
+					link: "priva/metadados",
 					icon: "vertical_split",
 					hidden: false,
 				}, {
 					label: "Compartilhamento",
-					link: "compartilhamento",
+					link: "priva/compartilhamento",
 					icon: "mobile_screen_share",
 					hidden: false,
 				}, {
 					label: "Armazenamento",
-					link: "local-armazenamento",
+					link: "priva/local-armazenamento",
 					icon: "inventory_2",
 					hidden: false,
 				}, {
 					label: "Risco",
-					link: "risco",
+					link: "priva/risco",
 					icon: "report",
 					hidden: false,
 				}, {
 					label: "Risco Associado",
-					link: "risco-associado",
+					link: "priva/risco-associado",
 					icon: "apps_outage",
 					hidden: false,
 				}, {
 					label: "Ameaças",
-					link: "ameaca",
+					link: "priva/ameaca",
 					icon: "social_distance",
 					hidden: false,
 				}, {
 					label: "Ciclo Monitoramento",
-					link: "ciclo-monitoramento",
+					link: "priva/ciclo-monitoramento",
 					icon: "settings_backup_restore",
 					hidden: false,
 				}
@@ -86,35 +86,35 @@ export class MenuItems {
 		},	
 		{
 			label: "Data Flow",
-			link: "data-flow",
+			link: "priva/data-flow",
 			icon: "account_tree",
 			hidden: false,
     	}, {
 			label: "Data Map",
-			link: "data-map",
+			link: "priva/data-map",
 			icon: "travel_explore",
 			hidden: false,
 		}, {
 			label: "Data Analisys Map",
-			link: "data-analisys-map",
+			link: "priva/data-analisys-map",
 			icon: "travel_explore",
 			hidden: false,
 		}, {
 			label: "Data Governance Map",
-			link: "data-governance-map",
+			link: "priva/data-governance-map",
 			icon: "travel_explore",
 			hidden: false,
     	},
 		{
 			label: "Registro de Incidente",
-			link: "incidente",
+			link: "priva/incidente",
 			icon: "report_problem",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Solicitação de Titulares",
-			link: "solicitacao-titular",
+			link: "priva/solicitacao-titular",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
@@ -128,19 +128,19 @@ export class MenuItems {
 			[
 				{
 					label: "Tratamento Dados",
-					link: "mapa-tratamento-dados",
+					link: "priva/mapa-tratamento-dados",
 					icon: "travel_explore",
 					hidden: false,
 				}, 
 				{
 					label: "Contratos",
-					link: "inventario-contratos",
+					link: "priva/inventario-contratos",
 					icon: "work",
 					hidden: false,
 				},
 				{
 					label: "Riscos",
-					link: "mapa-riscos",
+					link: "priva/mapa-riscos",
 					icon: "travel_explore",
 					hidden: false,
 				}

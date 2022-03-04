@@ -91,7 +91,7 @@ export class RiscoFormComponent implements OnInit {
         this.service.alterar(registro).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Risco ${registro.nomeRisco} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/risco"]);
+            this.router.navigate(["/priva/risco"]);
           },
           (err) => {
             if (err.status === 401)
@@ -109,7 +109,7 @@ export class RiscoFormComponent implements OnInit {
         this.service.incluir(registro).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Risco ${registro.nomeRisco} foi criado com sucesso!`,null);
-            this.router.navigate(["/risco"]);
+            this.router.navigate(["/priva/risco"]);
           },
           (err) => {
             if (err.status === 401)

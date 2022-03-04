@@ -93,7 +93,7 @@
             <a
               mat-raised-button
               class="add-button"
-              [routerLink]="['/area', areaId, 'processo', '']"
+              [routerLink]="['/priva/area', areaId, 'processo', '']"
               routerLinkActive="active">
               <mat-icon>add</mat-icon>Novo Processo</a>
           </div>
@@ -114,7 +114,7 @@
                 <button
                   mat-raised-button
                   class="edit-button"
-                  [routerLink]="['/area', element.codArea, 'processo', element.codProcesso]">
+                  [routerLink]="['/priva/area', element.codArea, 'processo', element.codProcesso]">
                   Editar
                 </button>
                 <button

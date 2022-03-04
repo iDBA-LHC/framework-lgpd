@@ -90,7 +90,7 @@ export class MetadadosFormComponent implements OnInit {
         this.metadadosService.alterarMetadados(metadados).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Metadados ${metadados.nomeMetadados} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/metadados"]);
+            this.router.navigate(["/priva/metadados"]);
           },
           (err) => {
             if (err.status === 401)
@@ -108,7 +108,7 @@ export class MetadadosFormComponent implements OnInit {
         this.metadadosService.incluirMetadados(metadados).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Metadados ${metadados.nomeMetadados} foi criado com sucesso!`,null);
-            this.router.navigate(["/metadados"]);
+            this.router.navigate(["/priva/metadados"]);
           },
           (err) => {
             if (err.status === 401)

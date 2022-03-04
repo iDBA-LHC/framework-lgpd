@@ -79,7 +79,7 @@ export class AmeacaFormComponent implements OnInit {
         this.ameacaService.alterarAmeaca(ameaca).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Ameaça ${ameaca.nomeAmeaca} foi atualizada com sucesso!`,null);
-            this.router.navigate(["/ameaca"]);
+            this.router.navigate(["/priva/ameaca"]);
           },
           (err) => {
             if (err.status === 401)
@@ -97,7 +97,7 @@ export class AmeacaFormComponent implements OnInit {
         this.ameacaService.incluirAmeaca(ameaca).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Ameaça ${ameaca.nomeAmeaca} foi criada com sucesso!`,null);
-            this.router.navigate(["/ameaca"]);
+            this.router.navigate(["/priva/ameaca"]);
           },
           (err) => {
             if (err.status === 401)

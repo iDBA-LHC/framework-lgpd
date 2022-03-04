@@ -239,15 +239,15 @@ export class DataMapFormComponent implements OnInit {
 							{
 								if (this.indTipo==0)
 								{
-									this.router.navigate(["/data-map"]);
+									this.router.navigate(["/priva/data-map"]);
 								}
 								else if (this.indTipo==1)
 								{
-									this.router.navigate(["/data-analisys-map"]);
+									this.router.navigate(["/priva/data-analisys-map"]);
 								}
 								else
 								{
-									this.router.navigate(["/data-governance-map"]);
+									this.router.navigate(["/priva/data-governance-map"]);
 								}
 							}
 
@@ -381,17 +381,17 @@ export class DataMapFormComponent implements OnInit {
 						if (this.indTipo==1)
 						{
 							this.snackBar.openSnackBar(`Data Analisys Map Alterado com Sucesso`, null);
-							this.router.navigate(["/data-analisys-map"]);
+							this.router.navigate(["/priva/data-analisys-map"]);
 						}
 						else if (this.indTipo==2)
 						{
 							this.snackBar.openSnackBar(`Data Governance Map Alterado com Sucesso`, null);
-							this.router.navigate(["/data-governance-map"]);
+							this.router.navigate(["/priva/data-governance-map"]);
 						}
 						else 
 						{
 							this.snackBar.openSnackBar(`Data Map Alterado com Sucesso`, null);
-							this.router.navigate(["/data-map"]);
+							this.router.navigate(["/priva/data-map"]);
 						}
 					},
 					(err) => {
@@ -410,17 +410,17 @@ export class DataMapFormComponent implements OnInit {
 						if (this.indTipo==1)
 						{
 							this.snackBar.openSnackBar(`Data Analisys Map Criado com Sucesso`, null);
-							this.router.navigate(["/data-analisys-map"]);
+							this.router.navigate(["/priva/data-analisys-map"]);
 						}
 						else if (this.indTipo==2)
 						{
 							this.snackBar.openSnackBar(`Data Governance Map Criado com Sucesso`, null);
-							this.router.navigate(["/data-governance-map"]);
+							this.router.navigate(["/priva/data-governance-map"]);
 						}
 						else
 						{
 							this.snackBar.openSnackBar(`Data  Map Criado com Sucesso`, null);
-							this.router.navigate(["/data-map"]);
+							this.router.navigate(["/priva/data-map"]);
 						}
 					},
 					(err) => {

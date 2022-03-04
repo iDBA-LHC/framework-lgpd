@@ -134,7 +134,7 @@
 				<div fxLayout="row" fxLayoutGap="5px">
 					<div fxLayout="column" fxLayoutAlign="start end">
 						<a mat-raised-button class="add-button"
-							[routerLink]="['/data-governance-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', '']"
+							[routerLink]="['/priva/data-governance-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', '']"
 							routerLinkActive="active">
 							<mat-icon>add</mat-icon>Novo Documento
 						</a>
@@ -158,7 +158,7 @@
 									Visualizar Documento
 								</button>
 								<button mat-raised-button class="edit-button"
-									[routerLink]="['/data-governance-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', element.codDocumentoPlano]">
+									[routerLink]="['/priva/data-governance-map', codDataMap, 'plano-mitigacao', codPlanoMitigacao, 'documento-plano', element.codDocumentoPlano]">
 									Editar
 								</button>
 								<button

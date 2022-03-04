@@ -106,7 +106,7 @@ export class AtividadeFormComponent implements OnInit {
         this.atividadeService.alterarAtividade(atividade).subscribe(
           (retorno) => {
             this.snackBar.openSnackBar(`A Atividade ${atividade.nomeAtividade} foi atualizado com sucesso!`,null);
-            this.router.navigate(["area", this.areaId, "processo", this.processoId]);
+            this.router.navigate(["/priva/area", this.areaId, "processo", this.processoId]);
           },
           (err) => {
             if (err.status === 401)
@@ -123,7 +123,7 @@ export class AtividadeFormComponent implements OnInit {
         this.atividadeService.incluirAtividade(atividade).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Atividade ${atividade.nomeAtividade} for criada com sucesso!`, null);
-            this.router.navigate(["area", this.areaId, "processo", this.processoId])
+            this.router.navigate(["/priva/area", this.areaId, "processo", this.processoId])
           },
           (err) => {
             if (err.status === 401)
@@ -231,6 +231,6 @@ export class AtividadeFormComponent implements OnInit {
 
   navigateToProcesso()
 	{
-    this.router.navigate(["area", this.areaId, "processo", this.processoId])
+    this.router.navigate(["/priva/area", this.areaId, "processo", this.processoId])
 	}
 }

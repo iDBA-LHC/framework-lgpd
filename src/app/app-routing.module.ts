@@ -6,6 +6,11 @@ import { AuthGuard } from "./guards/auth.guard";
 const routes: Routes = [
   {
     path: "",
+    redirectTo: "priva",
+    pathMatch: "full"
+  },
+  {
+    path: "priva",
     children: [
       {
         path: "",
@@ -228,7 +233,7 @@ const routes: Routes = [
 export class AppRoutingModule {
   constructor(private router: Router) {
       this.router.errorHandler = (error: any) => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/priva/home']);
       }
     }
   }

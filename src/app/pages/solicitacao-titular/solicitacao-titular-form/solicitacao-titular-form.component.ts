@@ -329,7 +329,7 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 
 	navigateToList()
 	{
-		this.router.navigate(["/solicitacao-titular"]);
+		this.router.navigate(["/priva/solicitacao-titular"]);
 	}
 
 }

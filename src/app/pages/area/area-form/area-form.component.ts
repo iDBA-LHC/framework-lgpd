@@ -84,7 +84,7 @@ export class AreaFormComponent implements OnInit {
         this.areaService.alterarArea(area).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Área ${area.nomeArea} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/area"]);
+            this.router.navigate(["/priva/area"]);
           },
           (err) => {
             if (err.status === 401)
@@ -100,7 +100,7 @@ export class AreaFormComponent implements OnInit {
         this.areaService.incluirArea(area).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`A Área ${area.nomeArea} foi criada com sucesso!`,null);
-            this.router.navigate(["/area"]);
+            this.router.navigate(["/priva/area"]);
           },
           (err) => {
             if (err.status === 401)

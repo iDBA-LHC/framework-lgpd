@@ -153,7 +153,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				this.PlanoMitigacaoService.alterarPlanoMitigacao(planoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi atualizado com sucesso!`, null);
-						this.router.navigate(["data-governance-map", this.codDataMap]);
+						this.router.navigate(["/priva/data-governance-map", this.codDataMap]);
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -169,7 +169,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 				this.PlanoMitigacaoService.incluirPlanoMitigacao(planoMitigacao).subscribe(
 					(response) => {
 						this.snackBar.openSnackBar(`O Plano de Mitigação foi criado com sucesso!`, null);
-						this.router.navigate(["data-governance-map", this.codDataMap]);
+						this.router.navigate(["/priva/data-governance-map", this.codDataMap]);
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -190,7 +190,7 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 
 	navigateToDataGovernanceMap()
 	{
-		this.router.navigate(["data-governance-map", this.codDataMap]);
+		this.router.navigate(["/priva/data-governance-map", this.codDataMap]);
 	}
 
 	openNewWindow(documentoPlano: DocumentoPlano): void {

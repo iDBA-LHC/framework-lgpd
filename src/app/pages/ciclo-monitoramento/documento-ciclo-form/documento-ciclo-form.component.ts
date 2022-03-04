@@ -126,7 +126,7 @@ export class DocumentoCicloFormComponent implements OnInit {
 
   navigateToCicloMonitoramento()
 	{
-    this.router.navigate(["ciclo-monitoramento", this.codCicloMonitoramento]);
+    this.router.navigate(["priva/ciclo-monitoramento", this.codCicloMonitoramento]);
 	}
 
 }

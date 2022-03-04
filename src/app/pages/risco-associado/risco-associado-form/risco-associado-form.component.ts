@@ -79,7 +79,7 @@ export class RiscoAssociadoFormComponent implements OnInit {
         this.riscoAssociadoService.alterarRiscoAssociado(riscoAssociado).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Risco Associado ${riscoAssociado.nomeRiscoAssociado} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/risco-associado"]);
+            this.router.navigate(["/priva/risco-associado"]);
           },
           (err) => {
             if (err.status === 401)
@@ -97,7 +97,7 @@ export class RiscoAssociadoFormComponent implements OnInit {
         this.riscoAssociadoService.incluirRiscoAssociado(riscoAssociado).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Risco Associado ${riscoAssociado.nomeRiscoAssociado} foi criado com sucesso!`,null);
-            this.router.navigate(["/risco-associado"]);
+            this.router.navigate(["/priva/risco-associado"]);
           },
           (err) => {
             if (err.status === 401)

@@ -144,7 +144,7 @@ export class CompartilhamentoFormComponent implements OnInit {
         this.compartilhamentoService.alterarCompartilhamento(compartilhamento).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Compartilhamento ${compartilhamento.nomeCompartilhamento} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/compartilhamento"]);
+            this.router.navigate(["/priva/compartilhamento"]);
           },
           (err) => {
             if (err.status === 401)
@@ -162,7 +162,7 @@ export class CompartilhamentoFormComponent implements OnInit {
         this.compartilhamentoService.incluirCompartilhamento(compartilhamento).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Compartilhamento ${compartilhamento.nomeCompartilhamento} foi criada com sucesso!`,null);
-            this.router.navigate(["/compartilhamento"]);
+            this.router.navigate(["/priva/compartilhamento"]);
           },
           (err) => {
             if (err.status === 401)

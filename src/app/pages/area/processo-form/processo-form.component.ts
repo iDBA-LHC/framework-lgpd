@@ -154,7 +154,7 @@ export class ProcessoFormComponent implements OnInit {
         this.processoService.alterarProcesso(processo).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Processo ${processo.nomeProcesso} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/area", this.areaId]);
+            this.router.navigate(["/priva/area", this.areaId]);
           },
           (err) => {
             if (err.status === 401)
@@ -172,7 +172,7 @@ export class ProcessoFormComponent implements OnInit {
         this.processoService.incluirProcesso(processo).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Processo ${processo.nomeProcesso} foi criado com sucesso!`,null);
-            this.router.navigate(["/area", this.areaId]);
+            this.router.navigate(["/priva/area", this.areaId]);
           },
           (err) => {
             if (err.status === 401)
@@ -194,7 +194,7 @@ export class ProcessoFormComponent implements OnInit {
 
   navigateToArea()
 	{
-    this.router.navigate(["/area", this.areaId]);
+    this.router.navigate(["/priva/area", this.areaId]);
   }
 
   openNewWindow(contrato: Contrato): void {

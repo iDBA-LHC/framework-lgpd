@@ -107,7 +107,7 @@ export class LocalArmazenamentoFormComponent implements OnInit {
         this.localArmazenamentoService.alterarLocalArmazenamento(localArmazenamento).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Local de Armazenamento ${localArmazenamento.nomeLocalArmazenamento} foi atualizado com sucesso!`,null);
-              this.router.navigate(["/local-armazenamento"]);
+              this.router.navigate(["/priva/local-armazenamento"]);
           },
           (err) => {
             if (err.status === 401)
@@ -125,7 +125,7 @@ export class LocalArmazenamentoFormComponent implements OnInit {
         this.localArmazenamentoService.incluirLocalArmazenamento(localArmazenamento).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Local de Armazenamento ${localArmazenamento.nomeLocalArmazenamento} foi criado com sucesso!`,null);
-            this.router.navigate(["/local-armazenamento"]);
+            this.router.navigate(["/priva/local-armazenamento"]);
           },
           (err) => {
             if (err.status === 401)

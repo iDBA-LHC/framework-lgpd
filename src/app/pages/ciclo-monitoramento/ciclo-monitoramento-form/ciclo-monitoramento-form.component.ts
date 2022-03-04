@@ -217,7 +217,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
         this.cicloMonitoramentoService.alterarCicloMonitoramento(ciclo).subscribe(
           (retorno) => {
             this.snackBar.openSnackBar(`O Ciclo Monitoramento ${ciclo.nomeCicloMonitoramento} foi atualizado com sucesso!`,null);
-            this.router.navigate(["/ciclo-monitoramento"]);
+            this.router.navigate(["/priva/ciclo-monitoramento"]);
           },
           (err) => {
             if (err.status === 401)
@@ -236,7 +236,7 @@ export class CicloMonitoramentoFormComponent implements OnInit {
         this.cicloMonitoramentoService.incluirCicloMonitoramento(ciclo).subscribe(
           (response) => {
             this.snackBar.openSnackBar(`O Ciclo Monitoramento ${ciclo.nomeCicloMonitoramento} foi criado com sucesso!`,null);
-            this.router.navigate(["/ciclo-monitoramento"]);
+            this.router.navigate(["/priva/ciclo-monitoramento"]);
           },
           (err) => {
             if (err.status === 401)
