@@ -1,0 +1,32 @@
+
+input {
+    font-size: 15px;
+}
+
+.top-img-wrapper {
+    z-index: 1;
+    top: 0;
+}
+
+.top-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 15px;
+    max-height: 55%;
+    max-width: 55%;
+}
+
+.bottom-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 50%;
+    max-width: 80%;
+    padding: 15px;
+}
+
+.bottom-img-wrapper {
+    z-index: 1;
+    bottom: 0;
+}

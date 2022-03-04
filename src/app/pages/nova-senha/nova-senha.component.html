@@ -1,4 +1,4 @@
-<div fxLayout="row" fxFill fxLayoutAlign="center center" class="authBackground">
+<div fxLayout="column" fxFill fxLayoutAlign="center center" class="authBackground" style="padding-top: 50px;">
     <mat-card class="w-30"> 
       <form 
         fxLayout="row wrap"
@@ -6,19 +6,22 @@
         fxLayoutAlign="space-between center"
         [formGroup]="novaSenhaForm"
         (submit)="criarNovaSenha()">
-        <mat-card-header *ngIf="ambiente">
-          <mat-card-title>
-            <h2 style="color: firebrick">{{this.ambiente}}</h2>
-          </mat-card-title>
-        </mat-card-header>
+
+        <div fxLayout="row" fxLayoutAlign="center center" class="top-img-wrapper">
+          <img src="./../../../assets/img/logo.png" class="top-img"/>
+        </div>
   
         <mat-card-header>
-            <mat-card-title>
-                <h2>Cadastrar Nova Senha</h2>
+            <mat-card-title *ngIf="ambiente">
+                <h4 *ngIf="ambiente" style="color: firebrick; text-align: center; margin: 0px; margin-top: 10px">{{this.ambiente}}</h4>
+                <h3 style="margin: 10px">Cadastrar Nova Senha</h3>
             </mat-card-title>
+            <mat-card-title *ngIf="!ambiente">
+              <h3>Cadastrar Nova Senha</h3>
+          </mat-card-title>
         </mat-card-header>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+        <mat-form-field fxFlex style="width: 50%;">
             <mat-label>Nome</mat-label>
             <input
                 matInput
@@ -29,7 +32,7 @@
                 type="text"/>
         </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+        <mat-form-field fxFlex style="width: 50%;">
             <mat-label>Email</mat-label>
             <input
                 matInput
@@ -40,7 +43,7 @@
                 type="email"/>
         </mat-form-field>
 
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+        <mat-form-field fxFlex style="width: 50%;">
           <mat-label>Nova Senha</mat-label>
           <input
               matInput
@@ -51,7 +54,7 @@
           <mat-error *ngIf="novaSenhaForm.controls.novaSenha.errors?.required">Nova Senha é Obrigatória</mat-error>
         </mat-form-field>  
         
-        <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+        <mat-form-field fxFlex style="width: 50%;">
             <mat-label>Confirma Senha</mat-label>
             <input
                 matInput
@@ -63,11 +66,14 @@
             <mat-error *ngIf="novaSenhaForm.controls.confirmaNovaSenha.hasError('mismatchedPasswords')">Nova Senha e Confirmação da Nova Senha Não São Iguais</mat-error>
         </mat-form-field>
 
-        <mat-card-actions>
+        <mat-card-actions style="padding: 0px;">
             <button mat-raised-button class="save-button">Salvar</button>
         </mat-card-actions>
       </form>
     </mat-card>
+    <div class="bottom-img-wrapper">
+      <img src="./../../../assets/img/selo.png" class="bottom-img"/>
+    </div>
   </div>
 
   

@@ -10,6 +10,7 @@ import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/c
 import { MatDialog } from '@angular/material';
 import { Usuario } from 'src/app/models/usuario/usuario';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-nova-senha',
@@ -32,11 +33,13 @@ export class NovaSenhaComponent implements OnInit {
     private usuarioService: UsuarioService,
     private dialog: MatDialog,
     private aesService: AESService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
 
     this.ambiente = environment.envDesc;
+    this.authService.invalidateSession();
 
     this.novaSenhaForm = this.formBuilder.group({
       nomeUsuario: ["",],
@@ -63,6 +66,7 @@ export class NovaSenhaComponent implements OnInit {
           this.router.navigate(["/public/sign-in"]);
           return; 
         }
+
         var tokenData = JSON.parse(this.token);
 
         var dataAux = new Date();
@@ -76,7 +80,7 @@ export class NovaSenhaComponent implements OnInit {
         }
 
         this.usuario = new Usuario();
-        this.usuario.codigoUsuario = tokenData.codigoUusuario;
+        this.usuario.codigoUsuario = tokenData.codigoUsuario;
         this.usuario.nomeUsuario = tokenData.nomeUsuario;
         this.usuario.emailUsuario = tokenData.email;
 

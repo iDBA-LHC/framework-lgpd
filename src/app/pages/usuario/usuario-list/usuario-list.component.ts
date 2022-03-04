@@ -33,7 +33,6 @@ export class UsuarioListComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-
   ngOnInit() {
     this.pesquisaUsuarios();
   }
@@ -87,7 +86,7 @@ export class UsuarioListComponent implements OnInit {
         this.usuarioService.gerarSenha(usuario).subscribe(
           () => {
             this.snackBar.openSnackBar(
-              `Senha foi gerada com sucesso.`,
+              `Senha foi gerada com sucesso. O Usuário Irá Receber um E-mail Com as Instruções Para Acesso`,
               null);
             this.isLoading = false;  
           },

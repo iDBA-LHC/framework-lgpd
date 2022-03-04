@@ -169,6 +169,13 @@ export class AuthService {
     this.router.navigate(["/public/sign-in"]);
   }
 
+  invalidateSession()
+  {
+    localStorage.removeItem(this.jwtTokenName);
+    this.token = "";
+    this.loggedIn.next(false);
+  }
+
   isTokenExpired(token?: string): boolean {
     if (!token) token = localStorage.getItem(this.jwtTokenName);
     if (!token) return true;   

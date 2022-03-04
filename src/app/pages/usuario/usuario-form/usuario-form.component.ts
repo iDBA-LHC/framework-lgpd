@@ -207,17 +207,23 @@ export class UsuarioFormComponent implements OnInit {
     });
 
     confirmRemoveDialog.afterClosed().subscribe((result) => {
-      /*if (result) {
-        this.usuarioService.gerarSenha(this.usuarioId).subscribe(
+      if (result) {
+        this.isLoading = true;
+        const usuario: Usuario = this.usuarioForm.getRawValue();        
+        usuario.codigoUsuario = this.usuarioId;
+        this.usuarioService.gerarSenha(usuario).subscribe(
           () => {
             this.snackBar.openSnackBar(
-              `Senha foi gerada com sucesso.`,
-              null
-            );
+              `Senha foi gerada com sucesso. O Usuário Irá Receber um E-mail Com as Instruções Para Acesso`,
+              null);
+            this.isLoading = false;  
           },
-          (err) => this.snackBar.openSnackBar(err.error, null, "Error")
+          (err) => {
+            this.isLoading = false;  
+            this.snackBar.openSnackBar(err.error, null, "Error");
+          }
         );
-      }*/
+      }
     });
   }
 
