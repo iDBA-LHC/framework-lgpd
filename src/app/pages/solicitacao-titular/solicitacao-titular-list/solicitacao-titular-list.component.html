@@ -6,16 +6,16 @@
 
         <div>
             <mat-form-field style="width: 35%;">
-            <mat-label>Controladora</mat-label>
-            <input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="!this.usuarioAdmin"/>
-    
-            <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
-                (optionSelected)="selecionaEmpresa($event)">
-                <mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
-                {{empresa.nomeEmpresa}}
-                </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="form.controls.empresa.errors?.required">Campo obrigatório</mat-error>
+              <mat-label>Controladora</mat-label>
+              <input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="!this.usuarioAdmin"/>
+      
+              <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
+                  (optionSelected)="selecionaEmpresa($event)">
+                  <mat-option *ngFor="let empresa of listaEmpresasFiltradas | async" [value]="empresa">
+                  {{empresa.nomeEmpresa}}
+                  </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="form.controls.empresa.errors?.required">Campo obrigatório</mat-error>
             </mat-form-field>
     
             <mat-form-field style="width: 30%;" fxFlexOffset="10px">
@@ -46,7 +46,7 @@
         </div>
         <div>
 
-            <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+            <mat-form-field fxFlex style="width: 50%;">
                 <mat-label>CPF Titular</mat-label>
                 <input
                     matInput
