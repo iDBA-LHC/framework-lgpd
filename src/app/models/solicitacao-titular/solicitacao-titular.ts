@@ -11,9 +11,9 @@ export class SolicitacaoTitular {
     numeroDocumentoRepresentante: string;
     indDireito: number;
     emailTitular: string;
-    dataInclusao: Date;
-    dataPrevisaoRetorno: Date;
-    dataRetorno: Date;
+    dataInclusao: Date | string;
+    dataPrevisaoRetorno: Date | string;
+    dataRetorno: Date | string;
     indStatus: number;
     desObservacoes: string;
 

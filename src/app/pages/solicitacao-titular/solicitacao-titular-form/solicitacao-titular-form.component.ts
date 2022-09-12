@@ -256,8 +256,9 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 		{
 			const registro: SolicitacaoTitular = this.form.getRawValue();
 			registro.codigoSolicitacaoTitular = this.codigoSolicitacaoTitular;
-			registro.dataInclusao = this.form.controls['dataInclusao'].value;
-			registro.dataPrevisaoRetorno = this.form.controls['dataPrevisaoRetorno'].value;
+			registro.dataInclusao = this.formataData(this.form.controls['dataInclusao'].value);
+			registro.dataPrevisaoRetorno = this.formataData(this.form.controls['dataPrevisaoRetorno'].value);
+			registro.dataRetorno = this.formataData(this.form.controls['dataRetorno'].value);
 
 			if (this.codigoSolicitacaoTitular)
 			{
@@ -305,6 +306,27 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 		else {
 			this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
 		}
+	}
+
+	formataData(value: Date | string): string {
+		value = new Date(value)
+		const padTo2Digits = (num) => {
+			return num.toString().padStart(2, '0');
+		}
+		const format: string = (
+			[
+				value.getFullYear(),
+				padTo2Digits(value.getMonth() + 1),
+				padTo2Digits(value.getDate()),
+			].join('-') +
+			' ' +
+			[
+				padTo2Digits(value.getHours()),
+				padTo2Digits(value.getMinutes()),
+				padTo2Digits(value.getSeconds()),
+			].join(':')
+		);
+		return format
 	}
 
 	private pesquisaProximoProtocolo()

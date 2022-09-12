@@ -3,9 +3,9 @@ export class Incidente {
     codigoEmpresa: number;
     codigoUsuarioEncarregado: number;
     codigoUsuarioOperador: number;
-    dataRegistro: Date;
-    dataIncidente: Date;
-    dataComunicacao: Date;
+    dataRegistro: Date | string;
+    dataIncidente: Date | string;
+    dataComunicacao: Date | string;
     desJustificativa: string;
     numeroProtocolo: string;
     indStatus: number;

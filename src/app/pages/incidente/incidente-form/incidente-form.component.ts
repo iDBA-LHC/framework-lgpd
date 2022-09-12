@@ -185,8 +185,9 @@ export class IncidenteFormComponent implements OnInit {
 		{
 			const registro: Incidente = this.form.getRawValue();
 			registro.codigoIncidente = this.codigoIncidente;
-			registro.dataIncidente = this.form.controls['dataIncidente'].value;
-			registro.dataRegistro = this.form.controls['dataRegistro'].value;
+			registro.dataIncidente = this.formataData(this.form.controls['dataIncidente'].value);
+			registro.dataRegistro = this.formataData(this.form.controls['dataRegistro'].value);
+			registro.dataComunicacao = this.formataData(this.form.controls['dataComunicacao'].value);
 			if (this.codigoIncidente)
 			{
 				//Alteração
@@ -233,6 +234,27 @@ export class IncidenteFormComponent implements OnInit {
 		else {
 			this.snackBar.openSnackBar("Campos obrigatórios não foram preenchidos", null, "Warn");
 		}
+	}
+
+	formataData(value: Date | string): string {
+		value = new Date(value)
+		const padTo2Digits = (num) => {
+			return num.toString().padStart(2, '0');
+		}
+		const format: string = (
+			[
+				value.getFullYear(),
+				padTo2Digits(value.getMonth() + 1),
+				padTo2Digits(value.getDate()),
+			].join('-') +
+			' ' +
+			[
+				padTo2Digits(value.getHours()),
+				padTo2Digits(value.getMinutes()),
+				padTo2Digits(value.getSeconds()),
+			].join(':')
+		);
+		return format
 	}
 
   private pesquisaEmpresas() {
