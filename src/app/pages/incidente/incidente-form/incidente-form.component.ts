@@ -143,7 +143,6 @@ export class IncidenteFormComponent implements OnInit {
 							desLinkDocumento: retorno.body[0].desLinkDocumento
 
 						});
-
 						if (retorno.body[0].dataRegistro) {
 							let dataRegistro = new Date(retorno.body[0].dataRegistro)
 							dataRegistro.setHours(dataRegistro.getHours() + 3)

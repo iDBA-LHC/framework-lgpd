@@ -131,10 +131,9 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 							indDireito: retorno.body[0].indDireito,
 
 						});
-
 						if (retorno.body[0].dataPrevisaoRetorno) {
 							let dataPrevisaoRetorno = new Date(retorno.body[0].dataPrevisaoRetorno)
-							dataPrevisaoRetorno.setDate(dataPrevisaoRetorno.getDate())
+							dataPrevisaoRetorno.setHours(dataPrevisaoRetorno.getHours() + 3)
 							this.form.controls["dataPrevisaoRetorno"].setValue(dataPrevisaoRetorno)
 						}
 						if (retorno.body[0].dataRetorno) {
