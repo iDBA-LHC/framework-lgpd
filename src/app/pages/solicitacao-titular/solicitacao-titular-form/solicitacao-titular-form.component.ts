@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { startWith,map } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import { Empresa } from 'src/app/models/empresa/empresa';
 import { Protocolo } from 'src/app/models/protocolo/protocolo';
 import { DireitoSolicitacaoTitularButtons } from 'src/app/models/solicitacao-titular/buttons/direito-solicitacao-titular-buttons';
@@ -20,51 +20,50 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-solicitacao-titular-form',
-  templateUrl: './solicitacao-titular-form.component.html',
-  styleUrls: ['./solicitacao-titular-form.component.css']
+	selector: 'app-solicitacao-titular-form',
+	templateUrl: './solicitacao-titular-form.component.html',
+	styleUrls: ['./solicitacao-titular-form.component.css']
 })
 export class SolicitacaoTitularFormComponent implements OnInit {
 
-  usuarioAdmin:boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;	
-  form: FormGroup;
-  codigoSolicitacaoTitular: number;
-  indStatus: number;
-  isLoading = false;
-  statusSolicitacaoTitularButtons = new StatusSolicitacaoTitularButtons();
-  direitoSolicitacaoTitularButtons = new DireitoSolicitacaoTitularButtons();
+	usuarioAdmin: boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
+	form: FormGroup;
+	codigoSolicitacaoTitular: number;
+	indStatus: number;
+	isLoading = false;
+	statusSolicitacaoTitularButtons = new StatusSolicitacaoTitularButtons();
+	direitoSolicitacaoTitularButtons = new DireitoSolicitacaoTitularButtons();
 
-  listaEmpresas: Empresa[];
-  listaEmpresasFiltradas: Observable<Empresa[]>;
+	listaEmpresas: Empresa[];
+	listaEmpresasFiltradas: Observable<Empresa[]>;
 
-  listaUsuarios: Usuario[];;
+	listaUsuarios: Usuario[];;
 
-  listaUsuariosFiltrados: Observable<Usuario[]>;
+	listaUsuariosFiltrados: Observable<Usuario[]>;
 
-  private datePipe:DateFormatPipe = new DateFormatPipe();
+	private datePipe: DateFormatPipe = new DateFormatPipe();
 
-  constructor(private empresaService: EmpresaService,
-			  private usuarioService: UsuarioService,
-              private activatedRoute: ActivatedRoute,
-              private service: SolicitacaoTitularService,
-              private snackBar: CustomSnackBarService,
-              private router: Router,
-              private authService: AuthService,
-              private formBuilder: FormBuilder) { }
+	constructor(private empresaService: EmpresaService,
+		private usuarioService: UsuarioService,
+		private activatedRoute: ActivatedRoute,
+		private service: SolicitacaoTitularService,
+		private snackBar: CustomSnackBarService,
+		private router: Router,
+		private authService: AuthService,
+		private formBuilder: FormBuilder) { }
 
-  ngOnInit() {
+	ngOnInit() {
 
-    this.createForm();
+		this.createForm();
 
-		if (!this.usuarioAdmin)
-		{
+		if (!this.usuarioAdmin) {
 			this.form.controls.codigoEmpresa.setValue(this.authService.getLoggedEmpresaUser());
 		}
 
 		this.pesquisa();
-  }
+	}
 
-  private createForm() {
+	private createForm() {
 		this.form = this.formBuilder.group({
 
 			numeroProtocolo: [, Validators.required],
@@ -78,11 +77,11 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 
 			desNomeRepresentante: ["",],
 			numeroCpfRepresentante: [, cpfValidator],
-			numeroDocumentoRepresentante: ["", ],
+			numeroDocumentoRepresentante: ["",],
 
 			indDireito: [1, Validators.required],
 
-			emailTitular: ["",Validators.compose([Validators.required, emailValidator])],
+			emailTitular: ["", Validators.compose([Validators.required, emailValidator])],
 
 			dataInclusao: [new Date()],
 			dataPrevisaoRetorno: [new Date(), Validators.required],
@@ -98,69 +97,76 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 		});
 	}
 
-  private pesquisa()
-  {
-    this.activatedRoute.params.subscribe((data) => {
-		if (data["id?"]) {
-			this.codigoSolicitacaoTitular = parseInt(data["id?"]);
-			this.service.pesquisar(this.codigoSolicitacaoTitular).subscribe(
-				(retorno) => {
-  
-				  if (!this.usuarioAdmin)
-				  {
-					  if (retorno.body[0].codigoEmpresa != this.authService.getLoggedEmpresaUser())
-					  {
-						  this.snackBar.openSnackBar("Você Não Tem Permissão de Acesso a Esta Solicitação de Titular", null, "Warn");
-						  this.navigateToList();
-					  }
-				  }
-  
-				  this.form.patchValue({
-  
-					numeroProtocolo: retorno.body[0].numeroProtocolo,
-					codigoEmpresa: retorno.body[0].codigoEmpresa,
-					codigoUsuario: retorno.body[0].codigoUsuario,
-					dataInlcusao: this.datePipe.transformToScreen(retorno.body[0].dataInclusao),
-					dataPrevisaoRetorno: this.datePipe.transformToScreen(retorno.body[0].dataPrevisaoRetorno),
-					dataRetorno: this.datePipe.transformToScreen(retorno.body[0].dataRetorno),
-					desObservacoes: retorno.body[0].desObservacoes,
-					indStatus: retorno.body[0].indStatus,
-					desNomeTitular: retorno.body[0].desNomeTitular,
-					numeroCpfTitular: retorno.body[0].numeroCpfTitular,
-					numeroDocumentoTitular: retorno.body[0].numeroDocumentoTitular,
-					emailTitular: retorno.body[0].emailTitular,
-					desNomeRepresentante: retorno.body[0].desNomeRepresentante,
-					numeroCpfRepresentante: retorno.body[0].numeroCpfRepresentante,
-					numeroDocumentoRepresentante: retorno.body[0].numeroDocumentoRepresentante,
-					indDireito: retorno.body[0].indDireito,
+	private pesquisa() {
+		this.activatedRoute.params.subscribe((data) => {
+			if (data["id?"]) {
+				this.codigoSolicitacaoTitular = parseInt(data["id?"]);
+				this.service.pesquisar(this.codigoSolicitacaoTitular).subscribe(
+					(retorno) => {
 
-				  });
-  
-				  this.indStatus = retorno.body[0].indStatus;
-  
-				  if (this.indStatus === 2 || this.indStatus === 3 )
-				  {
-					  this.form.controls['indStatus'].disable();
-				  }
+						if (!this.usuarioAdmin) {
+							if (retorno.body[0].codigoEmpresa != this.authService.getLoggedEmpresaUser()) {
+								this.snackBar.openSnackBar("Você Não Tem Permissão de Acesso a Esta Solicitação de Titular", null, "Warn");
+								this.navigateToList();
+							}
+						}
 
-				  this.form.controls['indDireito'].disable();
+						this.form.patchValue({
 
-  
-				  this.pesquisaEmpresas();
-				  this.pesquisaUsuarios();
-				  
-				});
-      	}
-      	else
-      	{
-			this.form.controls['codigoUsuario'].setValue(this.authService.getLoggedUserId());
-        	this.pesquisaProximoProtocolo();
-        	this.pesquisaEmpresas();
-			this.pesquisaUsuarios();
-      	}});
-  }
+							numeroProtocolo: retorno.body[0].numeroProtocolo,
+							codigoEmpresa: retorno.body[0].codigoEmpresa,
+							codigoUsuario: retorno.body[0].codigoUsuario,
+							dataInlcusao: this.datePipe.transformToScreen(retorno.body[0].dataInclusao),
+							dataPrevisaoRetorno: this.datePipe.transformToScreen(retorno.body[0].dataPrevisaoRetorno),
+							dataRetorno: this.datePipe.transformToScreen(retorno.body[0].dataRetorno),
+							desObservacoes: retorno.body[0].desObservacoes,
+							indStatus: retorno.body[0].indStatus,
+							desNomeTitular: retorno.body[0].desNomeTitular,
+							numeroCpfTitular: retorno.body[0].numeroCpfTitular,
+							numeroDocumentoTitular: retorno.body[0].numeroDocumentoTitular,
+							emailTitular: retorno.body[0].emailTitular,
+							desNomeRepresentante: retorno.body[0].desNomeRepresentante,
+							numeroCpfRepresentante: retorno.body[0].numeroCpfRepresentante,
+							numeroDocumentoRepresentante: retorno.body[0].numeroDocumentoRepresentante,
+							indDireito: retorno.body[0].indDireito,
 
-  	private pesquisaEmpresas() {
+						});
+
+						if (retorno.body[0].dataPrevisaoRetorno) {
+							let dataPrevisaoRetorno = new Date(retorno.body[0].dataPrevisaoRetorno)
+							dataPrevisaoRetorno.setDate(dataPrevisaoRetorno.getDate())
+							this.form.controls["dataPrevisaoRetorno"].setValue(dataPrevisaoRetorno)
+						}
+						if (retorno.body[0].dataRetorno) {
+							let dataRetorno = new Date(retorno.body[0].dataRetorno)
+							dataRetorno.setHours(dataRetorno.getHours() + 3 )
+							this.form.controls["dataRetorno"].setValue(dataRetorno)
+						}
+
+						this.indStatus = retorno.body[0].indStatus;
+
+						if (this.indStatus === 2 || this.indStatus === 3) {
+							this.form.controls['indStatus'].disable();
+						}
+
+						this.form.controls['indDireito'].disable();
+
+
+						this.pesquisaEmpresas();
+						this.pesquisaUsuarios();
+
+					});
+			}
+			else {
+				this.form.controls['codigoUsuario'].setValue(this.authService.getLoggedUserId());
+				this.pesquisaProximoProtocolo();
+				this.pesquisaEmpresas();
+				this.pesquisaUsuarios();
+			}
+		});
+	}
+
+	private pesquisaEmpresas() {
 		this.empresaService.listaTodasEmpresas().subscribe(
 			(retorno) => {
 				this.listaEmpresas = retorno.body;
@@ -168,8 +174,7 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 				let codEmpresa = this.form.controls.codigoEmpresa.value;
 				if (codEmpresa != 0) {
 					let empresaSel: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == codEmpresa)[0];
-					if (empresaSel)
-					{
+					if (empresaSel) {
 						this.form.controls.empresa.setValue(empresaSel);
 					}
 				}
@@ -198,7 +203,7 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 	}
 
 	displayEmpresa(empresa: Empresa): string {
-			
+
 		return empresa && empresa.nomeEmpresa ? empresa.nomeEmpresa : '';
 	}
 
@@ -209,15 +214,14 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 
 				let codigoUsuario = this.form.controls.codigoUsuario.value;
 
-				if (codigoUsuario != 0 && codigoUsuario != null && codigoUsuario != undefined ) {
+				if (codigoUsuario != 0 && codigoUsuario != null && codigoUsuario != undefined) {
 					let usuarioSel: Usuario = <Usuario>this.listaUsuarios.filter(usuario => usuario.codigoUsuario == codigoUsuario)[0];
-					if (usuarioSel)
-					{
+					if (usuarioSel) {
 						this.form.controls.usuario.setValue(usuarioSel);
 						this.form.controls.codigoUsuario.setValue(codigoUsuario);
 					}
 				}
-				
+
 
 				this.listaUsuariosFiltrados = this.form.controls.usuario.valueChanges
 					.pipe(
@@ -240,66 +244,59 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 		return usuario ? usuario.nomeUsuario : "";
 	}
 
-	salvar()
-	{
+	salvar() {
 
-		if ((this.form.controls['indStatus'].value === 2 || this.form.controls['indStatus'].value === 3) && this.form.controls['dataRetorno'].value === null)
-		{
-			this.form.controls['dataRetorno'].setErrors({required: true});
+		if ((this.form.controls['indStatus'].value === 2 || this.form.controls['indStatus'].value === 3) && this.form.controls['dataRetorno'].value === null) {
+			this.form.controls['dataRetorno'].setErrors({ required: true });
 		}
-		else
-		{
+		else {
 			this.form.controls['dataRetorno'].setErrors(null);
 		}
 
-		if (this.form.valid)
-		{
+		if (this.form.valid) {
 			const registro: SolicitacaoTitular = this.form.getRawValue();
 			registro.codigoSolicitacaoTitular = this.codigoSolicitacaoTitular;
-			registro.dataInclusao = this.formataData(this.form.controls['dataInclusao'].value);
-			registro.dataPrevisaoRetorno = this.formataData(this.form.controls['dataPrevisaoRetorno'].value);
-			registro.dataRetorno = this.formataData(this.form.controls['dataRetorno'].value);
+			if (registro.dataInclusao)
+				registro.dataInclusao = this.formataData(this.form.controls['dataInclusao'].value);
+			if (registro.dataPrevisaoRetorno)
+				registro.dataPrevisaoRetorno = this.formataData(this.form.controls['dataPrevisaoRetorno'].value);
+			if (registro.dataRetorno)
+				registro.dataRetorno = this.formataData(this.form.controls['dataRetorno'].value);
 
-			if (this.codigoSolicitacaoTitular)
-			{
+			if (this.codigoSolicitacaoTitular) {
 				//Alteração
 				this.service.alterar(registro).subscribe(
 					(response) => {
-					  this.snackBar.openSnackBar(`A Solicitação de Titular de Protocolo ${registro.numeroProtocolo} foi alterada com sucesso!`,null);
-					  this.navigateToList();
+						this.snackBar.openSnackBar(`A Solicitação de Titular de Protocolo ${registro.numeroProtocolo} foi alterada com sucesso!`, null);
+						this.navigateToList();
 					},
 					(err) => {
-					  if (err.status === 401)
-					  {
-						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvar();}));
-					  }
-					  else
-					  {
-						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-					  }
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvar(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
 					}
-				  );
+				);
 
 			}
-			else
-			{
+			else {
 				//Inclusão
 				this.service.incluir(registro).subscribe(
 					(response) => {
-					  this.snackBar.openSnackBar(`A Solicitação de Titular de Protocolo ${registro.numeroProtocolo} foi criada com sucesso!`,null);
-					  this.navigateToList();
+						this.snackBar.openSnackBar(`A Solicitação de Titular de Protocolo ${registro.numeroProtocolo} foi criada com sucesso!`, null);
+						this.navigateToList();
 					},
 					(err) => {
-					  if (err.status === 401)
-					  {
-						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvar();}));
-					  }
-					  else
-					  {
-						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-					  }
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvar(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
 					}
-				  );
+				);
 
 			}
 		}
@@ -329,28 +326,24 @@ export class SolicitacaoTitularFormComponent implements OnInit {
 		return format
 	}
 
-	private pesquisaProximoProtocolo()
-		{
-			this.service.pesquisaProximoProtocolo().subscribe(
-				(response) => {
-					var protocolo: Protocolo = response.body; 
-					this.form.controls['numeroProtocolo'].setValue(protocolo.numeroProtocolo);
-				},
-				(err) => {
-					if (err.status === 401)
-					{
-					TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaProximoProtocolo();}));
-					}
-					else
-					{
-					TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-					}
+	private pesquisaProximoProtocolo() {
+		this.service.pesquisaProximoProtocolo().subscribe(
+			(response) => {
+				var protocolo: Protocolo = response.body;
+				this.form.controls['numeroProtocolo'].setValue(protocolo.numeroProtocolo);
+			},
+			(err) => {
+				if (err.status === 401) {
+					TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.pesquisaProximoProtocolo(); }));
 				}
-				);
-		}
+				else {
+					TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+				}
+			}
+		);
+	}
 
-	navigateToList()
-	{
+	navigateToList() {
 		this.router.navigate(["/priva/solicitacao-titular"]);
 	}
 

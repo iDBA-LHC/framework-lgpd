@@ -18,21 +18,21 @@ import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexa
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-incidente-form',
-  templateUrl: './incidente-form.component.html',
-  styleUrls: ['./incidente-form.component.css']
+	selector: 'app-incidente-form',
+	templateUrl: './incidente-form.component.html',
+	styleUrls: ['./incidente-form.component.css']
 })
 export class IncidenteFormComponent implements OnInit {
 
-	usuarioAdmin:boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;	
-  	form: FormGroup;
-  	codigoIncidente: number;
-  	indStatus: number;
-  	isLoading = false;
-  	indNoPrazo = undefined;
+	usuarioAdmin: boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
+	form: FormGroup;
+	codigoIncidente: number;
+	indStatus: number;
+	isLoading = false;
+	indNoPrazo = undefined;
 
-  	listaEmpresas: Empresa[];
-  	listaEmpresasFiltradas: Observable<Empresa[]>;
+	listaEmpresas: Empresa[];
+	listaEmpresasFiltradas: Observable<Empresa[]>;
 
 	listaUsuarios: Usuario[];
 	listaUsuariosEncarregados: Usuario[];
@@ -41,31 +41,30 @@ export class IncidenteFormComponent implements OnInit {
 	listaUsuariosEncarregadosFiltrados: Observable<Usuario[]>;
 	listaUsuariosOperadorFiltrados: Observable<Usuario[]>;
 
-	private datePipe:DateFormatPipe = new DateFormatPipe();
+	private datePipe: DateFormatPipe = new DateFormatPipe();
 
 	statusIncidenteButtons = new StatusIncidenteButtons();
 
 	constructor(private empresaService: EmpresaService,
-				private activatedRoute: ActivatedRoute,
-				private usuarioService: UsuarioService,
-				private service: IncidenteService,
-				private snackBar: CustomSnackBarService,
-				private router: Router,
-				private authService: AuthService,
-				private formBuilder: FormBuilder) { }
+		private activatedRoute: ActivatedRoute,
+		private usuarioService: UsuarioService,
+		private service: IncidenteService,
+		private snackBar: CustomSnackBarService,
+		private router: Router,
+		private authService: AuthService,
+		private formBuilder: FormBuilder) { }
 
 	ngOnInit() {
 		this.createForm();
 
-		if (!this.usuarioAdmin)
-		{
+		if (!this.usuarioAdmin) {
 			this.form.controls.codigoEmpresa.setValue(this.authService.getLoggedEmpresaUser());
 		}
 
 		this.pesquisa();
 	}
 
-  	private createForm() {
+	private createForm() {
 		this.form = this.formBuilder.group({
 
 			numeroProtocolo: [, Validators.required],
@@ -80,9 +79,9 @@ export class IncidenteFormComponent implements OnInit {
 			emailEncarregado: [,],
 
 			codigoUsuarioOperador: [, Validators.required],
-			usuarioOperador: [,Validators.required],
+			usuarioOperador: [, Validators.required],
 
-			dataRegistro: [new Date(),Validators.required],
+			dataRegistro: [new Date(), Validators.required],
 			dataIncidente: [new Date(), Validators.required],
 
 			dataComunicacao: [, Validators.required],
@@ -107,127 +106,135 @@ export class IncidenteFormComponent implements OnInit {
 
 	private pesquisa() {
 		this.activatedRoute.params.subscribe((data) => {
-		  if (data["id?"]) {
-			this.codigoIncidente = parseInt(data["id?"]);
-			this.service.pesquisar(this.codigoIncidente).subscribe(
-			  (retorno) => {
+			if (data["id?"]) {
+				this.codigoIncidente = parseInt(data["id?"]);
+				this.service.pesquisar(this.codigoIncidente).subscribe(
+					(retorno) => {
 
-				if (!this.usuarioAdmin)
-				{
-					if (retorno.body[0].codigoEmpresa != this.authService.getLoggedEmpresaUser())
-					{
-						this.snackBar.openSnackBar("Você Não Tem Permissão de Acesso a Este Incidente", null, "Warn");
-						this.navigateToIncidenteList();
-					}
-				}
+						if (!this.usuarioAdmin) {
+							if (retorno.body[0].codigoEmpresa != this.authService.getLoggedEmpresaUser()) {
+								this.snackBar.openSnackBar("Você Não Tem Permissão de Acesso a Este Incidente", null, "Warn");
+								this.navigateToIncidenteList();
+							}
+						}
 
-				this.form.patchValue({
+						this.form.patchValue({
 
-				  numeroProtocolo: retorno.body[0].numeroProtocolo,
-				  codigoEmpresa: retorno.body[0].codigoEmpresa,
-				  codigoUsuarioEncarregado: retorno.body[0].codigoUsuarioEncarregado,
-				  codigoUsuarioOperador: retorno.body[0].codigoUsuarioOperador,
-				  dataRegistro: retorno.body[0].dataRegistro,
-				  dataIncidente: retorno.body[0].dataIncidente,
-				  dataComunicacao: this.datePipe.transformToScreen(retorno.body[0].dataComunicacao),
-				  desJustificativa: retorno.body[0].desJustificativa,
-				  indStatus: retorno.body[0].indStatus,
+							numeroProtocolo: retorno.body[0].numeroProtocolo,
+							codigoEmpresa: retorno.body[0].codigoEmpresa,
+							codigoUsuarioEncarregado: retorno.body[0].codigoUsuarioEncarregado,
+							codigoUsuarioOperador: retorno.body[0].codigoUsuarioOperador,
+							dataRegistro: retorno.body[0].dataRegistro,
+							dataIncidente: retorno.body[0].dataIncidente,
+							dataComunicacao: this.datePipe.transformToScreen(retorno.body[0].dataComunicacao),
+							desJustificativa: retorno.body[0].desJustificativa,
+							indStatus: retorno.body[0].indStatus,
 
-				  desTipoComunicacao: retorno.body[0].desTipoComunicacao,
-				  dadosAgenteTratamento: retorno.body[0].dadosAgenteTratamento,
-				  dadosNotificante: retorno.body[0].dadosNotificante,
-				  desDetalhes: retorno.body[0].desDetalhes,
-				  desNaturezaDados: retorno.body[0].desNaturezaDados,
-				  desTipoTitulares: retorno.body[0].desTipoTitulares,
-				  desMedidasPreventivas: retorno.body[0].desMedidasPreventivas,
-				  desMedidasMitigatorias: retorno.body[0].desMedidasMitigatorias,
-				  indRelatorioImpacto: retorno.body[0].indRelatorioImpacto,
-				  desConsequencias: retorno.body[0].desConsequencias,
-				  desLinkDocumento: retorno.body[0].desLinkDocumento
-				  
-				});
+							desTipoComunicacao: retorno.body[0].desTipoComunicacao,
+							dadosAgenteTratamento: retorno.body[0].dadosAgenteTratamento,
+							dadosNotificante: retorno.body[0].dadosNotificante,
+							desDetalhes: retorno.body[0].desDetalhes,
+							desNaturezaDados: retorno.body[0].desNaturezaDados,
+							desTipoTitulares: retorno.body[0].desTipoTitulares,
+							desMedidasPreventivas: retorno.body[0].desMedidasPreventivas,
+							desMedidasMitigatorias: retorno.body[0].desMedidasMitigatorias,
+							indRelatorioImpacto: retorno.body[0].indRelatorioImpacto,
+							desConsequencias: retorno.body[0].desConsequencias,
+							desLinkDocumento: retorno.body[0].desLinkDocumento
 
-				this.indStatus = retorno.body[0].indStatus;
-				this.form.controls['indRelatorioImpacto'].disable();
+						});
 
-				if (this.indStatus === 2)
-				{
-					this.form.controls['indStatus'].disable();
-				}
+						if (retorno.body[0].dataRegistro) {
+							let dataRegistro = new Date(retorno.body[0].dataRegistro)
+							dataRegistro.setHours(dataRegistro.getHours() + 3)
+							this.form.controls["dataRegistro"].setValue(dataRegistro)
+						}
+						if (retorno.body[0].dataIncidente) {
+							let dataIncidente = new Date(retorno.body[0].dataIncidente)
+							dataIncidente.setHours(dataIncidente.getHours() + 3)
+							this.form.controls["dataIncidente"].setValue(dataIncidente)
+						}
+						if (retorno.body[0].dataComunicacao) {
+							let dataComunicacao = new Date(this.datePipe.transformToScreen(retorno.body[0].dataComunicacao))
+							dataComunicacao.setDate(dataComunicacao.getDate() + 1)
+							this.form.controls["dataComunicacao"].setValue(dataComunicacao)
+						}
 
+
+
+						this.indStatus = retorno.body[0].indStatus;
+						this.form.controls['indRelatorioImpacto'].disable();
+
+						if (this.indStatus === 2) {
+							this.form.controls['indStatus'].disable();
+						}
+
+						this.preencherCombos();
+						this.verificaComunicacaoNoPrazo();
+
+					});
+			} else {
 				this.preencherCombos();
-				this.verificaComunicacaoNoPrazo();
-				
-			  });
-		  } else {
-			this.preencherCombos();
-			this.pesquisaProximoProtocolo();
-		  }
+				this.pesquisaProximoProtocolo();
+			}
 		});
-	  }
+	}
 
-  	preencherCombos() {
+	preencherCombos() {
 		this.pesquisaEmpresas();
-  	}
+	}
 
-	salvar()
-	{
-		if (this.indNoPrazo === false && this.form.controls['desJustificativa'].value.length === 0)
-		{
-			this.form.controls['desJustificativa'].setErrors({required: true});
+	salvar() {
+		if (this.indNoPrazo === false && this.form.controls['desJustificativa'].value.length === 0) {
+			this.form.controls['desJustificativa'].setErrors({ required: true });
 		}
-		else
-		{
+		else {
 			this.form.controls['desJustificativa'].setErrors(null);
 		}
 
-		if (this.form.valid)
-		{
+		if (this.form.valid) {
 			const registro: Incidente = this.form.getRawValue();
 			registro.codigoIncidente = this.codigoIncidente;
-			registro.dataIncidente = this.formataData(this.form.controls['dataIncidente'].value);
-			registro.dataRegistro = this.formataData(this.form.controls['dataRegistro'].value);
-			registro.dataComunicacao = this.formataData(this.form.controls['dataComunicacao'].value);
-			if (this.codigoIncidente)
-			{
+			if (registro.dataIncidente)
+				registro.dataIncidente = this.formataData(this.form.controls['dataIncidente'].value);
+			if (registro.dataRegistro)
+				registro.dataRegistro = this.formataData(this.form.controls['dataRegistro'].value);
+			if (registro.dataComunicacao)
+				registro.dataComunicacao = this.formataData(this.form.controls['dataComunicacao'].value);
+			if (this.codigoIncidente) {
 				//Alteração
 				this.service.alterar(registro).subscribe(
 					(response) => {
-					  this.snackBar.openSnackBar(`O Incidente de Protcolo ${registro.numeroProtocolo} foi alterado com sucesso!`,null);
-					  this.navigateToIncidenteList();
+						this.snackBar.openSnackBar(`O Incidente de Protcolo ${registro.numeroProtocolo} foi alterado com sucesso!`, null);
+						this.navigateToIncidenteList();
 					},
 					(err) => {
-					  if (err.status === 401)
-					  {
-						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvar();}));
-					  }
-					  else
-					  {
-						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-					  }
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvar(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
 					}
-				  );
+				);
 
 			}
-			else
-			{
+			else {
 				//Inclusão
 				this.service.incluir(registro).subscribe(
 					(response) => {
-					  this.snackBar.openSnackBar(`O Incidente de Protcolo ${registro.numeroProtocolo} foi criado com sucesso!`,null);
-					  this.navigateToIncidenteList();
+						this.snackBar.openSnackBar(`O Incidente de Protcolo ${registro.numeroProtocolo} foi criado com sucesso!`, null);
+						this.navigateToIncidenteList();
 					},
 					(err) => {
-					  if (err.status === 401)
-					  {
-						TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.salvar();}));
-					  }
-					  else
-					  {
-						TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-					  }
+						if (err.status === 401) {
+							TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvar(); }));
+						}
+						else {
+							TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+						}
 					}
-				  );
+				);
 
 			}
 		}
@@ -257,7 +264,7 @@ export class IncidenteFormComponent implements OnInit {
 		return format
 	}
 
-  private pesquisaEmpresas() {
+	private pesquisaEmpresas() {
 		this.empresaService.listaTodasEmpresas().subscribe(
 			(retorno) => {
 				this.listaEmpresas = retorno.body;
@@ -265,12 +272,11 @@ export class IncidenteFormComponent implements OnInit {
 				let codEmpresa = this.form.controls.codigoEmpresa.value;
 				if (codEmpresa != 0) {
 					let empresaSel: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == codEmpresa)[0];
-					if (empresaSel)
-					{
+					if (empresaSel) {
 						this.form.controls.empresa.setValue(empresaSel);
 						this.form.controls.numeroCNPJ.setValue(empresaSel.numeroCNPJ);
 						this.form.controls.telefoneControlador.setValue(empresaSel.telefoneControlador);
-				
+
 						this.pesquisaUsuarios();
 					}
 				}
@@ -303,7 +309,7 @@ export class IncidenteFormComponent implements OnInit {
 	}
 
 	displayEmpresa(empresa: Empresa): string {
-			
+
 		return empresa && empresa.nomeEmpresa ? empresa.nomeEmpresa : '';
 	}
 
@@ -313,28 +319,24 @@ export class IncidenteFormComponent implements OnInit {
 				this.listaUsuarios = retorno.body;
 				let codEmpresa = this.form.controls.codigoEmpresa.value;
 				this.listaUsuariosEncarregados = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa &&
-																								 usuario.indTipoUsuario == environment.tipoUsuarioEncarregado);
-				this.listaUsuariosOperador     = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa &&
-																								 usuario.indTipoUsuario == environment.tipoUsuarioOperador);
+					usuario.indTipoUsuario == environment.tipoUsuarioEncarregado);
+				this.listaUsuariosOperador = <Usuario[]>this.listaUsuarios.filter(usuario => usuario.codigoEmpresa == codEmpresa &&
+					usuario.indTipoUsuario == environment.tipoUsuarioOperador);
 
 
 				let codigoUsuarioEncarregado = this.form.controls['codigoUsuarioEncarregado'].value;
 
-				if (codigoUsuarioEncarregado != 0 && codigoUsuarioEncarregado != null && codigoUsuarioEncarregado != undefined ) {
+				if (codigoUsuarioEncarregado != 0 && codigoUsuarioEncarregado != null && codigoUsuarioEncarregado != undefined) {
 					let usuarioSel: Usuario = <Usuario>this.listaUsuariosEncarregados.filter(usuario => usuario.codigoUsuario == codigoUsuarioEncarregado)[0];
-					if (usuarioSel)
-					{
+					if (usuarioSel) {
 						this.form.controls.usuarioEncarregado.setValue(usuarioSel);
 						this.form.controls.emailEncarregado.setValue(usuarioSel.emailUsuario);
 					}
 				}
-				else
-				{
-					if (this.listaUsuariosEncarregados.length === 1)
-					{
-						let usuarioSel: Usuario = <Usuario> this.listaUsuariosEncarregados[0];
-						if (usuarioSel)
-						{
+				else {
+					if (this.listaUsuariosEncarregados.length === 1) {
+						let usuarioSel: Usuario = <Usuario>this.listaUsuariosEncarregados[0];
+						if (usuarioSel) {
 							this.form.controls.usuarioEncarregado.setValue(usuarioSel);
 							this.form.controls.codigoUsuarioEncarregado.setValue(usuarioSel.codigoUsuario);
 							this.form.controls.emailEncarregado.setValue(usuarioSel.emailUsuario);
@@ -346,22 +348,18 @@ export class IncidenteFormComponent implements OnInit {
 
 				if (codigoUsuarioOperador != 0 && codigoUsuarioOperador != null && codigoUsuarioOperador != undefined) {
 					let usuarioSel: Usuario = <Usuario>this.listaUsuariosOperador.filter(usuario => usuario.codigoUsuario == codigoUsuarioOperador)[0];
-					if (usuarioSel)
-					{
+					if (usuarioSel) {
 						this.form.controls.usuarioOperador.setValue(usuarioSel);
 					}
 				}
-				else
-				{
-					if (this.listaUsuariosOperador.length === 1)
-					{
-						let usuarioSel: Usuario = <Usuario> this.listaUsuariosOperador[0];
-						if (usuarioSel)
-						{
+				else {
+					if (this.listaUsuariosOperador.length === 1) {
+						let usuarioSel: Usuario = <Usuario>this.listaUsuariosOperador[0];
+						if (usuarioSel) {
 							this.form.controls.usuarioOperador.setValue(usuarioSel);
 							this.form.controls.codigoUsuarioOperador.setValue(usuarioSel.codigoUsuario);
 						}
-					}	
+					}
 				}
 
 				this.listaUsuariosEncarregadosFiltrados = this.form.controls.usuarioEncarregado.valueChanges
@@ -386,43 +384,38 @@ export class IncidenteFormComponent implements OnInit {
 		this.isLoading = false;
 	}
 
-	private pesquisaProximoProtocolo()
-	{
+	private pesquisaProximoProtocolo() {
 		this.service.pesquisaProximoProtocolo().subscribe(
 			(response) => {
-				var protocolo: Protocolo = response.body; 
+				var protocolo: Protocolo = response.body;
 				this.form.controls['numeroProtocolo'].setValue(protocolo.numeroProtocolo);
 			},
 			(err) => {
-				if (err.status === 401)
-				{
-				  TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaProximoProtocolo();}));
+				if (err.status === 401) {
+					TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.pesquisaProximoProtocolo(); }));
 				}
-				else
-				{
-				  TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+				else {
+					TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
 				}
-			  }
+			}
 		);
 	}
 
-	verificaComunicacaoNoPrazo()
-	{
+	verificaComunicacaoNoPrazo() {
 
 		var dataComunicacao = new Date(this.form.controls['dataComunicacao'].value);
 		var dataHoraIncidente = new Date(this.form.controls['dataIncidente'].value);
 
-		if (this.datediff(dataHoraIncidente, dataComunicacao) > 2)
-		{
+		if (this.datediff(dataHoraIncidente, dataComunicacao) > 2) {
 			this.indNoPrazo = false;
 		}
-		else{
+		else {
 			this.indNoPrazo = true;
 		}
 	}
 
 	private datediff(first, second) {
-		return Math.round((second-first)/(1000*60*60*24)) + 1;
+		return Math.round((second - first) / (1000 * 60 * 60 * 24)) + 1;
 	}
 
 	private filtraUsuario(lista: Usuario[], value: string): Usuario[] {
@@ -434,8 +427,7 @@ export class IncidenteFormComponent implements OnInit {
 		let usuarioSelecionado: Usuario = event.option.value;
 		this.form.controls[campo].setValue(usuarioSelecionado);
 		this.form.controls[campoCodigo].setValue(usuarioSelecionado.codigoUsuario);
-		if (campo === 'usuarioEncarregado')
-		{
+		if (campo === 'usuarioEncarregado') {
 			this.form.controls.emailEncarregado.setValue(usuarioSelecionado.emailUsuario);
 		}
 	}
@@ -444,22 +436,21 @@ export class IncidenteFormComponent implements OnInit {
 		return usuario ? usuario.nomeUsuario : "";
 	}
 
-	navigateToIncidenteList()
-	{
+	navigateToIncidenteList() {
 		this.router.navigate(["/priva/incidente"]);
 	}
 
 	private requiredIfValidator(predicate) {
 
 		return (formControl => {
-		  if (!formControl.parent) {
+			if (!formControl.parent) {
+				return null;
+			}
+			if (predicate()) {
+				return Validators.required(formControl);
+			}
 			return null;
-		  }
-		  if (predicate()) {
-			return Validators.required(formControl); 
-		  }
-		  return null;
 		})
-	  }
+	}
 
 }
