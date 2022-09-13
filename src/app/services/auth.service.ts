@@ -82,7 +82,7 @@ export class AuthService {
 
   login(authRequest: AuthRequest) {    
 
-    // authRequest.password = this.aesService.criptogrfaSenha(authRequest.password)
+    authRequest.password = this.aesService.criptogrfaSenha(authRequest.password)
 
     this.http.post<AuthData>(environment.apiURL + "usuario/login", authRequest, { observe: 'response' }).subscribe( 
       resp => {        
