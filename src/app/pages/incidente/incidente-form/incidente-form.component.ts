@@ -200,6 +200,11 @@ export class IncidenteFormComponent implements OnInit {
 				registro.dataRegistro = this.formataData(this.form.controls['dataRegistro'].value);
 			if (registro.dataComunicacao)
 				registro.dataComunicacao = this.formataData(this.form.controls['dataComunicacao'].value);
+			if (registro.indRelatorioImpacto) {
+				registro.indRelatorioImpacto = 1;
+			} else {
+				registro.indRelatorioImpacto = 0;
+			}
 			if (this.codigoIncidente) {
 				//Alteração
 				this.service.alterar(registro).subscribe(
