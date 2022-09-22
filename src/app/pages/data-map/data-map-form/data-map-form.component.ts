@@ -55,7 +55,7 @@ export class DataMapFormComponent implements OnInit {
 	codDataMap: number;
 	dataMapForm: FormGroup;
 	isLoading = false;
-	indTipo : number;
+	indTipo: number;
 
 	codCicloMonitoramento: number;
 
@@ -82,7 +82,7 @@ export class DataMapFormComponent implements OnInit {
 	listaMetadados: Metadados[];
 	metadados: Metadados[];
 	listaMetadadosFiltrados: Observable<Metadados[]>;
-  
+
 	separatorKeysCodes: number[] = [ENTER, COMMA];
 	metadadosCtrl = new FormControl();
 	metadadosDataMap: Metadados[] = [];
@@ -112,7 +112,7 @@ export class DataMapFormComponent implements OnInit {
 	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 	@ViewChild(MatSort, { static: false }) sort: MatSort;
 
-	@ViewChild('metadadosInput',{static: false}) metadadosInput: ElementRef<HTMLInputElement>;
+	@ViewChild('metadadosInput', { static: false }) metadadosInput: ElementRef<HTMLInputElement>;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -159,7 +159,7 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm = this.formBuilder.group({
 
 			codEmpresa: [0, Validators.required],
-			empresa: ["", Validators.required],			
+			empresa: ["", Validators.required],
 			dataCompetencia: [""],
 
 			codArea: ["", Validators.required],
@@ -189,7 +189,7 @@ export class DataMapFormComponent implements OnInit {
 
 			codCicloVida: ["", Validators.required],
 			cicloVida: ["", Validators.required],
-			
+
 			indRisco: ["", Validators.required],
 			desObservacoes: [""],
 
@@ -208,9 +208,8 @@ export class DataMapFormComponent implements OnInit {
 
 		});
 
-		
-		if (this.indTipo === 2)
-		{
+
+		if (this.indTipo === 2) {
 			this.dataMapForm.controls.indPrincipios.disable();
 			this.dataMapForm.controls.indSensivel.disable();
 			this.dataMapForm.controls.indDadosMenores.disable();
@@ -225,7 +224,7 @@ export class DataMapFormComponent implements OnInit {
 		}
 	}
 
-	pesquisaDataMap() {		
+	pesquisaDataMap() {
 
 		this.activatedRoute.params.subscribe(
 			(data) => {
@@ -235,28 +234,24 @@ export class DataMapFormComponent implements OnInit {
 					this.dataMapService.pesquisaDataMap(this.codDataMap).subscribe(
 						(retorno) => {
 
-							if (retorno.body[0].indTipo != this.indTipo)
-							{
-								if (this.indTipo==0)
-								{
+							if (retorno.body[0].indTipo != this.indTipo) {
+								if (this.indTipo == 0) {
 									this.router.navigate(["/priva/data-map"]);
 								}
-								else if (this.indTipo==1)
-								{
+								else if (this.indTipo == 1) {
 									this.router.navigate(["/priva/data-analisys-map"]);
 								}
-								else
-								{
+								else {
 									this.router.navigate(["/priva/data-governance-map"]);
 								}
 							}
 
 							this.dataMapForm.patchValue({
 								codDataMap: retorno.body[0].codDataMap,
-								
+
 								codEmpresa: retorno.body[0].codEmpresa,
 								dataCompetencia: retorno.body[0].dataCompetencia,
-								
+
 								codArea: retorno.body[0].codArea,
 								codProcesso: retorno.body[0].codProcesso,
 								codAtividade: retorno.body[0].codAtividade,
@@ -289,6 +284,11 @@ export class DataMapFormComponent implements OnInit {
 								indAnonimizar: retorno.body[0].indAnonimizar
 							});
 
+							if (retorno.body[0].dataCompetencia) {
+								let dataCompetencia = new Date(retorno.body[0].dataCompetencia)
+								dataCompetencia.setHours(dataCompetencia.getHours() + 3)
+								this.dataMapForm.controls["dataCompetencia"].setValue(dataCompetencia)
+							}
 							this.metadadosDataMap = retorno.body[0].metadados;
 
 							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
@@ -322,13 +322,12 @@ export class DataMapFormComponent implements OnInit {
 		this.pesquisaBaselegal();
 		this.pesquisaMetadados();
 		this.pesquisaCicloVida();
-		
+
 		this.pesquisaFormaColetas();
 		this.pesquisaLocalArmazenamento();
 		this.pesquisaCompartilhamentos();
 
-		if (this.indTipo === 2)
-		{
+		if (this.indTipo === 2) {
 			this.pesquisaRisco();
 			this.pesquisaRiscoAssociado();
 			this.pesquisaAmeaca();
@@ -339,15 +338,13 @@ export class DataMapFormComponent implements OnInit {
 
 		if (this.dataMapForm.valid) {
 
-			if (this.codCicloMonitoramento == null)
-			{
+			if (this.codCicloMonitoramento == null) {
 				TrataExcessaoConexao.TrataExcessao('Não Existem Ciclos de Monitoramento para a Empresa Selecionada!', this.snackBar);
 				return;
 			}
 
-			if (this.metadadosDataMap.length===0)
-			{
-				this.showMessage("Deve Ser Selecionado ao menos um Metadado","Warn");
+			if (this.metadadosDataMap.length === 0) {
+				this.showMessage("Deve Ser Selecionado ao menos um Metadado", "Warn");
 				return;
 			}
 
@@ -367,8 +364,7 @@ export class DataMapFormComponent implements OnInit {
 			DataMap.codCicloMonitoramento = this.codCicloMonitoramento;
 			DataMap.metadados = this.metadadosDataMap;
 
-			if (this.indTipo === 2)
-			{
+			if (this.indTipo === 2) {
 				DataMap.indDescarte = (this.dataMapForm.controls.indDescarte.value ? 1 : 0);
 				DataMap.indRevisarPermissoes = (this.dataMapForm.controls.indRevisarPermissoes.value ? 1 : 0);
 				DataMap.indAnonimizar = (this.dataMapForm.controls.indAnonimizar.value ? 1 : 0);
@@ -378,18 +374,15 @@ export class DataMapFormComponent implements OnInit {
 				// Alteração
 				this.dataMapService.alterarDataMap(DataMap).subscribe(
 					(response) => {
-						if (this.indTipo==1)
-						{
+						if (this.indTipo == 1) {
 							this.snackBar.openSnackBar(`Data Analisys Map Alterado com Sucesso`, null);
 							this.router.navigate(["/priva/data-analisys-map"]);
 						}
-						else if (this.indTipo==2)
-						{
+						else if (this.indTipo == 2) {
 							this.snackBar.openSnackBar(`Data Governance Map Alterado com Sucesso`, null);
 							this.router.navigate(["/priva/data-governance-map"]);
 						}
-						else 
-						{
+						else {
 							this.snackBar.openSnackBar(`Data Map Alterado com Sucesso`, null);
 							this.router.navigate(["/priva/data-map"]);
 						}
@@ -407,18 +400,15 @@ export class DataMapFormComponent implements OnInit {
 				// Inclusão
 				this.dataMapService.incluirDataMap(DataMap).subscribe(
 					(response) => {
-						if (this.indTipo==1)
-						{
+						if (this.indTipo == 1) {
 							this.snackBar.openSnackBar(`Data Analisys Map Criado com Sucesso`, null);
 							this.router.navigate(["/priva/data-analisys-map"]);
 						}
-						else if (this.indTipo==2)
-						{
+						else if (this.indTipo == 2) {
 							this.snackBar.openSnackBar(`Data Governance Map Criado com Sucesso`, null);
 							this.router.navigate(["/priva/data-governance-map"]);
 						}
-						else
-						{
+						else {
 							this.snackBar.openSnackBar(`Data  Map Criado com Sucesso`, null);
 							this.router.navigate(["/priva/data-map"]);
 						}
@@ -434,8 +424,8 @@ export class DataMapFormComponent implements OnInit {
 				)
 			}
 		} else {
-      		this.showMessage("Campos obrigatórios não foram preenchidos", "Warn");
-    	}
+			this.showMessage("Campos obrigatórios não foram preenchidos", "Warn");
+		}
 	}
 
 	displayMetadados(metadados: Metadados): string {
@@ -450,45 +440,44 @@ export class DataMapFormComponent implements OnInit {
 			this.listaMetadados.push(metadados);
 		}
 
-		this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+		this.listaMetadados.sort((a, b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
 
 		this.metadadosCtrl.setValue("");
 	}
-	
+
 	selectedMetadados(event: MatAutocompleteSelectedEvent): void {
 
 		var metadadosSelected: Metadados;
 		metadadosSelected = event.option.value;
 		this.metadadosDataMap.push(metadadosSelected);
-	
+
 		this.metadadosInput.nativeElement.value = '';
 		const index = this.listaMetadados.indexOf(metadadosSelected);
-	
+
 		if (index >= 0) {
-		  this.listaMetadados.splice(index, 1);
+			this.listaMetadados.splice(index, 1);
 		}
 		this.metadadosCtrl.setValue("");
 
-		if (metadadosSelected.indSensivel == 1)
-		{
+		if (metadadosSelected.indSensivel == 1) {
 			this.dataMapForm.controls.indSensivel.setValue(1);
 		}
 	}
 
-	private pesquisaMetadados() {    
+	private pesquisaMetadados() {
 		this.metadadosService.listaTodosMetadados().subscribe(
 			(retorno) => {
-			this.listaMetadados = retorno.body;    
-			
-			this.removeSelecionados();
-		
-			this.listaMetadadosFiltrados = this.metadadosCtrl.valueChanges
-				.pipe(
-				startWith(''),
-				map(value => typeof value === 'string' ? value: value.nomeMetadados),
-				map(name => {
-					return name ? this.filtraMetadados(name): this.listaMetadados.slice();
-				}));
+				this.listaMetadados = retorno.body;
+
+				this.removeSelecionados();
+
+				this.listaMetadadosFiltrados = this.metadadosCtrl.valueChanges
+					.pipe(
+						startWith(''),
+						map(value => typeof value === 'string' ? value : value.nomeMetadados),
+						map(name => {
+							return name ? this.filtraMetadados(name) : this.listaMetadados.slice();
+						}));
 
 				this.isLoading = false;
 
@@ -498,38 +487,34 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	//Remove os Metadados já selecionados da lista de todos os Metadados Cadastrados
-	removeSelecionados()
-	{
+	removeSelecionados() {
 		var index = -1;
-		if (this.listaMetadados != undefined && this.listaMetadados.length!=0 &&
-			this.metadadosDataMap != undefined && this.metadadosDataMap.length!=0)
-		{
-		var listaAux = this.listaMetadados;
-		this.listaMetadados = [];
-		listaAux.forEach(meta => {
-			index = -1;
-			this.metadadosDataMap.forEach(metaDataMap => {
-			if (meta.codMetadados === metaDataMap.codMetadados)
-			{
-				index = 1;
-			}          
-			});
+		if (this.listaMetadados != undefined && this.listaMetadados.length != 0 &&
+			this.metadadosDataMap != undefined && this.metadadosDataMap.length != 0) {
+			var listaAux = this.listaMetadados;
+			this.listaMetadados = [];
+			listaAux.forEach(meta => {
+				index = -1;
+				this.metadadosDataMap.forEach(metaDataMap => {
+					if (meta.codMetadados === metaDataMap.codMetadados) {
+						index = 1;
+					}
+				});
 
-			if (index===-1)
-			{
-				this.listaMetadados.push(meta);
-			}
-		});
-		this.listaMetadados.sort((a,b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
-		
-		this.metadadosCtrl.setValue("");
+				if (index === -1) {
+					this.listaMetadados.push(meta);
+				}
+			});
+			this.listaMetadados.sort((a, b) => a.nomeMetadados.localeCompare(b.nomeMetadados));
+
+			this.metadadosCtrl.setValue("");
 		}
-	}  
+	}
 
 	filtraMetadados(value: string): Metadados[] {
 		const filterValue = value.toLowerCase();
 		return this.listaMetadados.filter(item => item.nomeMetadados.trim().toLowerCase().includes(filterValue));
-	}	  
+	}
 
 	private pesquisaAtividade(codProcesso: number) {
 		this.isLoading = true;
@@ -555,19 +540,16 @@ export class DataMapFormComponent implements OnInit {
 	selecionaAtividade(event) {
 		let selecionado: Atividade = event.option.value;
 		this.dataMapForm.controls.atividade.setValue(selecionado);
-		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);		
+		this.dataMapForm.controls.codAtividade.setValue(selecionado.codAtividade);
 
-		if (!this.codDataMap)
-		{
+		if (!this.codDataMap) {
 			this.isLoading = true;
-			if (this.indTipo == 1)
-			{
+			if (this.indTipo == 1) {
 				//Se for Data Analisys Map, buscar informações do Data Map
 				this.dataMapService.pesquisaDataMapCicloAtividadeTipo(this.codCicloMonitoramento, selecionado.codAtividade, 0).subscribe(
 					(retorno) => {
 
-						if (retorno.body[0])
-						{
+						if (retorno.body[0]) {
 							this.metadadosDataMap = retorno.body[0].metadados;
 
 							let baseLegal: BaseLegal = <BaseLegal>this.listaBaseLegal.filter(baseLegal => baseLegal.codigoBase == retorno.body[0].codBaseLegal)[0];
@@ -600,14 +582,12 @@ export class DataMapFormComponent implements OnInit {
 						this.isLoading = false;
 					});
 			}
-			else if (this.indTipo == 2)
-			{
+			else if (this.indTipo == 2) {
 				//Se for Data Governance Map, buscar informações do Data Analisys Map
 				this.dataMapService.pesquisaDataMapCicloAtividadeTipo(this.codCicloMonitoramento, selecionado.codAtividade, 1).subscribe(
 					(retorno) => {
 
-						if (retorno.body[0])
-						{
+						if (retorno.body[0]) {
 							this.metadadosDataMap = retorno.body[0].metadados;
 
 							let baseLegal: BaseLegal = <BaseLegal>this.listaBaseLegal.filter(baseLegal => baseLegal.codigoBase == retorno.body[0].codBaseLegal)[0];
@@ -639,15 +619,13 @@ export class DataMapFormComponent implements OnInit {
 						this.isLoading = false;
 					});
 			}
-			else
-			{
+			else {
 				//Se for Data map, buscar informações do Data Flow
-				
+
 				this.dataFlowService.pesquisaDataFlowCicloAtividade(this.codCicloMonitoramento, selecionado.codAtividade).subscribe(
 					(retorno) => {
 
-						if (retorno.body[0])
-						{
+						if (retorno.body[0]) {
 
 							let cicloVida: CicloDeVida = <CicloDeVida>this.listaCicloVida.filter(cicloVida => cicloVida.codCicloVida == retorno.body[0].codCicloVida)[0];
 							if (cicloVida) {
@@ -670,8 +648,7 @@ export class DataMapFormComponent implements OnInit {
 					});
 			}
 		}
-		else
-		{
+		else {
 
 			this.metadadosDataMap = selecionado.metadados;
 			this.testaMetadadosSensiveis();
@@ -679,11 +656,9 @@ export class DataMapFormComponent implements OnInit {
 		}
 	}
 
-	private testaMetadadosSensiveis()
-	{
+	private testaMetadadosSensiveis() {
 		this.metadadosDataMap.forEach(metadados => {
-			if (metadados.indSensivel === 1 )
-			{
+			if (metadados.indSensivel === 1) {
 				this.dataMapForm.controls.indSensivel.setValue(1);
 			}
 		});
@@ -941,7 +916,7 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.codProcesso.setValue(null);
 		this.dataMapForm.controls.processo.setValue(null);
 		this.dataMapForm.controls.codAtividade.setValue(null);
-    	this.dataMapForm.controls.atividade.setValue(null);
+		this.dataMapForm.controls.atividade.setValue(null);
 
 		this.isLoading = true;
 
@@ -961,13 +936,15 @@ export class DataMapFormComponent implements OnInit {
 				this.isLoading = false;
 				if (retorno.body != null) {
 					this.codCicloMonitoramento = retorno.body.codCicloMonitoramento;
-					this.dataMapForm.controls.dataCompetencia.setValue(retorno.body.dataCompetencia);
+					let dataCompetencia = new Date(retorno.body.dataCompetencia)
+					dataCompetencia.setHours(dataCompetencia.getHours() + 3)
+					this.dataMapForm.controls["dataCompetencia"].setValue(dataCompetencia)
 				} else {
 					this.codCicloMonitoramento = null;
 					TrataExcessaoConexao.TrataExcessao('Não existem ciclos de monitoramento para a empresa selecionada!', this.snackBar);
 				}
 			}
-		)		
+		)
 	}
 
 	private pesquisaArea(codEmpresa: number) {
@@ -985,7 +962,7 @@ export class DataMapFormComponent implements OnInit {
 				this.listaAreasFiltradas = this.dataMapForm.controls.area.valueChanges
 					.pipe(
 						startWith(''),
-						map(value => value === undefined || value === null ? "": value),
+						map(value => value === undefined || value === null ? "" : value),
 						map(value => typeof value === 'string' ? value : value.nomeArea),
 						map(name => {
 							return name ? this.filtraArea(name) : this.listaAreas.slice();
@@ -1033,7 +1010,7 @@ export class DataMapFormComponent implements OnInit {
 				this.listaProcessosFiltradas = this.dataMapForm.controls.processo.valueChanges
 					.pipe(
 						startWith(''),
-						map(value => value === undefined || value === null ? "": value),
+						map(value => value === undefined || value === null ? "" : value),
 						map(value => typeof value === 'string' ? value : value.nomeProcesso),
 						map(name => {
 							return name ? this.filtraProcesso(name) : this.listaProcessos.slice();
@@ -1053,7 +1030,7 @@ export class DataMapFormComponent implements OnInit {
 		this.dataMapForm.controls.codProcesso.setValue(processoSelecionada.codProcesso);
 
 		this.dataMapForm.controls.codAtividade.setValue(null);
-    	this.dataMapForm.controls.atividade.setValue(null);
+		this.dataMapForm.controls.atividade.setValue(null);
 
 		this.pesquisaAtividade(processoSelecionada.codProcesso);
 	}
@@ -1091,81 +1068,69 @@ export class DataMapFormComponent implements OnInit {
 		)
 	}
 
-	excluirPlano(planoMitigacao: PlanoMitigacao)
-    {
-        const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
-            data: {
-              title: "Confirmar Exclusão do Plano de Mitigação",
-              msg: `Tem certeza que deseja prosseguir com exclusão do Plano de Mitigação ${planoMitigacao.desPlanoMitigacao}?`,
-            },
-          });
+	excluirPlano(planoMitigacao: PlanoMitigacao) {
+		const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+			data: {
+				title: "Confirmar Exclusão do Plano de Mitigação",
+				msg: `Tem certeza que deseja prosseguir com exclusão do Plano de Mitigação ${planoMitigacao.desPlanoMitigacao}?`,
+			},
+		});
 
-          confirmRemoveDialog.afterClosed().subscribe((result) => {
-            if (result) {
-              this.confirmaExclusaoPlano(planoMitigacao);
-              this.isLoading = true;
-            }
-          });  
-    }
+		confirmRemoveDialog.afterClosed().subscribe((result) => {
+			if (result) {
+				this.confirmaExclusaoPlano(planoMitigacao);
+				this.isLoading = true;
+			}
+		});
+	}
 
-    confirmaExclusaoPlano(planoMitigacao: PlanoMitigacao)
-    {
-        this.planoMitigacaoService.excluirPlanoMitigacao(planoMitigacao.codPlanoMitigacao).subscribe((response) => {
-            this.snackBar.openSnackBar(
-              `Plano de Mitigação ${planoMitigacao.desPlanoMitigacao} foi excluído com Sucesso.`,
-              null
-            );
-            this.pesquisaPlanoMitigacao(this.codDataMap);
-          },
-          (err) => {
-            if (err.status === 401)
-            {
-              TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.confirmaExclusaoPlano(planoMitigacao);}));
-            }
-            else
-            {
-              TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-              this.isLoading = false;
-            }
-          });
-    }
+	confirmaExclusaoPlano(planoMitigacao: PlanoMitigacao) {
+		this.planoMitigacaoService.excluirPlanoMitigacao(planoMitigacao.codPlanoMitigacao).subscribe((response) => {
+			this.snackBar.openSnackBar(
+				`Plano de Mitigação ${planoMitigacao.desPlanoMitigacao} foi excluído com Sucesso.`,
+				null
+			);
+			this.pesquisaPlanoMitigacao(this.codDataMap);
+		},
+			(err) => {
+				if (err.status === 401) {
+					TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.confirmaExclusaoPlano(planoMitigacao); }));
+				}
+				else {
+					TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+					this.isLoading = false;
+				}
+			});
+	}
 
-	calculaRisco()
-	{
+	calculaRisco() {
 		var indRisco: number = 0;
 
-		if (this.dataMapForm.controls.indSensivel.value == 1)
-		{
+		if (this.dataMapForm.controls.indSensivel.value == 1) {
 			indRisco++;
 		}
 
-		if (this.dataMapForm.controls.indDadosMenores.value == 1)
-		{
+		if (this.dataMapForm.controls.indDadosMenores.value == 1) {
 			indRisco++;
 		}
 
-		if (this.dataMapForm.controls.indNecessitaConsentimento.value == 1)
-		{
+		if (this.dataMapForm.controls.indNecessitaConsentimento.value == 1) {
 			indRisco++;
 		}
 
-		if (this.dataMapForm.controls.indTransfInternacional.value == 1)
-		{
+		if (this.dataMapForm.controls.indTransfInternacional.value == 1) {
 			indRisco++;
 		}
 
-		if (this.dataMapForm.controls.indAnonimizacao.value == 1)
-		{
+		if (this.dataMapForm.controls.indAnonimizacao.value == 1) {
 			indRisco++;
 		}
 
-		if (indRisco===0)
-		{
+		if (indRisco === 0) {
 			indRisco = 1;
 		}
 
-		if (indRisco>4)
-		{
+		if (indRisco > 4) {
 			indRisco = 4;
 		}
 
@@ -1174,7 +1139,7 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	private showMessage(msg: string, type: string = "Success") {
-    	this.snackBar.openSnackBar(msg, null, type);
+		this.snackBar.openSnackBar(msg, null, type);
 	}
 
 }

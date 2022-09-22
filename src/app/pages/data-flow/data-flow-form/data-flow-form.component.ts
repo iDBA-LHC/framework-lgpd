@@ -173,6 +173,12 @@ export class DataFlowFormComponent implements OnInit {
 								compartilhamentos: retorno.body[0].compartilhamentos
 							});
 
+							if (retorno.body[0].dataCompetencia) {
+								let dataCompetencia = new Date(retorno.body[0].dataCompetencia)
+								dataCompetencia.setHours(dataCompetencia.getHours() + 3)
+								this.dataFlowForm.controls["dataCompetencia"].setValue(dataCompetencia)
+							}
+
 							this.metadadosDataFlow = retorno.body[0].metadados;
 
 							this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;

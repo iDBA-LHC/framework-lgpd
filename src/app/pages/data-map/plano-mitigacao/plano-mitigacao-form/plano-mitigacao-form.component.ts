@@ -99,6 +99,32 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 
 							});
 
+							if (retorno.body[0].dataElaboracao) {
+								let dataElaboracao = new Date(retorno.body[0].dataElaboracao)
+								dataElaboracao.setHours(dataElaboracao.getHours() + 3)
+								this.planoMitigacaoForm.controls["dataElaboracao"].setValue(dataElaboracao)
+							}
+							if (retorno.body[0].dataAditivacao) {
+								let dataAditivacao = new Date(retorno.body[0].dataAditivacao)
+								dataAditivacao.setHours(dataAditivacao.getHours() + 3)
+								this.planoMitigacaoForm.controls["dataAditivacao"].setValue(dataAditivacao)
+							}
+							if (retorno.body[0].dataRevisao) {
+								let dataRevisao = new Date(retorno.body[0].dataRevisao)
+								dataRevisao.setHours(dataRevisao.getHours() + 3)
+								this.planoMitigacaoForm.controls["dataRevisao"].setValue(dataRevisao)
+							}
+							if (retorno.body[0].dataRecusa) {
+								let dataRecusa = new Date(retorno.body[0].dataRecusa)
+								dataRecusa.setHours(dataRecusa.getHours() + 3)
+								this.planoMitigacaoForm.controls["dataRecusa"].setValue(dataRecusa)
+							}
+							if (retorno.body[0].dataStatus) {
+								let dataStatus = new Date(retorno.body[0].dataStatus)
+								dataStatus.setHours(dataStatus.getHours() + 3)
+								this.planoMitigacaoForm.controls["dataStatus"].setValue(dataStatus)
+							}
+
 							this.pesquisaDocumentoPlano();
 						},
 						(err) => {

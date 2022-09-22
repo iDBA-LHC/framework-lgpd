@@ -94,6 +94,11 @@ export class CicloMonitoramentoFormComponent implements OnInit {
               dataCompetencia: retorno.body[0].dataCompetencia,
 			        usuarios: retorno.body[0].usuarios
             });
+            if (retorno.body[0].dataCompetencia) {
+							let dataCompetencia = new Date(retorno.body[0].dataCompetencia)
+							dataCompetencia.setHours(dataCompetencia.getHours() + 3)
+							this.cicloMonitoramentoForm.controls["dataCompetencia"].setValue(dataCompetencia)
+						}
             this.cicloMonitoramentoUsuarioCriado = retorno.body[0].codUsuarioInclusao;
 
             this.pesquisaEmpresas();
