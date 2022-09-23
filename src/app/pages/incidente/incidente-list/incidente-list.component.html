@@ -92,7 +92,7 @@
 
       <ng-container matColumnDef="dataIncidente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Incidente</th>
-        <td mat-cell *matCellDef="let element; let i = index">{{ element.dataIncidente | date:'dd/MM/yyyy' }}</td>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.dataIncidente | date:'dd/MM/yyyy':'UTC +3' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="statusIncidente">
