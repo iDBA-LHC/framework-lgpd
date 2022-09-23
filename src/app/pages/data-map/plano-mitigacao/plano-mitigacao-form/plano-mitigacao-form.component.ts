@@ -99,6 +99,11 @@ export class PlanoMitigacaoFormComponent implements OnInit {
 
 							});
 
+							if (retorno.body[0].dataLimite) {
+								let dataLimite = new Date(retorno.body[0].dataLimite)
+								dataLimite.setHours(dataLimite.getHours() + 3)
+								this.planoMitigacaoForm.controls["dataLimite"].setValue(dataLimite)
+							}
 							if (retorno.body[0].dataElaboracao) {
 								let dataElaboracao = new Date(retorno.body[0].dataElaboracao)
 								dataElaboracao.setHours(dataElaboracao.getHours() + 3)
