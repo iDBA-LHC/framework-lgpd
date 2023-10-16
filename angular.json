@@ -60,6 +60,67 @@
                   "with": "src/environments/environment.bellube.ts"
                 }
               ],
+              "outputPath": "dist/producao/bellube",
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "fco": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fco.ts"
+                }
+              ],
+              "outputPath": "dist/producao/fco",
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "fepe": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fepe.ts"
+                }
+              ],
+              "outputPath": "dist/producao/fepe",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -89,6 +150,7 @@
                   "with": "src/environments/environment.homologacao.ts"
                 }
               ],
+              "outputPath": "dist/homologacao/externo",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -118,6 +180,7 @@
                   "with": "src/environments/environment.homologacao-interno.ts"
                 }
               ],
+              "outputPath": "dist/homologacao/interno",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
