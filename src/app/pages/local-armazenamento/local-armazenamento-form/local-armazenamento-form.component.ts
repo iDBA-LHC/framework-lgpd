@@ -52,7 +52,7 @@ export class LocalArmazenamentoFormComponent implements OnInit {
       indProvedorNacional: [false, ],
       indNuvem: [false, ],
       nomeProvedorNuvem: ["", ],
-      codCompartilhamento: [],
+      codCompartilhamento: [0],
       compartilhamento: []
     });
   }
