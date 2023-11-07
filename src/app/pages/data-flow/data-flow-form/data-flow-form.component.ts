@@ -255,8 +255,8 @@ export class DataFlowFormComponent implements OnInit {
 				// Alteração
 				this.DataFlowService.alterarDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`Data Flow Atualizado com Sucesso!`, null);
-						this.router.navigate(["/priva/data-flow"]);
+						this.snackBar.openSnackBar(`Data Map Atualizado com Sucesso!`, null);
+						this.router.navigate(["/priva/data-map"]);
 					},
 					(err) => {
 						if (err.status === 401) {
@@ -271,8 +271,8 @@ export class DataFlowFormComponent implements OnInit {
 				// Inclusão
 				this.DataFlowService.incluirDataFlow(DataFlow).subscribe(
 					(response) => {
-						this.snackBar.openSnackBar(`Data Flow Criado com Sucesso!`, null);
-						this.router.navigate(["/priva/data-flow"]);
+						this.snackBar.openSnackBar(`Data Map Criado com Sucesso!`, null);
+						this.router.navigate(["/priva/data-map"]);
 					},
 					(err) => {
 						if (err.status === 401) {

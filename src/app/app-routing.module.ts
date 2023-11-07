@@ -136,8 +136,8 @@ const routes: Routes = [
       }, {
         path: "data-map",
         loadChildren: () =>
-          import("./pages/data-map/data-map.module").then(
-            (module) => module.DataMapModule
+          import("./pages/data-flow/data-flow.module").then(
+            (module) => module.DataFlowModule
           ),
         canActivate: [AuthGuard],
       }, {
@@ -155,14 +155,15 @@ const routes: Routes = [
             (module) => module.DataMapModule
           ),
         canActivate: [AuthGuard],
-      }, {
-        path: "data-flow",
-        loadChildren: () =>
-          import("./pages/data-flow/data-flow.module").then(
-            (module) => module.DataFlowModule
-          ),
-        canActivate: [AuthGuard],
-      },
+      }, 
+      // {
+      //   path: "data-flow",
+      //   loadChildren: () =>
+      //     import("./pages/data-flow/data-flow.module").then(
+      //       (module) => module.DataFlowModule
+      //     ),
+      //   canActivate: [AuthGuard],
+      // },
       {
         path: "mapa-tratamento-dados",
         loadChildren: () =>

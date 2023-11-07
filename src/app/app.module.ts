@@ -21,6 +21,7 @@ import { PopupModule } from './shared/popup.module';
 import { StorageServiceModule} from 'angular-webstorage-service';
 import { AuthMeuUsuarioGuard } from './guards/auth-meu-usuario.guard';
 import { AuthTokenInterceptor } from './shared/utils/auth-token-interceptor';
+import { ɵb } from "ng-material-multilevel-menu";
 
 export function jwtOptionsFactory() {
   return {
@@ -65,6 +66,7 @@ export function tokenGetter() {
     PopupModule,
   ],
   providers: [
+    ɵb,
     AuthGuard,
     AuthMeuUsuarioGuard,
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlPTBR },

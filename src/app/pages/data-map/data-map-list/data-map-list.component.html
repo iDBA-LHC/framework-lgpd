@@ -71,7 +71,8 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
             <div class="example-button-row">
-              <button *ngIf="indTipo == 0" mat-raised-button class="edit-button" [routerLink]="['/priva/data-map', element.codDataMap]">Editar</button>
+              <!-- <button *ngIf="indTipo == 0" mat-raised-button class="edit-button" [routerLink]="['/priva/data-map', element.codDataMap]">Editar</button> -->
+			        <button *ngIf="indTipo == 1" mat-raised-button class="action-button" (click)="checkIfDataExists(element)">Criar Data Governance Map</button>
 			        <button *ngIf="indTipo == 1" mat-raised-button class="edit-button" [routerLink]="['/priva/data-analisys-map', element.codDataMap]">Editar</button>
               <button *ngIf="indTipo == 2" mat-raised-button class="edit-button" [routerLink]="['/priva/data-governance-map', element.codDataMap]">Editar</button>
             </div>

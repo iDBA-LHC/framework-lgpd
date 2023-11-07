@@ -43,4 +43,8 @@ export class DataMapService {
 	{
 		return this.http.get<DataMap[]>(`${environment.apiURL}${this.apiSuffix}empresa/${codigoEmpresa}/ciclo_monitoramento/${codigoClicloMonitoramento}/area/${codigoArea}/processo/${codigoProcesso}/atividade/${codigoAtividade}/graurisco/${indGrauRisco}/sensiveis/${indDadosSensiveis}/tipo/${indTipo}`, { observe: "response" });
 	}
+
+	excluirDataMap(id: number) {
+		return this.http.delete(`${environment.apiURL}${this.apiSuffix}${id}`, { observe: "response" });
+	}
 }

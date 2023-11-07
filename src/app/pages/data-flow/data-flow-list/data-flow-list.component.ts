@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { DataFlow } from 'src/app/models/data-flow/data-flow';
+import { DataMapService } from 'src/app/services/data-map.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataFlowService } from 'src/app/services/data-flow.service';
 import { CustomSnackBarService } from 'src/app/shared/components/custom-snack-bar/custom-snack-bar.service';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
+import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-data-flow-list',
@@ -22,6 +25,9 @@ export class DataFlowListComponent implements OnInit {
 
   constructor(
     private dataFlowService: DataFlowService,
+    private DataMapService: DataMapService,
+    private dialog: MatDialog,
+    private router: Router,
     private snackBar: CustomSnackBarService,
     private authService: AuthService
   ) { }
@@ -47,10 +53,10 @@ export class DataFlowListComponent implements OnInit {
           },
           filterValue: string
         ) => data.nomeEmpresa.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-             data.nomeArea.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-             data.nomeProcesso.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-             data.nomeAtividade.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-             data.dataCompetencia.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+        data.nomeArea.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+        data.nomeProcesso.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+        data.nomeAtividade.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+          data.dataCompetencia.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -66,6 +72,36 @@ export class DataFlowListComponent implements OnInit {
         }
       }
     );
+  }
+
+  checkIfDataExists(element) {
+    this.DataMapService.pesquisaDataMapCicloAtividadeTipo(element.codCicloMonitoramento, element.codAtividade, 1).subscribe(
+      (response) => {
+        if (response.body[0]) {
+          const confirmRemoveDialog = this.dialog.open(ConfirmModalComponent, {
+            data: {
+              title: "Já Existe Data Analisys Map Cadastrado Para Esta Atividade Neste Ciclo de Monitoramento",
+              msg: `Deseja atualizar o Data Analisys Map existente?`,
+            },
+          });
+
+          confirmRemoveDialog.afterClosed().subscribe((result) => {
+            if (result) {
+              this.router.navigate(['/priva/data-analisys-map/children', element.codDataFlow, response.body[0].codDataMap]);
+            }
+          });
+        } else {
+          this.router.navigate(['/priva/data-analisys-map/children', element.codDataFlow]);
+        }
+      },
+      (err) => {
+        if (err.status == 401) {
+          TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.checkIfDataExists(element); }));
+        } else {
+          TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+        }
+      }
+    )
   }
 
   applyFilter(value: string) {

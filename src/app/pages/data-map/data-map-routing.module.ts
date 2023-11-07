@@ -13,8 +13,15 @@ const routes: Routes = [{
   loadChildren: () =>
     import("./data-map-form/data-map-form.module").then(
       (module) => module.DataMapFormModule
-    )
+    ) 
 }, {
+  path: "children/:childrenId/:id?",
+  loadChildren: () =>
+    import("./data-map-form/data-map-form.module").then(
+      (module) => module.DataMapFormModule
+    )
+}, 
+{
   path: ":codDataMap/plano-mitigacao/:id?",
   loadChildren: () =>
     import("./plano-mitigacao/plano-mitigacao-form/plano-mitigacao-form.module").then(

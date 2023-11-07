@@ -84,12 +84,13 @@ export class MenuItems {
 				}
 			]
 		},	
+		// {
+		// 	label: "Data Flow",
+		// 	link: "priva/data-flow",
+		// 	icon: "account_tree",
+		// 	hidden: false,
+    	// }, 
 		{
-			label: "Data Flow",
-			link: "priva/data-flow",
-			icon: "account_tree",
-			hidden: false,
-    	}, {
 			label: "Data Map",
 			link: "priva/data-map",
 			icon: "travel_explore",

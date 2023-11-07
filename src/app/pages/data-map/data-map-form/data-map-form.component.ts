@@ -53,6 +53,7 @@ export class DataMapFormComponent implements OnInit {
 	permiteExclusao = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
 	codDataMap: number;
+	codChildrenData: number;
 	dataMapForm: FormGroup;
 	isLoading = false;
 	indTipo: number;
@@ -228,6 +229,7 @@ export class DataMapFormComponent implements OnInit {
 
 		this.activatedRoute.params.subscribe(
 			(data) => {
+				this.codChildrenData = parseInt(data["childrenId"]);
 				this.codDataMap = parseInt(data["id?"]);
 
 				if (this.codDataMap) {
@@ -309,6 +311,141 @@ export class DataMapFormComponent implements OnInit {
 							}
 						}
 					);
+				} else if (this.codChildrenData) {
+					if (this.indTipo == 1) {
+						this.dataFlowService.pesquisaDataFlow(this.codChildrenData).subscribe(
+							(retorno) => {
+								this.dataMapForm.patchValue({
+									codDataMap: retorno.body[0].codDataMap,
+
+									codEmpresa: retorno.body[0].codEmpresa,
+									dataCompetencia: retorno.body[0].dataCompetencia,
+
+									codArea: retorno.body[0].codArea,
+									codProcesso: retorno.body[0].codProcesso,
+									codAtividade: retorno.body[0].codAtividade,
+
+									codBaseLegal: retorno.body[0].codBaseLegal,
+
+									indPrincipios: retorno.body[0].indPrincipios,
+									indSensivel: retorno.body[0].indSensivel,
+									indDadosMenores: retorno.body[0].indDadosMenores,
+
+									formaColetas: retorno.body[0].formaColetas,
+									indNecessitaConsentimento: retorno.body[0].indNecessitaConsentimento,
+
+									armazenamentos: retorno.body[0].armazenamentos,
+									indTransfInternacional: retorno.body[0].indTransfInternacional,
+
+									compartilhamentos: retorno.body[0].compartilhamentos,
+									indAnonimizacao: retorno.body[0].indAnonimizacao,
+
+									codCicloVida: retorno.body[0].codCicloVida,
+									indRisco: retorno.body[0].indRisco,
+									desObservacoes: retorno.body[0].desObservacoes,
+
+									codigoRisco: retorno.body[0].codigoRisco,
+									codigoRiscoAssociado: retorno.body[0].codigoRiscoAssociado,
+									codigoAmeaca: retorno.body[0].codigoAmeaca,
+
+									indDescarte: retorno.body[0].indDescarte,
+									indRevisarPermissoes: retorno.body[0].indRevisarPermissoes,
+									indAnonimizar: retorno.body[0].indAnonimizar
+								});
+
+								if (retorno.body[0].dataCompetencia) {
+									let dataCompetencia = new Date(retorno.body[0].dataCompetencia)
+									dataCompetencia.setHours(dataCompetencia.getHours() + 3)
+									this.dataMapForm.controls["dataCompetencia"].setValue(dataCompetencia)
+								}
+								this.metadadosDataMap = retorno.body[0].metadados;
+
+								this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
+
+								this.preencherCombos();
+
+								this.pesquisaArea(retorno.body[0].codEmpresa);
+								this.pesquisaProcesso(retorno.body[0].codArea);
+								this.pesquisaAtividade(retorno.body[0].codProcesso);
+								this.pesquisaPlanoMitigacao(retorno.body[0].codDataMap ? retorno.body[0].codDataMap : 0);
+							},
+							(err) => {
+								if (err.status === 401) {
+									TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.pesquisaDataMap(); }));
+								}
+								else {
+									TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+								}
+							}
+						)
+					}
+					if (this.indTipo == 2) {
+						this.dataMapService.pesquisaDataMap(this.codChildrenData).subscribe(
+							(retorno) => {
+								this.dataMapForm.patchValue({
+									codDataMap: retorno.body[0].codDataMap,
+
+									codEmpresa: retorno.body[0].codEmpresa,
+									dataCompetencia: retorno.body[0].dataCompetencia,
+
+									codArea: retorno.body[0].codArea,
+									codProcesso: retorno.body[0].codProcesso,
+									codAtividade: retorno.body[0].codAtividade,
+
+									codBaseLegal: retorno.body[0].codBaseLegal,
+
+									indPrincipios: retorno.body[0].indPrincipios,
+									indSensivel: retorno.body[0].indSensivel,
+									indDadosMenores: retorno.body[0].indDadosMenores,
+
+									formaColetas: retorno.body[0].formaColetas,
+									indNecessitaConsentimento: retorno.body[0].indNecessitaConsentimento,
+
+									armazenamentos: retorno.body[0].armazenamentos,
+									indTransfInternacional: retorno.body[0].indTransfInternacional,
+
+									compartilhamentos: retorno.body[0].compartilhamentos,
+									indAnonimizacao: retorno.body[0].indAnonimizacao,
+
+									codCicloVida: retorno.body[0].codCicloVida,
+									indRisco: retorno.body[0].indRisco,
+									desObservacoes: retorno.body[0].desObservacoes,
+
+									codigoRisco: retorno.body[0].codigoRisco,
+									codigoRiscoAssociado: retorno.body[0].codigoRiscoAssociado,
+									codigoAmeaca: retorno.body[0].codigoAmeaca,
+
+									indDescarte: retorno.body[0].indDescarte,
+									indRevisarPermissoes: retorno.body[0].indRevisarPermissoes,
+									indAnonimizar: retorno.body[0].indAnonimizar
+								});
+
+								if (retorno.body[0].dataCompetencia) {
+									let dataCompetencia = new Date(retorno.body[0].dataCompetencia)
+									dataCompetencia.setHours(dataCompetencia.getHours() + 3)
+									this.dataMapForm.controls["dataCompetencia"].setValue(dataCompetencia)
+								}
+								this.metadadosDataMap = retorno.body[0].metadados;
+
+								this.codCicloMonitoramento = retorno.body[0].codCicloMonitoramento;
+
+								this.preencherCombos();
+
+								this.pesquisaArea(retorno.body[0].codEmpresa);
+								this.pesquisaProcesso(retorno.body[0].codArea);
+								this.pesquisaAtividade(retorno.body[0].codProcesso);
+								this.pesquisaPlanoMitigacao(retorno.body[0].codDataMap ? retorno.body[0].codDataMap : 0);
+							},
+							(err) => {
+								if (err.status === 401) {
+									TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.pesquisaDataMap(); }));
+								}
+								else {
+									TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+								}
+							}
+						)
+					}
 				} else {
 					this.preencherCombos();
 				}
@@ -1049,7 +1186,7 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	pesquisaPlanoMitigacao(codDataMap: number) {
-		this.planoMitigacaoService.listaTodosPlanoMitigacao(this.codDataMap).subscribe(
+		this.planoMitigacaoService.listaTodosPlanoMitigacao(codDataMap).subscribe(
 			(response) => {
 				this.dataSourcePlanoMitigacao = new MatTableDataSource<PlanoMitigacao>(response.body);
 				setTimeout(() => {
