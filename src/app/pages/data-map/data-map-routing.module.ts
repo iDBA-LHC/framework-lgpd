@@ -21,7 +21,7 @@ const routes: Routes = [{
       (module) => module.DataMapFormModule
     )
 }, {
-  path: "children/:childrenId/:id",
+  path: "children/:childrenId/:id?",
   loadChildren: () =>
     import("./data-map-form/data-map-form.module").then(
       (module) => module.DataMapFormModule

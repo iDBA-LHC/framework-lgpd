@@ -231,7 +231,6 @@ export class DataMapFormComponent implements OnInit {
 			(data) => {
 				this.codChildrenData = parseInt(data["childrenId"]);
 				this.codDataMap = parseInt(data["id?"]);
-
 				if (this.codDataMap) {
 					this.dataMapService.pesquisaDataMap(this.codDataMap).subscribe(
 						(retorno) => {
