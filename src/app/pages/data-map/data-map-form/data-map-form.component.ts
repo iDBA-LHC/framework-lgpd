@@ -226,11 +226,11 @@ export class DataMapFormComponent implements OnInit {
 	}
 
 	pesquisaDataMap() {
-
 		this.activatedRoute.params.subscribe(
 			(data) => {
 				this.codChildrenData = parseInt(data["childrenId"]);
 				this.codDataMap = parseInt(data["id?"]);
+
 				if (this.codDataMap) {
 					if (this.indTipo === 1 && this.codChildrenData) {
 						this.dataFlowService.pesquisaDataFlow(this.codChildrenData).subscribe(
@@ -566,7 +566,7 @@ export class DataMapFormComponent implements OnInit {
 			}
 
 			const DataMap: DataMap = this.dataMapForm.getRawValue();
-			DataMap.codDataMap = this.codDataMap;
+			DataMap.codDataMap = this.codDataMap ? this.codDataMap: undefined;
 
 			DataMap.indPrincipios = (this.dataMapForm.controls.indPrincipios.value ? 1 : 0);
 			DataMap.indSensivel = (this.dataMapForm.controls.indSensivel.value ? 1 : 0);
@@ -580,6 +580,15 @@ export class DataMapFormComponent implements OnInit {
 			DataMap.indTipo = this.indTipo;
 			DataMap.codCicloMonitoramento = this.codCicloMonitoramento;
 			DataMap.metadados = this.metadadosDataMap;
+
+			if(this.indTipo == 1){
+				DataMap.indAnonimizar = (this.dataMapForm.controls.indAnonimizar.value ? this.dataMapForm.controls.indAnonimizar.value : null);
+				DataMap.indRevisarPermissoes = (this.dataMapForm.controls.indRevisarPermissoes.value ? this.dataMapForm.controls.indRevisarPermissoes.value : null);
+				DataMap.codigoAmeaca = (this.dataMapForm.controls.codigoAmeaca.value ? this.dataMapForm.controls.codigoAmeaca.value : null);
+				DataMap.codigoRiscoAssociado = (this.dataMapForm.controls.codigoRiscoAssociado.value ? this.dataMapForm.controls.codigoRiscoAssociado.value : null);
+				DataMap.codigoRisco = (this.dataMapForm.controls.codigoRisco.value ? this.dataMapForm.controls.codigoRisco.value : null);
+				DataMap.desObservacoes = (this.dataMapForm.controls.desObservacoes.value ? this.dataMapForm.controls.desObservacoes.value : '');
+			}
 
 			if (this.indTipo === 2) {
 				DataMap.indDescarte = (this.dataMapForm.controls.indDescarte.value ? 1 : 0);
