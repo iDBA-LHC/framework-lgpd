@@ -17,116 +17,116 @@ import { environment } from 'src/environments/environment';
 import * as fs from 'file-saver';
 import { DatePipe } from '@angular/common';
 import { CpfCnpjPipe } from 'src/app/shared/components/pipe/cpf-cnpj-pipe';
+import { jsPDF } from 'jspdf';
 
 @Component({
-  selector: 'app-incidente-list',
-  templateUrl: './incidente-list.component.html',
-  styleUrls: ['./incidente-list.component.css']
+    selector: 'app-incidente-list',
+    templateUrl: './incidente-list.component.html',
+    styleUrls: ['./incidente-list.component.css']
 })
 export class IncidenteListComponent implements OnInit {
-  isLoading = false;
-  usuarioAdmin:boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
-  
-  displayedColumns: string[] = ["numeroProtocolo","dataIncidente","statusIncidente","actions"];
-  statusIncidenteButtons = new StatusIncidenteButtons();
+    isLoading = false;
+    usuarioAdmin: boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
 
-  form: FormGroup;
-  datas = {begin: new Date(1900, 1, 1), end: new Date(9999, 12, 31)};
+    displayedColumns: string[] = ["numeroProtocolo", "dataIncidente", "statusIncidente", "actions"];
+    statusIncidenteButtons = new StatusIncidenteButtons();
 
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+    form: FormGroup;
+    datas = { begin: new Date(1900, 1, 1), end: new Date(9999, 12, 31) };
 
-  listaEmpresas: Empresa[];
-  listaEmpresasFiltradas: Observable<Empresa[]>;
+    dataSource = new MatTableDataSource();
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  cnpjCpfPipe: CpfCnpjPipe = new CpfCnpjPipe();
+    listaEmpresas: Empresa[];
+    listaEmpresasFiltradas: Observable<Empresa[]>;
+
+    cnpjCpfPipe: CpfCnpjPipe = new CpfCnpjPipe();
 
 
-  constructor(
-      private service: IncidenteService,
-      private snackBar: CustomSnackBarService,
-      private dialog: MatDialog,
-      private empresaService: EmpresaService,
-      private authService: AuthService,
-      private formBuilder: FormBuilder,
-      private datePipe: DatePipe,
-  ) { }
+    constructor(
+        private service: IncidenteService,
+        private snackBar: CustomSnackBarService,
+        private dialog: MatDialog,
+        private empresaService: EmpresaService,
+        private authService: AuthService,
+        private formBuilder: FormBuilder,
+        private datePipe: DatePipe,
+    ) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
 
-      this.form = this.formBuilder.group({
-        empresa: [,],
-        codigoEmpresa: [0,],  
-        datas: [{begin: new Date(), end: new Date()}],
-        indStatus: [0,]
-      });
-
-      if (!this.usuarioAdmin)
-      {
-          this.form.controls['codigoEmpresa'].setValue(this.authService.getLoggedEmpresaUser());
-      }
-
-      this.pesquisaIncidentes();
-
-      this.pesquisaEmpresas();
-  }
-
-  pesquisaIncidentes() {
-    this.isLoading = true;
-    this.service.pesquisaIncidentes(this.form.controls['codigoEmpresa'].value,
-                                    this.form.controls['datas'].value.begin,
-                                    this.form.controls['datas'].value.end,
-                                    this.form.controls['indStatus'].value).subscribe(
-        (response) => {
-
-            this.isLoading = false;
-            this.dataSource = new MatTableDataSource<Incidente>(response.body);
-
-            setTimeout(() => {
-                this.dataSource.filterPredicate = (
-                    data: {
-                        numeroProtocolo: string
-                    },
-                    filterValue: string
-                ) => data.numeroProtocolo.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
-                
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-            });
-
-        },
-        (err) => {
-            this.isLoading = false;
-            if (err.status == 401) {
-                TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => {this.pesquisaIncidentes();}));
-            } else {
-                this.isLoading = false;
-                TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
-            }
+        this.form = this.formBuilder.group({
+            empresa: [,],
+            codigoEmpresa: [0,],
+            datas: [{ begin: new Date(), end: new Date() }],
+            indStatus: [0,]
         });
-  }
+
+        if (!this.usuarioAdmin) {
+            this.form.controls['codigoEmpresa'].setValue(this.authService.getLoggedEmpresaUser());
+        }
+
+        this.pesquisaIncidentes();
+
+        this.pesquisaEmpresas();
+    }
+
+    pesquisaIncidentes() {
+        this.isLoading = true;
+        this.service.pesquisaIncidentes(this.form.controls['codigoEmpresa'].value,
+            this.form.controls['datas'].value.begin,
+            this.form.controls['datas'].value.end,
+            this.form.controls['indStatus'].value).subscribe(
+                (response) => {
+
+                    this.isLoading = false;
+                    this.dataSource = new MatTableDataSource<Incidente>(response.body);
+
+                    setTimeout(() => {
+                        this.dataSource.filterPredicate = (
+                            data: {
+                                numeroProtocolo: string
+                            },
+                            filterValue: string
+                        ) => data.numeroProtocolo.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    });
+
+                },
+                (err) => {
+                    this.isLoading = false;
+                    if (err.status == 401) {
+                        TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.pesquisaIncidentes(); }));
+                    } else {
+                        this.isLoading = false;
+                        TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+                    }
+                });
+    }
 
     private pesquisaEmpresas() {
         this.empresaService.listaTodasEmpresas().subscribe(
-        (retorno) => {
-            this.listaEmpresas = retorno.body;
+            (retorno) => {
+                this.listaEmpresas = retorno.body;
 
-            let codEmpresa = this.form.controls.codigoEmpresa.value;
-            if (codEmpresa != 0) {
-                let empresaSel: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == codEmpresa)[0];
-                if (empresaSel)
-                    this.form.controls.empresa.setValue(empresaSel);
-            }
+                let codEmpresa = this.form.controls.codigoEmpresa.value;
+                if (codEmpresa != 0) {
+                    let empresaSel: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == codEmpresa)[0];
+                    if (empresaSel)
+                        this.form.controls.empresa.setValue(empresaSel);
+                }
 
-            this.listaEmpresasFiltradas = this.form.controls.empresa.valueChanges
-                .pipe(
-                    startWith(''),
-                    map(value => typeof value === 'string' ? value : value.nomeEmpresa),
-                    map(name => {
-                    return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
-                    }));      
-        });
+                this.listaEmpresasFiltradas = this.form.controls.empresa.valueChanges
+                    .pipe(
+                        startWith(''),
+                        map(value => typeof value === 'string' ? value : value.nomeEmpresa),
+                        map(name => {
+                            return name ? this.filtraEmpresa(name) : this.listaEmpresas.slice();
+                        }));
+            });
     }
 
     displayEmpresa(empresa: Empresa): string {
@@ -148,54 +148,53 @@ export class IncidenteListComponent implements OnInit {
         this.dataSource.filter = value.trim().toLowerCase();
     }
 
-    gerarRelatorio(event)
-	{
-		this.geraPlanilha(this.dataSource.data as Incidente[]);
-	}
+    gerarRelatorio(event) {
+        this.geraPlanilha(this.dataSource.data as Incidente[]);
+    }
 
-	private geraPlanilha(listaIncidentes: Incidente[]){
+    private geraPlanilha(listaIncidentes: Incidente[]) {
 
-		const header = ["Protocolo", "Controlador", "CNPJ", "Operador","Encarregado",
-						"Contato Encarregado","Registro do Incidente","Data do Incidente","Data da Comunicação",
-                        "Status","Detalhes"];
+        const header = ["Protocolo", "Controlador", "CNPJ", "Operador", "Encarregado",
+            "Contato Encarregado", "Registro do Incidente", "Data do Incidente", "Data da Comunicação",
+            "Status", "Detalhes"];
 
-		let workbook = new Workbook();
-		let worksheet = workbook.addWorksheet('Incidentes');                    
+        let workbook = new Workbook();
+        let worksheet = workbook.addWorksheet('Incidentes');
 
-		let headerRow = worksheet.addRow(header);
-		
-		headerRow.eachCell((cell, number) => {
-			cell.font = { name: 'Calibri', size: 11, bold: true, color: {argb : 'F8F8F8'} };
-			cell.fill = {
-				type: 'pattern',
-				pattern: 'solid',
-				fgColor: { argb: 'F58634' },
-			}
-			cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
-		});
+        let headerRow = worksheet.addRow(header);
 
-		listaIncidentes.forEach((incidente) => {
-            let dado = 
-            [
-                incidente.numeroProtocolo,
-                incidente.nomeEmpresa,
-                this.cnpjCpfPipe.transform(incidente.numeroCNPJEmpresa),
-                incidente.nomeUsuarioOperador,
-                incidente.nomeUsuarioEncarregado,
-                incidente.emailUsuarioEncarregado,
-                this.datePipe.transform(incidente.dataRegistro,"dd/MM/yyyy hh:mm:ss"),
-                this.datePipe.transform(incidente.dataIncidente,"dd/MM/yyyy hh:mm:ss"),
-                this.datePipe.transform(incidente.dataComunicacao,"dd/MM/yyyy"),
-                this.statusIncidenteButtons.buttonsForm[incidente.indStatus - 1]['description'],
-                incidente.desDetalhes === null  ? "" : incidente.desDetalhes 
-            ]
+        headerRow.eachCell((cell, number) => {
+            cell.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'F8F8F8' } };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'F58634' },
+            }
+            cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+        });
 
-		    let row = worksheet.addRow(dado);
-		    let colDetalhes = row.getCell(11);
-		    colDetalhes.alignment =  { wrapText: true };
+        listaIncidentes.forEach((incidente) => {
+            let dado =
+                [
+                    incidente.numeroProtocolo,
+                    incidente.nomeEmpresa,
+                    this.cnpjCpfPipe.transform(incidente.numeroCNPJEmpresa),
+                    incidente.nomeUsuarioOperador,
+                    incidente.nomeUsuarioEncarregado,
+                    incidente.emailUsuarioEncarregado,
+                    this.datePipe.transform(incidente.dataRegistro, "dd/MM/yyyy hh:mm:ss"),
+                    this.datePipe.transform(incidente.dataIncidente, "dd/MM/yyyy hh:mm:ss"),
+                    this.datePipe.transform(incidente.dataComunicacao, "dd/MM/yyyy"),
+                    this.statusIncidenteButtons.buttonsForm[incidente.indStatus - 1]['description'],
+                    incidente.desDetalhes === null ? "" : incidente.desDetalhes
+                ]
+
+            let row = worksheet.addRow(dado);
+            let colDetalhes = row.getCell(11);
+            colDetalhes.alignment = { wrapText: true };
 
             row.eachCell((cell, number) => {
-                cell.font = { name: 'Calibri', size: 10, bold: false, color: {argb : 'FFFFFF'} };
+                cell.font = { name: 'Calibri', size: 10, bold: false, color: { argb: 'FFFFFF' } };
                 cell.fill = {
                     type: 'pattern',
                     pattern: 'solid',
@@ -203,15 +202,29 @@ export class IncidenteListComponent implements OnInit {
                 }
                 cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
             });
-		});
+        });
 
-		ExcelUtils.autoWidth(worksheet);
+        ExcelUtils.autoWidth(worksheet);
 
-		workbook.xlsx.writeBuffer().then((data) => {
-			let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-			fs.saveAs(blob, 'Incidentes.xlsx');
-		});
+        workbook.xlsx.writeBuffer().then((data) => {
+            let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            fs.saveAs(blob, 'Incidentes.xlsx');
+        });
 
-	}
+    }
+
+    exportAllToPDF() {
+        const pages = document.querySelector('.all-pages') as HTMLElement;
+        const doc = new jsPDF({
+            unit: 'px',
+            format: [595, 842]
+        });
+
+        doc.html(pages, {
+            callback: (doc: jsPDF) => {
+                doc.save('pdf-export');
+            }
+        });
+    }
 
 }

@@ -1,12 +1,17 @@
 <mat-card class="marginContent">
-
+  <div class="pdf-container" style="height: 0px; overflow: hidden;">
+    <div class="all-pages">
+      <div class="page">Conteúdo aqui</div>
+    </div>
+  </div>
   <div fxLayout="row">
 
     <form [formGroup]="form" style="width: 100%;">
 
       <mat-form-field style="width: 35%;">
         <mat-label>Controladora</mat-label>
-        <input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa" [readonly]="!this.usuarioAdmin"/>
+        <input matInput formControlName="empresa" placeholder="Controladora" [matAutocomplete]="autoEmpresa"
+          [readonly]="!this.usuarioAdmin" />
 
         <mat-autocomplete #autoEmpresa="matAutocomplete" [displayWith]="displayEmpresa"
           (optionSelected)="selecionaEmpresa($event)">
@@ -18,68 +23,48 @@
       </mat-form-field>
 
       <mat-form-field style="width: 30%;" fxFlexOffset="10px">
-        <input matInput
-              placeholder="Selecione o Intervalo de Datas"
-              [satDatepicker]="picker1"
-              formControlName="datas">
-        <sat-datepicker #picker1 [rangeMode]="true"
-                        [selectFirstDateOnClose]="true">
+        <input matInput placeholder="Selecione o Intervalo de Datas" [satDatepicker]="picker1" formControlName="datas">
+        <sat-datepicker #picker1 [rangeMode]="true" [selectFirstDateOnClose]="true">
         </sat-datepicker>
         <sat-datepicker-toggle matSuffix [for]="picker1"></sat-datepicker-toggle>
       </mat-form-field>
 
       <mat-form-field style="width: 30%;" fxFlexOffset="10px">
         <mat-label>Status</mat-label>
-        <mat-select
-          placeholder="Status"
-          formControlName="indStatus">
+        <mat-select placeholder="Status" formControlName="indStatus">
 
-          <mat-option
-            *ngFor="let button of statusIncidenteButtons.buttons"
-            [value]="button.cod">{{ button.description }}
+          <mat-option *ngFor="let button of statusIncidenteButtons.buttons" [value]="button.cod">{{ button.description
+            }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
-      <button fxLayoutAlign="start end" mat-raised-button class="action-button" style="width: 150px; align-self: center;" (click)="pesquisaIncidentes()">
+      <button fxLayoutAlign="start end" mat-raised-button class="action-button"
+        style="width: 150px; align-self: center;" (click)="pesquisaIncidentes()">
         <mat-icon>search</mat-icon>Pesquisar
       </button>
     </form>
   </div>
 
   <div fxLayout="row" style="padding-top: 5px;">
-      <div fxFlex>
-          <mat-form-field fxFlex="30">
-            <input
-              matInput
-              (keyup)="applyFilter($event.target.value)"
-              placeholder="Buscar Incidente"/>
-          </mat-form-field>
-        </div>
-        <div fxLayout="row" fxLayoutGap="5px" style="align-self: center;">
-          <div fxLayout="row" fxLayoutAlign="start end" >
-            <button 
-               *ngIf="this.dataSource.data.length > 0" 
-               mat-raised-button
-               class="action-button"
-               style="align-self: baseline;"
-               (click)="gerarRelatorio($event)">Imprimir</button> 
+    <div fxFlex>
+      <mat-form-field fxFlex="30">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar Incidente" />
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="5px" style="align-self: center;">
+      <div fxLayout="row" fxLayoutAlign="start end">
+        <button *ngIf="this.dataSource.data.length > 0" mat-raised-button class="action-button"
+          style="align-self: baseline;" (click)="gerarRelatorio($event)">Imprimir</button>
 
-            <a fxFlexOffset="15px"
-              mat-raised-button
-              class="add-button"
-              [routerLink]="['/priva/incidente', '']"
-              routerLinkActive="active">
-              <mat-icon>add</mat-icon>Novo Incidente</a>
-          </div>
-        </div>
+        <a fxFlexOffset="15px" mat-raised-button class="add-button" [routerLink]="['/priva/incidente', '']"
+          routerLinkActive="active">
+          <mat-icon>add</mat-icon>Novo Incidente</a>
+      </div>
+    </div>
   </div>
 
-  <div
-    *ngIf="isLoading"
-    fxLayout="row"
-    fxLayoutAlign="center"
-    fxLayoutGap="gappx">
+  <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="gappx">
     <mat-spinner></mat-spinner>
   </div>
 
@@ -92,29 +77,30 @@
 
       <ng-container matColumnDef="dataIncidente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Incidente</th>
-        <td mat-cell *matCellDef="let element; let i = index">{{ element.dataIncidente | date:'dd/MM/yyyy':'UTC +3' }}</td>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.dataIncidente | date:'dd/MM/yyyy':'UTC +3' }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="statusIncidente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-        <td mat-cell *matCellDef="let element; let i = index">{{ statusIncidenteButtons.buttonsForm[element.indStatus - 1]['description'] }}</td>
+        <td mat-cell *matCellDef="let element; let i = index">{{ statusIncidenteButtons.buttonsForm[element.indStatus -
+          1]['description'] }}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <div class="example-button-row">
-            <button *ngIf="element.indStatus === 1"
-              mat-raised-button
-              class="edit-button"
+          </div>
+          <div class="example-button-row">
+            <button mat-raised-button class="edit-button" (click)="exportAllToPDF()">
+              PDF
+            </button>
+            <button *ngIf="element.indStatus === 1" mat-raised-button class="edit-button"
               [routerLink]="['/priva/incidente/', element.codigoIncidente]">
               Editar
             </button>
-          </div>
-          <div class="example-button-row">
-            <button *ngIf="element.indStatus === 2"
-              mat-raised-button
-              class="action-button"
+            <button *ngIf="element.indStatus === 2" mat-raised-button class="action-button"
               [routerLink]="['/priva/incidente/', element.codigoIncidente]">
               Visualizar
             </button>
