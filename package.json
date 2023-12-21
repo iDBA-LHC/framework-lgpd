@@ -11,8 +11,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-material-components/datetime-picker": "^2.0.4",
-    "@angular-material-components/moment-adapter": "^5.0.0",
     "@angular/animations": "~8.2.13",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.2.13",
@@ -39,6 +37,7 @@
     "material-design-icons": "^3.0.1",
     "ng-bootstrap": "^1.6.3",
     "ng-material-multilevel-menu": "^4.11.3",
+    "ng-pick-datetime": "^7.0.0",
     "ngx-currency": "^2.3.3",
     "ngx-mask": "^8.1.7",
     "ngx-perfect-scrollbar": "^8.0.0",

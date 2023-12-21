@@ -22,6 +22,7 @@ import { StorageServiceModule} from 'angular-webstorage-service';
 import { AuthMeuUsuarioGuard } from './guards/auth-meu-usuario.guard';
 import { AuthTokenInterceptor } from './shared/utils/auth-token-interceptor';
 import { ɵb } from "ng-material-multilevel-menu";
+import { OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
 
 export function jwtOptionsFactory() {
   return {
@@ -71,6 +72,7 @@ export function tokenGetter() {
     AuthMeuUsuarioGuard,
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlPTBR },
     { provide: MAT_DATE_LOCALE, useValue: "pt-BR" },
+    { provide: OWL_DATE_TIME_LOCALE, useValue: 'pt-BR'},
     { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],

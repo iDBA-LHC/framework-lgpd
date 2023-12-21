@@ -6,6 +6,7 @@
       "crypto":["node_modules/crypto-js"],
       "exceljs": ["node_modules/exceljs/dist/exceljs.min"]
     },
+    "types": ["node"],
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,

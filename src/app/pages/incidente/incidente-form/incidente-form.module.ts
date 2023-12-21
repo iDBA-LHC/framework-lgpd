@@ -5,7 +5,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { IncidenteFormRoutingModule } from './incidente-form-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
-import { NgxMatMomentModule} from '@angular-material-components/moment-adapter';
+//import { NgxMatMomentModule} from '@angular-material-components/moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import localeBr from '@angular/common/locales/br';
@@ -25,7 +25,7 @@ export const options: Partial<IConfig> = {
     SharedModule, 
     IncidenteFormRoutingModule,
     ReactiveFormsModule,
-    NgxMatMomentModule,
+    //NgxMatMomentModule,
     NgxMaskModule.forRoot(options)
   ],
   providers:
