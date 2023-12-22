@@ -1,9 +1,4 @@
 <mat-card class="marginContent">
-  <div class="pdf-container" style="height: 0px; overflow: hidden;">
-    <div class="all-pages">
-      <div class="page">Conteúdo aqui</div>
-    </div>
-  </div>
   <div fxLayout="row">
 
     <form [formGroup]="form" style="width: 100%;">
@@ -93,8 +88,8 @@
           <div class="example-button-row">
           </div>
           <div class="example-button-row">
-            <button mat-raised-button class="edit-button" (click)="exportAllToPDF()">
-              PDF
+            <button mat-raised-button class="edit-button" (click)="gerarPdfIncidente(element)">
+              Gerar PDF
             </button>
             <button *ngIf="element.indStatus === 1" mat-raised-button class="edit-button"
               [routerLink]="['/priva/incidente/', element.codigoIncidente]">
