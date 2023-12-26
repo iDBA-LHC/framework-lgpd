@@ -151,27 +151,28 @@
 				<div style="width: 50%;" fxFlexOffset="5px">
 					<mat-form-field fxFlex style="width: 50%;" >
 						<mat-label>Data de Inclusão</mat-label>
-							<input matInput [matDatepicker]="pickerInclusao" 
+							<input matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" 
 								[readonly]="true"
 								[formControl]="form.controls.dataInclusao">
-								<mat-datepicker-toggle  matSuffix [for]="pickerInclusao"></mat-datepicker-toggle>
-								<ngx-mat-datetime-picker #pickerInclusao
+								<owl-date-time [disabled]="true" #dt1 [pickerType]="'calendar'"></owl-date-time>
+								<!--<ngx-mat-datetime-picker #pickerInclusao
 									[showSpinners]="false"
 									[disabled]="true"
-									[hideTime]="true"></ngx-mat-datetime-picker>	
+									[hideTime]="true"></ngx-mat-datetime-picker>-->
 
 					</mat-form-field>
 
 					<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px" >
 						<mat-label>Data de Previsão de Retorno</mat-label>
-							<input matInput [matDatepicker]="pickerPrevisaoRetorno" 
+							<input matInput [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" 
 								[formControl]="form.controls.dataPrevisaoRetorno"
 								[readonly]="codigoSolicitacaoTitular > 0">
-								<mat-datepicker-toggle  matSuffix [for]="pickerPrevisaoRetorno"></mat-datepicker-toggle>
+								<owl-date-time [disabled]="codigoSolicitacaoTitular > 0" #dt2 [pickerType]="'calendar'"></owl-date-time>
+								<!--<mat-datepicker-toggle  matSuffix [for]="pickerPrevisaoRetorno"></mat-datepicker-toggle>
 								<ngx-mat-datetime-picker #pickerPrevisaoRetorno
 									[showSpinners]="false"
 									[disabled]="codigoSolicitacaoTitular > 0"
-									[hideTime]="true"></ngx-mat-datetime-picker>	
+									[hideTime]="true"></ngx-mat-datetime-picker>-->	
 
 					</mat-form-field>
 				</div>
@@ -190,15 +191,17 @@
 				
 				<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
 					<mat-label>Data de Retorno</mat-label>
-						<input matInput [matDatepicker]="pickerRetorno" 
+						<input matInput [owlDateTime]="dt3" [owlDateTimeTrigger]="dt3" 
 							placeholder="Selecione a data de Retorno"
 							[formControl]="form.controls.dataRetorno"
 							[readonly]="this.indStatus === 2 || this.indStatus === 3">
-							<mat-datepicker-toggle  matSuffix [for]="pickerRetorno"></mat-datepicker-toggle>
+							<owl-date-time [disabled]="this.indStatus === 2 || this.indStatus === 3" #dt3 [pickerType]="'calendar'"></owl-date-time>
+							
+							<!--<mat-datepicker-toggle  matSuffix [for]="pickerRetorno"></mat-datepicker-toggle>
 							<ngx-mat-datetime-picker #pickerRetorno
 								[showSpinners]="false"
 								[disabled]="this.indStatus === 2 || this.indStatus === 3"
-								[hideTime]="true"></ngx-mat-datetime-picker>	
+								[hideTime]="true"></ngx-mat-datetime-picker>-->	
 						<mat-error *ngIf="form.controls.dataRetorno.errors?.required">Data de Retorno é Obrigatória</mat-error>		
 				</mat-form-field>
 

@@ -19,20 +19,28 @@ import { Workbook } from 'exceljs';
 import { CpfCnpjPipe } from 'src/app/shared/components/pipe/cpf-cnpj-pipe';
 import { DatePipe } from '@angular/common';
 import { DireitoSolicitacaoTitularButtons } from 'src/app/models/solicitacao-titular/buttons/direito-solicitacao-titular-buttons';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-solicitacao-titular-list',
   templateUrl: './solicitacao-titular-list.component.html',
   styleUrls: ['./solicitacao-titular-list.component.css']
 })
+
 export class SolicitacaoTitularListComponent implements OnInit {
   isLoading = false;
   usuarioAdmin:boolean = this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin;
   
   displayedColumns: string[] = ["numeroProtocolo","dataSolicitacao","statusSolicitacao","actions"];
   statusSolicitacaoButtons = new StatusSolicitacaoTitularButtons();
+  direitoSolicitacaoTitularButtons = new DireitoSolicitacaoTitularButtons();
 
   form: FormGroup;
+
+  linhasPagina = 842;
+  colunasPagina = 595;
+  saltoLinha = 15;
+  linhaInicial = 70;
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -42,9 +50,6 @@ export class SolicitacaoTitularListComponent implements OnInit {
   listaEmpresasFiltradas: Observable<Empresa[]>;
 
   cnpjCpfPipe: CpfCnpjPipe = new CpfCnpjPipe();
-
-  direitoSolicitacaoTitularButtons: DireitoSolicitacaoTitularButtons = new DireitoSolicitacaoTitularButtons();
-
 
   constructor(
       private service: SolicitacaoTitularService,
@@ -220,6 +225,82 @@ export class SolicitacaoTitularListComponent implements OnInit {
         fs.saveAs(blob, 'Solicitações.xlsx');
     });
 
-}
+    }
+
+    gerarPdfSolicitacao(solicitacao: SolicitacaoTitular) {
+        var linha = this.linhaInicial; 
+
+        const doc = new jsPDF({
+            unit: 'px',
+            format: [this.colunasPagina, this.linhasPagina]
+        });
+
+        let empresaIncidente: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == solicitacao.codigoEmpresa)[0];
+
+        this.imprimeCabecalhoRelatorio(doc);
+
+        doc.setFontSize(16);
+        doc.setTextColor(0,0,0);
+        doc.text(`Solicitação # ${solicitacao.numeroProtocolo}`, 240, 50);
+
+        doc.text(`Controladora: ${empresaIncidente.nomeEmpresa}`, 10, linha);
+        linha+=this.saltoLinha;
+        doc.text(`Nome do Titular: ${solicitacao.desNomeTitular}`, 10, linha);
+        linha+=this.saltoLinha;
+        doc.text(`CPF Titular: ${this.cnpjCpfPipe.transform(solicitacao.numeroCpfTitular)} `, 10, linha);
+        doc.text(`Documento Identificação Titular: ${solicitacao.numeroDocumentoTitular} `, 280, linha);
+        linha+=this.saltoLinha;
+        doc.text(`Nome do Representante: ${solicitacao.desNomeRepresentante ? solicitacao.desNomeRepresentante : ""}`, 10, linha);
+        linha+=this.saltoLinha;
+        doc.text(`CPF Representante: ${solicitacao.numeroCpfRepresentante ? this.cnpjCpfPipe.transform(solicitacao.numeroCpfRepresentante) : ""} `, 10, linha);
+        doc.text(`Documento Identificação Representante: ${solicitacao.numeroDocumentoRepresentante ? solicitacao.numeroDocumentoRepresentante : ""} `, 280, linha);
+        linha+=this.saltoLinha;
+        doc.text(`Direito a Ser Exercido: ${this.direitoSolicitacaoTitularButtons.buttons[solicitacao.indDireito - 1].description}`, 10, linha);
+        linha+=this.saltoLinha;
+        doc.text(`E-Mail Para Retorno: ${solicitacao.emailTitular}`, 10, linha);
+        linha+=this.saltoLinha;
+        doc.text(`Data de Inclusão: ${this.datePipe.transform(solicitacao.dataInclusao,'dd/MM/yyyy',"UTC")} `, 10, linha);
+        doc.text(`Data de Previsão de Retorno: ${this.datePipe.transform(solicitacao.dataPrevisaoRetorno,'dd/MM/yyyy',"UTC")} `, 280, linha);
+        linha+=this.saltoLinha;
+        doc.text(`Usuário: ${solicitacao.nomeUsuario}`, 10, linha);
+        linha+=this.saltoLinha;
+        doc.text(`Data de Retorno: ${solicitacao.dataRetorno ? this.datePipe.transform(solicitacao.dataRetorno,'dd/MM/yyyy',"UTC") : ""} `, 10, linha);
+        linha+=this.saltoLinha;
+        doc.text(`Status: ${this.statusSolicitacaoButtons.buttons[solicitacao.indStatus - 1].description}`, 10, linha);
+        linha+=this.saltoLinha;
+        
+        doc.text(`Retorno/Observações:`,10, linha);
+        linha = this.imprimeTextoLongo(doc,solicitacao.desObservacoes,linha,135,450);
+        doc.save(`solicitacao-${solicitacao.codigoSolicitacaoTitular}`);
+        
+    }
+
+    private imprimeCabecalhoRelatorio(doc: jsPDF)
+    {
+        doc.setFillColor("F58634");
+        doc.rect(0, 0, 595, 30, 'F');
+        doc.setFontSize(20);
+        doc.setTextColor(255, 255, 255);
+        doc.text('PRIVA',280,21);
+    }
+
+    private imprimeTextoLongo(doc: jsPDF, texto: string, linha: number, coluna: number, limite: number): number
+    {
+        var linhaImpressa = linha;
+        var textoTratado = doc.splitTextToSize(texto,limite);
+        textoTratado.forEach((termo) => 
+        {
+            doc.text(termo,coluna, linhaImpressa);
+            linhaImpressa+=this.saltoLinha;
+            if (linhaImpressa>=this.linhasPagina)
+            {
+                doc.addPage();
+                this.imprimeCabecalhoRelatorio(doc);
+                linhaImpressa = this.linhaInicial;
+            }
+        });
+        return linhaImpressa; 
+    
+    }
 
 }

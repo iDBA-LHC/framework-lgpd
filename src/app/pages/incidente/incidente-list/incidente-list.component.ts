@@ -43,6 +43,10 @@ export class IncidenteListComponent implements OnInit {
 
     cnpjCpfPipe: CpfCnpjPipe = new CpfCnpjPipe();
 
+    linhasPagina = 842;
+    colunasPagina = 595;
+    saltoLinha = 15;
+    linhaInicial = 70;
 
     constructor(
         private service: IncidenteService,
@@ -214,14 +218,12 @@ export class IncidenteListComponent implements OnInit {
     }
 
     gerarPdfIncidente(incidente: Incidente) {
-        console.log(incidente);
         var indIncidenteNoPrazo = false;
-        var linha = 70; 
-        var saltoLinha = 15;
+        var linha = this.linhaInicial; 
 
         const doc = new jsPDF({
             unit: 'px',
-            format: [595, 842]
+            format: [this.colunasPagina, this.linhasPagina]
         });
 
         let empresaIncidente: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == incidente.codigoEmpresa)[0];
@@ -234,18 +236,18 @@ export class IncidenteListComponent implements OnInit {
 
         doc.text(`Controladora: ${incidente.nomeEmpresa}`, 10, linha);
         doc.text(`CNPJ: ${this.cnpjCpfPipe.transform(incidente.numeroCNPJEmpresa)} `, 300, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Operador: ${incidente.nomeUsuarioOperador}`, 10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Encarregado: ${incidente.nomeUsuarioEncarregado}`, 10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`E-Mail Encarregado: ${incidente.emailUsuarioEncarregado}`, 10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Telefone Controladora: ${empresaIncidente ? empresaIncidente.telefoneControlador : ""}`, 10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Data/Hora de Registro: ${this.datePipe.transform(incidente.dataRegistro,'dd/MM/yyyy hh:mm',"UTC")} `, 10, linha);
         doc.text(`Data/Hora do Incidente: ${this.datePipe.transform(incidente.dataIncidente,'dd/MM/yyyy hh:mm',"UTC")} `, 300, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Data de Comunicação Registro: ${this.datePipe.transform(incidente.dataComunicacao,'dd/MM/yyyy',"UTC")} `, 10, linha);
 
         if (this.datediff(incidente.dataIncidente, incidente.dataComunicacao) > 2) {
@@ -266,41 +268,56 @@ export class IncidenteListComponent implements OnInit {
             doc.text(`Incidente Comunicado Fora do Prazo`, 300, linha);
         }
 
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.setTextColor(0,0,0)
         
         doc.text(`Justificativa:`,10, linha);
+        linha = this.imprimeTextoLongo(doc, incidente.desJustificativa, linha, 80, 500);
+        /*
         doc.text(`${incidente.desJustificativa ? incidente.desJustificativa : ""}`, 80,linha);
-        linha+=(saltoLinha * this.contaLinhas(incidente.desJustificativa));
+        linha+=(this.saltoLinha * this.contaLinhas(incidente.desJustificativa));*/
+        
+
         doc.text(`Status: ${this.statusIncidenteButtons.buttonsForm[incidente.indStatus - 1].description}`, 10,linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Tipo de Comunicação: ${incidente.desTipoComunicacao ? incidente.desTipoComunicacao: ''}`,10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Dados do Agente de Tratamento: ${incidente.dadosAgenteTratamento ? incidente.dadosAgenteTratamento: ""}`,10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Dados do Notificante: ${incidente.dadosNotificante ? incidente.dadosNotificante: ""}`,10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
+
         doc.text(`Detalhes:`,10, linha);
-        doc.text(`${incidente.desDetalhes ? incidente.desDetalhes: ""}`,65, linha);
-        linha+=(saltoLinha * this.contaLinhas(incidente.desDetalhes));
+        linha = this.imprimeTextoLongo(doc, incidente.desDetalhes, linha, 65, 510);
+        /*doc.text(`${incidente.desDetalhes ? incidente.desDetalhes: ""}`,65, linha);
+        linha+=(this.saltoLinha * this.contaLinhas(incidente.desDetalhes));*/
+
         doc.text(`Natureza dos Dados Afetados: ${incidente.desNaturezaDados ? incidente.desNaturezaDados: ""}`,10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
         doc.text(`Tipo Titulares Afetados: ${incidente.desTipoTitulares ? incidente.desTipoTitulares: ""}`,10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
+
         doc.text(`Medidas Preventivas:`,10,linha);
-        doc.text(`${incidente.desMedidasPreventivas ? incidente.desMedidasPreventivas: ""}`,128, linha);
-        linha+=(saltoLinha * this.contaLinhas(incidente.desMedidasPreventivas));
+        linha = this.imprimeTextoLongo(doc, incidente.desMedidasPreventivas, linha, 128, 450);
+        /*doc.text(`${incidente.desMedidasPreventivas ? incidente.desMedidasPreventivas: ""}`,128, linha);
+        linha+=(this.saltoLinha * this.contaLinhas(incidente.desMedidasPreventivas));*/
+
         doc.text(`Medidas Mitigatórias:`,10,linha);
-        doc.text(`${incidente.desMedidasMitigatorias ? incidente.desMedidasMitigatorias: ""}`,128, linha);
-        linha+=(saltoLinha * this.contaLinhas(incidente.desMedidasMitigatorias));
+        linha = this.imprimeTextoLongo(doc, incidente.desMedidasMitigatorias, linha, 128, 450);
+        /*doc.text(`${incidente.desMedidasMitigatorias ? incidente.desMedidasMitigatorias: ""}`,128, linha);
+        linha+=(this.saltoLinha * this.contaLinhas(incidente.desMedidasMitigatorias));*/
+
         doc.text(`Relatório de Impacto: ${incidente.indRelatorioImpacto ? 'Sim':'Não'}`,10, linha);
-        linha+=saltoLinha;
+        linha+=this.saltoLinha;
+
         doc.text(`Consequências:`,10,linha);
-        doc.text(`${incidente.desConsequencias ? incidente.desConsequencias: ""}`,100, linha);
-        linha+=(saltoLinha * this.contaLinhas(incidente.desConsequencias));
+        linha = this.imprimeTextoLongo(doc, incidente.desConsequencias, linha, 100, 470);
+        /*doc.text(`${incidente.desConsequencias ? incidente.desConsequencias: ""}`,100, linha);
+        linha+=(this.saltoLinha * this.contaLinhas(incidente.desConsequencias));*/
+
         doc.text(`Link Documento Incidente: ${incidente.desLinkDocumento ? incidente.desLinkDocumento : ''}`,10, linha);
 
-        doc.save('pdf-export');
+        doc.save(`incidente-${incidente.codigoIncidente}`);
         
     }
 
@@ -313,11 +330,23 @@ export class IncidenteListComponent implements OnInit {
         doc.text('PRIVA',280,21);
     }
 
-    private contaLinhas(texto: string): number
+    private imprimeTextoLongo(doc: jsPDF, texto: string, linha: number, coluna: number, limite: number): number
     {
-        var linhas = texto.split("\n").length;
-        if (linhas === 0) linhas = 1;
-        return linhas;
+        var linhaImpressa = linha;
+        var textoTratado = doc.splitTextToSize(texto,limite);
+        textoTratado.forEach((termo) => 
+        {
+            doc.text(termo,coluna, linhaImpressa);
+            linhaImpressa+=this.saltoLinha;
+            if (linhaImpressa>=this.linhasPagina)
+            {
+                doc.addPage();
+                this.imprimeCabecalhoRelatorio(doc);
+                linhaImpressa = this.linhaInicial;
+            }
+        });
+        return linhaImpressa; 
+    
     }
 
     private datediff(first, second) {
