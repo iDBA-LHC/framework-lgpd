@@ -395,6 +395,7 @@ export class DataMapFormComponent implements OnInit {
 					if (this.indTipo == 1) {
 						this.dataFlowService.pesquisaDataFlow(this.codChildrenData).subscribe(
 							(retorno) => {
+
 								this.dataMapForm.patchValue({
 									codDataMap: retorno.body[0].codDataMap,
 
@@ -462,6 +463,7 @@ export class DataMapFormComponent implements OnInit {
 					if (this.indTipo == 2) {
 						this.dataMapService.pesquisaDataMap(this.codChildrenData).subscribe(
 							(retorno) => {
+
 								this.dataMapForm.patchValue({
 									codDataMap: retorno.body[0].codDataMap,
 
@@ -601,6 +603,57 @@ export class DataMapFormComponent implements OnInit {
 				this.dataMapService.alterarDataMap(DataMap).subscribe(
 					(response) => {
 						if (this.indTipo == 1) {
+							//Replicar Alteração do Data Analisys Map para o Data Governance Map
+							this.dataMapService.pesquisaDataMapCicloAtividadeTipo(DataMap.codCicloMonitoramento, DataMap.codAtividade, 2).subscribe(
+								(response) => {
+									//Se existir Data Governance Map, atualzar ele com dados do Data Analisys Map
+									var dataGovernanceMap: DataMap = response.body[0]; 
+									if (dataGovernanceMap) {
+										dataGovernanceMap.metadados = DataMap.metadados;
+										dataGovernanceMap.codBaseLegal = DataMap.codBaseLegal;
+										dataGovernanceMap.indPrincipios = DataMap.indPrincipios;
+										dataGovernanceMap.indSensivel = DataMap.indSensivel;
+										dataGovernanceMap.indDadosMenores = DataMap.indDadosMenores;
+										dataGovernanceMap.formaColetas = DataMap.formaColetas;
+										dataGovernanceMap.indNecessitaConsentimento = DataMap.indNecessitaConsentimento;
+										dataGovernanceMap.armazenamentos = DataMap.armazenamentos;
+										dataGovernanceMap.indTransfInternacional = DataMap.indTransfInternacional;
+										dataGovernanceMap.compartilhamentos = DataMap.compartilhamentos;
+										dataGovernanceMap.indAnonimizacao = DataMap.indAnonimizacao;
+										dataGovernanceMap.codCicloVida = DataMap.codCicloVida;
+										dataGovernanceMap.desObservacoes = DataMap.desObservacoes;
+										dataGovernanceMap.indRisco = DataMap.indRisco;
+										this.dataMapService.alterarDataMap(dataGovernanceMap).subscribe(
+											(response) => {
+												this.snackBar.openSnackBar(`Data Analisys Map Alterado com Sucesso`, null);
+												this.router.navigate(["/priva/data-analisys-map"]);
+											},
+											(err) => {
+												if (err.status === 401) {
+													TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
+												}
+												else {
+													TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+												}
+											}
+										);
+									}
+									else
+									{
+										this.snackBar.openSnackBar(`Data Analisys Map Alterado com Sucesso`, null);
+										this.router.navigate(["/priva/data-analisys-map"]);
+									}
+								},
+								(err) => {
+									if (err.status === 401) {
+										TrataExcessaoConexao.TrataErroAutenticacao(err, this.snackBar, this.authService.renewSession(() => { this.salvarDataMap(); }));
+									}
+									else {
+										TrataExcessaoConexao.TrataExcessao(err, this.snackBar);
+									}
+								}
+
+							);
 							this.snackBar.openSnackBar(`Data Analisys Map Alterado com Sucesso`, null);
 							this.router.navigate(["/priva/data-analisys-map"]);
 						}
