@@ -20,6 +20,8 @@ import { CpfCnpjPipe } from 'src/app/shared/components/pipe/cpf-cnpj-pipe';
 import { DatePipe } from '@angular/common';
 import { DireitoSolicitacaoTitularButtons } from 'src/app/models/solicitacao-titular/buttons/direito-solicitacao-titular-buttons';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { options } from './solicitacao-titular-list.module';
 
 @Component({
   selector: 'app-solicitacao-titular-list',
@@ -40,7 +42,8 @@ export class SolicitacaoTitularListComponent implements OnInit {
   linhasPagina = 842;
   colunasPagina = 595;
   saltoLinha = 15;
-  linhaInicial = 70;
+  linhaInicial = 90;
+  saltoCaixaTexto = 3;
 
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -228,7 +231,6 @@ export class SolicitacaoTitularListComponent implements OnInit {
     }
 
     gerarPdfSolicitacao(solicitacao: SolicitacaoTitular) {
-        var linha = this.linhaInicial; 
 
         const doc = new jsPDF({
             unit: 'px',
@@ -239,68 +241,69 @@ export class SolicitacaoTitularListComponent implements OnInit {
 
         this.imprimeCabecalhoRelatorio(doc);
 
-        doc.setFontSize(16);
-        doc.setTextColor(0,0,0);
-        doc.text(`Solicitação # ${solicitacao.numeroProtocolo}`, 240, 50);
+        var dadosRelatorio = [['Controladora:',empresaIncidente.nomeEmpresa],
+                              ['Nome do Titular:' ,solicitacao.desNomeTitular],
+                              ['CPF Titular:',this.cnpjCpfPipe.transform(solicitacao.numeroCpfTitular)],
+                              ['Documento Identificação Titular:',solicitacao.numeroDocumentoTitular],
+                              ['Nome do Representante:',solicitacao.desNomeRepresentante],
+                              ['CPF Representante:',solicitacao.numeroCpfRepresentante],
+                              ['Documento Identificação Representante:',solicitacao.numeroDocumentoRepresentante],
+                              ['Direito a Ser Exercido:',this.direitoSolicitacaoTitularButtons.buttons[solicitacao.indDireito - 1].description],
+                              ['E-Mail Para Retorno:',solicitacao.emailTitular],
+                              ['Data de Inclusão:',this.datePipe.transform(solicitacao.dataInclusao,'dd/MM/yyyy',"UTC")],
+                              ['Data de Previsão de Retorno',this.datePipe.transform(solicitacao.dataPrevisaoRetorno,'dd/MM/yyyy',"UTC")],
+                              ['Usuário:',solicitacao.nomeUsuario],
+                              ['Data de Retorno:',solicitacao.dataRetorno ? this.datePipe.transform(solicitacao.dataRetorno,'dd/MM/yyyy',"UTC") : ""],
+                              ['Status:',this.statusSolicitacaoButtons.buttons[solicitacao.indStatus - 1].description],
+                              ['Retorno/Observações:',solicitacao.desObservacoes]
 
-        doc.text(`Controladora: ${empresaIncidente.nomeEmpresa}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Nome do Titular: ${solicitacao.desNomeTitular}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`CPF Titular: ${this.cnpjCpfPipe.transform(solicitacao.numeroCpfTitular)} `, 10, linha);
-        doc.text(`Documento Identificação Titular: ${solicitacao.numeroDocumentoTitular} `, 280, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Nome do Representante: ${solicitacao.desNomeRepresentante ? solicitacao.desNomeRepresentante : ""}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`CPF Representante: ${solicitacao.numeroCpfRepresentante ? this.cnpjCpfPipe.transform(solicitacao.numeroCpfRepresentante) : ""} `, 10, linha);
-        doc.text(`Documento Identificação Representante: ${solicitacao.numeroDocumentoRepresentante ? solicitacao.numeroDocumentoRepresentante : ""} `, 280, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Direito a Ser Exercido: ${this.direitoSolicitacaoTitularButtons.buttons[solicitacao.indDireito - 1].description}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`E-Mail Para Retorno: ${solicitacao.emailTitular}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Data de Inclusão: ${this.datePipe.transform(solicitacao.dataInclusao,'dd/MM/yyyy',"UTC")} `, 10, linha);
-        doc.text(`Data de Previsão de Retorno: ${this.datePipe.transform(solicitacao.dataPrevisaoRetorno,'dd/MM/yyyy',"UTC")} `, 280, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Usuário: ${solicitacao.nomeUsuario}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Data de Retorno: ${solicitacao.dataRetorno ? this.datePipe.transform(solicitacao.dataRetorno,'dd/MM/yyyy',"UTC") : ""} `, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Status: ${this.statusSolicitacaoButtons.buttons[solicitacao.indStatus - 1].description}`, 10, linha);
-        linha+=this.saltoLinha;
-        
-        doc.text(`Retorno/Observações:`,10, linha);
-        linha = this.imprimeTextoLongo(doc,solicitacao.desObservacoes,linha,135,450);
+                            ];
+
+
+        doc.setFontSize(12);
+        doc.setTextColor(0,0,0);
+        doc.rect(30,57,535,this.saltoLinha + 3,"S");
+        doc.setTextColor("#ee8239");
+        doc.text(`Solicitação # ${solicitacao.numeroProtocolo}`, 33, 70);
+
+        autoTable(doc, {
+            startY: this.linhaInicial,
+            head: [],
+            body: dadosRelatorio,
+            styles: {fontStyle: "bold"},
+            willDrawCell: (data) => {
+                if (data.section === 'body')
+                {
+                    if (data.column.index ===1)
+                    {
+                        doc.setTextColor("#ee8239");
+                    }
+                    else
+                    {
+                        doc.setFont(doc.getFont().fontName,"normal");
+                    }
+                }
+              },
+            willDrawPage: (data) => {
+                if (data.pageNumber > 1)
+                {
+                    this.imprimeCabecalhoRelatorio(doc);
+                }
+            }  
+        });
+
         doc.save(`solicitacao-${solicitacao.codigoSolicitacaoTitular}`);
         
     }
 
     private imprimeCabecalhoRelatorio(doc: jsPDF)
     {
-        doc.setFillColor("F58634");
-        doc.rect(0, 0, 595, 30, 'F');
-        doc.setFontSize(20);
-        doc.setTextColor(255, 255, 255);
-        doc.text('PRIVA',280,21);
-    }
-
-    private imprimeTextoLongo(doc: jsPDF, texto: string, linha: number, coluna: number, limite: number): number
-    {
-        var linhaImpressa = linha;
-        var textoTratado = doc.splitTextToSize(texto,limite);
-        textoTratado.forEach((termo) => 
-        {
-            doc.text(termo,coluna, linhaImpressa);
-            linhaImpressa+=this.saltoLinha;
-            if (linhaImpressa>=this.linhasPagina)
-            {
-                doc.addPage();
-                this.imprimeCabecalhoRelatorio(doc);
-                linhaImpressa = this.linhaInicial;
-            }
-        });
-        return linhaImpressa; 
-    
+        var img = new Image();
+        img.src = "./../../../../assets/img/logo.png";
+        doc.addImage(img,'png',32,25,82,24);
+        doc.setTextColor("#ee8239");
+        doc.setFont(doc.getFont().fontName,"bold");
+        doc.text('Solicitação de Titulares',270,41);
     }
 
 }
