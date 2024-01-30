@@ -21,7 +21,6 @@ import { DatePipe } from '@angular/common';
 import { DireitoSolicitacaoTitularButtons } from 'src/app/models/solicitacao-titular/buttons/direito-solicitacao-titular-buttons';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { options } from './solicitacao-titular-list.module';
 
 @Component({
   selector: 'app-solicitacao-titular-list',
@@ -234,7 +233,8 @@ export class SolicitacaoTitularListComponent implements OnInit {
 
         const doc = new jsPDF({
             unit: 'px',
-            format: [this.colunasPagina, this.linhasPagina]
+            format: [this.colunasPagina, this.linhasPagina],
+            compress: true
         });
 
         let empresaIncidente: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == solicitacao.codigoEmpresa)[0];
@@ -298,12 +298,16 @@ export class SolicitacaoTitularListComponent implements OnInit {
 
     private imprimeCabecalhoRelatorio(doc: jsPDF)
     {
-        var img = new Image();
-        img.src = "./../../../../assets/img/logo.png";
-        doc.addImage(img,'png',32,25,82,24);
+        var imgLogo = new Image();
+        imgLogo.src = "./../../../../assets/img/logo.png";
+        doc.addImage(imgLogo,'png',32,25,82,24);
         doc.setTextColor("#ee8239");
         doc.setFont(doc.getFont().fontName,"bold");
         doc.text('Solicitação de Titulares',270,41);
+
+        var imgRodape = "./../../../../assets/img/bg-central.png";
+        doc.addImage(imgRodape,'png',0,742,595,150);
+        
     }
 
 }
