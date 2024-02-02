@@ -251,7 +251,7 @@ export class SolicitacaoTitularListComponent implements OnInit {
                               ['Direito a Ser Exercido:',this.direitoSolicitacaoTitularButtons.buttons[solicitacao.indDireito - 1].description],
                               ['E-Mail Para Retorno:',solicitacao.emailTitular],
                               ['Data de Inclusão:',this.datePipe.transform(solicitacao.dataInclusao,'dd/MM/yyyy',"UTC")],
-                              ['Data de Previsão de Retorno',this.datePipe.transform(solicitacao.dataPrevisaoRetorno,'dd/MM/yyyy',"UTC")],
+                              ['Data de Previsão de Retorno:',this.datePipe.transform(solicitacao.dataPrevisaoRetorno,'dd/MM/yyyy',"UTC")],
                               ['Usuário:',solicitacao.nomeUsuario],
                               ['Data de Retorno:',solicitacao.dataRetorno ? this.datePipe.transform(solicitacao.dataRetorno,'dd/MM/yyyy',"UTC") : ""],
                               ['Status:',this.statusSolicitacaoButtons.buttons[solicitacao.indStatus - 1].description],
@@ -268,6 +268,7 @@ export class SolicitacaoTitularListComponent implements OnInit {
 
         autoTable(doc, {
             startY: this.linhaInicial,
+            margin: this.linhaInicial - 20,
             head: [],
             body: dadosRelatorio,
             styles: {fontStyle: "bold"},

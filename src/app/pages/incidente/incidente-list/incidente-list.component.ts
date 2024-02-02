@@ -18,6 +18,7 @@ import * as fs from 'file-saver';
 import { DatePipe } from '@angular/common';
 import { CpfCnpjPipe } from 'src/app/shared/components/pipe/cpf-cnpj-pipe';
 import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
     selector: 'app-incidente-list',
@@ -46,7 +47,7 @@ export class IncidenteListComponent implements OnInit {
     linhasPagina = 842;
     colunasPagina = 595;
     saltoLinha = 15;
-    linhaInicial = 70;
+    linhaInicial = 90;
 
     constructor(
         private service: IncidenteService,
@@ -219,103 +220,103 @@ export class IncidenteListComponent implements OnInit {
 
     gerarPdfIncidente(incidente: Incidente) {
         var indIncidenteNoPrazo = false;
-        var linha = this.linhaInicial; 
 
         const doc = new jsPDF({
             unit: 'px',
-            format: [this.colunasPagina, this.linhasPagina]
+            format: [this.colunasPagina, this.linhasPagina],
+            compress: true
         });
+
 
         let empresaIncidente: Empresa = <Empresa>this.listaEmpresas.filter(empresa => empresa.codigoEmpresa == incidente.codigoEmpresa)[0];
 
         this.imprimeCabecalhoRelatorio(doc);
 
-        doc.setFontSize(16);
-        doc.setTextColor(0,0,0);
-        doc.text(`Incidente # ${incidente.numeroProtocolo}`, 250, 50);
 
-        doc.text(`Controladora: ${incidente.nomeEmpresa}`, 10, linha);
-        doc.text(`CNPJ: ${this.cnpjCpfPipe.transform(incidente.numeroCNPJEmpresa)} `, 300, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Operador: ${incidente.nomeUsuarioOperador}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Encarregado: ${incidente.nomeUsuarioEncarregado}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`E-Mail Encarregado: ${incidente.emailUsuarioEncarregado}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Telefone Controladora: ${empresaIncidente ? empresaIncidente.telefoneControlador : ""}`, 10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Data/Hora de Registro: ${this.datePipe.transform(incidente.dataRegistro,'dd/MM/yyyy hh:mm',"UTC")} `, 10, linha);
-        doc.text(`Data/Hora do Incidente: ${this.datePipe.transform(incidente.dataIncidente,'dd/MM/yyyy hh:mm',"UTC")} `, 300, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Data de Comunicação Registro: ${this.datePipe.transform(incidente.dataComunicacao,'dd/MM/yyyy',"UTC")} `, 10, linha);
-
-        if (this.datediff(incidente.dataIncidente, incidente.dataComunicacao) > 2) {
+        if (this.datediff(new Date(incidente.dataIncidente).getTime(), new Date(incidente.dataComunicacao).getTime()) > 2) {
 			indIncidenteNoPrazo = false;
 		}
 		else {
 			indIncidenteNoPrazo = true;
 		}
 
-        if (indIncidenteNoPrazo)
-        {
-            doc.setTextColor(0,255,0);
-            doc.text(`Incidente Comunicado No Prazo`, 300, linha);
-        }
-        else
-        {
-            doc.setTextColor(255,0,0);
-            doc.text(`Incidente Comunicado Fora do Prazo`, 300, linha);
-        }
+        var dadosRelatorio = [['Controladora:',empresaIncidente.nomeEmpresa],
+                              ['CNPJ:' ,this.cnpjCpfPipe.transform(incidente.numeroCNPJEmpresa)],
+                              ['Operador:',incidente.nomeUsuarioOperador],
+                              ['Encarregado:',incidente.nomeUsuarioEncarregado],
+                              ['E-Mail Encarregado:',incidente.emailUsuarioEncarregado],
+                              ['Telefone Controladora:',empresaIncidente.telefoneControlador],
+                              ['Data/Hora de Registro:',this.datePipe.transform(incidente.dataRegistro,'dd/MM/yyyy hh:mm',"UTC")],
+                              ['Data/Hora do Incidente:',this.datePipe.transform(incidente.dataIncidente,'dd/MM/yyyy hh:mm',"UTC")],
+                              ['Data de Comunicação Registro:',this.datePipe.transform(incidente.dataComunicacao,'dd/MM/yyyy',"UTC")],
+                              ['indIncidenteNoPrazo',indIncidenteNoPrazo],
+                              ['Justificativa:',incidente.desJustificativa],
+                              ['Status:',this.statusIncidenteButtons.buttonsForm[incidente.indStatus - 1].description],
+                              ['Tipo de Comunicação:',incidente.desTipoComunicacao],
+                              ['Dados do Agente de Tratamento:',incidente.dadosAgenteTratamento],
+                              ['Dados do Notificante:',incidente.dadosNotificante],
+                              ['Detalhes:',incidente.desDetalhes],
+                              ['Natureza dos Dados Afetados:',incidente.desNaturezaDados],
+                              ['Tipo Titulares Afetados:',incidente.desTipoTitulares],
+                              ['Medidas Preventivas:', incidente.desMedidasPreventivas],
+                              ['Medidas Mitigatórias:', incidente.desMedidasMitigatorias],
+                              ['Relatório de Impacto:',incidente.indRelatorioImpacto ? 'Sim':'Não'],
+                              ['Consequências:',incidente.desConsequencias],
+                              ['Link Documento Incidente:',incidente.desLinkDocumento]
 
-        linha+=this.saltoLinha;
-        doc.setTextColor(0,0,0)
-        
-        doc.text(`Justificativa:`,10, linha);
-        linha = this.imprimeTextoLongo(doc, incidente.desJustificativa, linha, 80, 500);
-        /*
-        doc.text(`${incidente.desJustificativa ? incidente.desJustificativa : ""}`, 80,linha);
-        linha+=(this.saltoLinha * this.contaLinhas(incidente.desJustificativa));*/
-        
+                            ];
 
-        doc.text(`Status: ${this.statusIncidenteButtons.buttonsForm[incidente.indStatus - 1].description}`, 10,linha);
-        linha+=this.saltoLinha;
-        doc.text(`Tipo de Comunicação: ${incidente.desTipoComunicacao ? incidente.desTipoComunicacao: ''}`,10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Dados do Agente de Tratamento: ${incidente.dadosAgenteTratamento ? incidente.dadosAgenteTratamento: ""}`,10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Dados do Notificante: ${incidente.dadosNotificante ? incidente.dadosNotificante: ""}`,10, linha);
-        linha+=this.saltoLinha;
+        doc.setFontSize(12);
+        doc.setTextColor(0,0,0);
+        doc.rect(30,57,535,this.saltoLinha + 3,"S");
+        doc.setTextColor("#ee8239");
+        doc.text(`Incidente #${incidente.numeroProtocolo}`, 33, 70);
 
-        doc.text(`Detalhes:`,10, linha);
-        linha = this.imprimeTextoLongo(doc, incidente.desDetalhes, linha, 65, 510);
-        /*doc.text(`${incidente.desDetalhes ? incidente.desDetalhes: ""}`,65, linha);
-        linha+=(this.saltoLinha * this.contaLinhas(incidente.desDetalhes));*/
+        autoTable(doc, {
+            startY: this.linhaInicial,
+            margin: this.linhaInicial - 20,
+            head: [],
+            body: dadosRelatorio,
+            styles: {fontStyle: "bold"},
+            willDrawCell: (data) => {
+                if (data.section === 'body')
+                {
+                    if (data.column.index ===1)
+                    {
+                        doc.setTextColor("#ee8239");
+                    }
+                    else
+                    {
+                        if (data.cell.raw === "indIncidenteNoPrazo")
+                        {
 
-        doc.text(`Natureza dos Dados Afetados: ${incidente.desNaturezaDados ? incidente.desNaturezaDados: ""}`,10, linha);
-        linha+=this.saltoLinha;
-        doc.text(`Tipo Titulares Afetados: ${incidente.desTipoTitulares ? incidente.desTipoTitulares: ""}`,10, linha);
-        linha+=this.saltoLinha;
+                            if (data.row.cells[1].raw)
+                            {
+                                data.cell.raw = "Incidente Comunicado No Prazo";
+                                doc.setTextColor("#00FF00");
+                            }
+                            else
+                            {
+                                data.cell.raw = "Incidente Comunicado Fora do Prazo";
+                                doc.setTextColor("#FF0000");
+                            }
 
-        doc.text(`Medidas Preventivas:`,10,linha);
-        linha = this.imprimeTextoLongo(doc, incidente.desMedidasPreventivas, linha, 128, 450);
-        /*doc.text(`${incidente.desMedidasPreventivas ? incidente.desMedidasPreventivas: ""}`,128, linha);
-        linha+=(this.saltoLinha * this.contaLinhas(incidente.desMedidasPreventivas));*/
+                            data.cell.text = [data.cell.raw];
 
-        doc.text(`Medidas Mitigatórias:`,10,linha);
-        linha = this.imprimeTextoLongo(doc, incidente.desMedidasMitigatorias, linha, 128, 450);
-        /*doc.text(`${incidente.desMedidasMitigatorias ? incidente.desMedidasMitigatorias: ""}`,128, linha);
-        linha+=(this.saltoLinha * this.contaLinhas(incidente.desMedidasMitigatorias));*/
-
-        doc.text(`Relatório de Impacto: ${incidente.indRelatorioImpacto ? 'Sim':'Não'}`,10, linha);
-        linha+=this.saltoLinha;
-
-        doc.text(`Consequências:`,10,linha);
-        linha = this.imprimeTextoLongo(doc, incidente.desConsequencias, linha, 100, 470);
-        /*doc.text(`${incidente.desConsequencias ? incidente.desConsequencias: ""}`,100, linha);
-        linha+=(this.saltoLinha * this.contaLinhas(incidente.desConsequencias));*/
-
-        doc.text(`Link Documento Incidente: ${incidente.desLinkDocumento ? incidente.desLinkDocumento : ''}`,10, linha);
+                            data.row.cells[1].raw = "";
+                            data.row.cells[1].text = [];
+                        }
+                        doc.setFont(doc.getFont().fontName,"normal");
+                    }
+                }
+              },
+            willDrawPage: (data) => {
+                if (data.pageNumber > 1)
+                {
+                    this.imprimeCabecalhoRelatorio(doc);
+                }
+            }  
+        });
 
         doc.save(`incidente-${incidente.codigoIncidente}`);
         
@@ -323,30 +324,16 @@ export class IncidenteListComponent implements OnInit {
 
     private imprimeCabecalhoRelatorio(doc: jsPDF)
     {
-        doc.setFillColor("F58634");
-        doc.rect(0, 0, 595, 30, 'F');
-        doc.setFontSize(20);
-        doc.setTextColor(255, 255, 255);
-        doc.text('PRIVA',280,21);
-    }
+        var imgLogo = new Image();
+        imgLogo.src = "./../../../../assets/img/logo.png";
+        doc.addImage(imgLogo,'png',32,25,82,24);
+        doc.setTextColor("#ee8239");
+        doc.setFont(doc.getFont().fontName,"bold");
+        doc.text('Incidente',270,41);
 
-    private imprimeTextoLongo(doc: jsPDF, texto: string, linha: number, coluna: number, limite: number): number
-    {
-        var linhaImpressa = linha;
-        var textoTratado = doc.splitTextToSize(texto,limite);
-        textoTratado.forEach((termo) => 
-        {
-            doc.text(termo,coluna, linhaImpressa);
-            linhaImpressa+=this.saltoLinha;
-            if (linhaImpressa>=this.linhasPagina)
-            {
-                doc.addPage();
-                this.imprimeCabecalhoRelatorio(doc);
-                linhaImpressa = this.linhaInicial;
-            }
-        });
-        return linhaImpressa; 
-    
+        var imgRodape = "./../../../../assets/img/bg-central.png";
+        doc.addImage(imgRodape,'png',0,742,595,150);
+        
     }
 
     private datediff(first, second) {
