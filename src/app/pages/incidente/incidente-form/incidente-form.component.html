@@ -297,12 +297,11 @@
 						formControlName="desLinkDocumento"
 						placeholder="Link Documento Incidente"
 						autocomplete="off"
-						[readonly]="indStatus === 2"
 						type="text"/>
 				</mat-form-field>
 
 				<mat-card-actions>
-					<button *ngIf="indStatus != 2 || codigoIncidente===0" mat-raised-button class="save-button">Salvar</button>
+					<button mat-raised-button class="save-button">Salvar</button>
 					<button *ngIf="indStatus === 2 && codigoIncidente!=0" mat-raised-button class="action-button"
 						    (click)="navigateToIncidenteList()">Voltar</button>
 				</mat-card-actions>

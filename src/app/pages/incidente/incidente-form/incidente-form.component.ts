@@ -159,6 +159,14 @@ export class IncidenteFormComponent implements OnInit {
 							this.form.controls["dataComunicacao"].setValue(dataComunicacao)
 						}
 
+						if (this.listaUsuariosEncarregados)
+						{
+							let usuarioSel: Usuario = <Usuario>this.listaUsuariosEncarregados.filter(usuario => usuario.codigoUsuario == retorno.body[0].codigoUsuarioEncarregado)[0];
+							if (usuarioSel) {
+								this.form.controls.usuarioEncarregado.setValue(usuarioSel);
+								this.form.controls.emailEncarregado.setValue(usuarioSel.emailUsuario);
+							}
+						}
 
 
 						this.indStatus = retorno.body[0].indStatus;
