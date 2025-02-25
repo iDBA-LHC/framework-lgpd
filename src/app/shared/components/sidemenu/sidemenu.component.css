@@ -77,3 +77,7 @@ mat-sidenav {
   height: 50px;
   text-align: -webkit-center;
 }
+
+.label-menu{
+  font-size: 13px !important;
+}
