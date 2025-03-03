@@ -122,7 +122,7 @@ export class MenuItems {
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
-			label: "Gestão do Consentimento",
+			label: "Gestão Consentimento",
 			link: "priva/solicitacao-titular",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
