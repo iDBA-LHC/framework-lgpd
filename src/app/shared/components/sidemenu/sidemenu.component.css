@@ -77,3 +77,7 @@ mat-sidenav {
   height: 50px;
   text-align: -webkit-center;
 }
+
+:host ::ng-deep .label-menu .label{
+  font-size: 13px !important;
+}
