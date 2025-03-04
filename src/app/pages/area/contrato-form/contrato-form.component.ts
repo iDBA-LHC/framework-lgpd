@@ -44,6 +44,8 @@ export class ContratoFormComponent implements OnInit {
       indTipoContrato: [0, Validators.required],
       obsContrato: [],
       enderecoDocumento: [],
+      nomeGestorPontoFocal: ["", Validators.required],
+      dataRevisao: [, Validators.required]
     });
   }
 
@@ -61,7 +63,9 @@ export class ContratoFormComponent implements OnInit {
                 objetoContrato: retorno.body[0].objetoContrato,
                 obsContrato: retorno.body[0].obsContrato,
                 indTipoContrato: retorno.body[0].indTipoContrato,
-                enderecoDocumento: retorno.body[0].enderecoDocumento
+                enderecoDocumento: retorno.body[0].enderecoDocumento,
+                nomeGestorPontoFocal: retorno.body[0].nomeGestorPontoFocal,
+                dataRevisao: retorno.body[0].dataRevisao
               });
 
               this.isLoading = false;

@@ -46,6 +46,28 @@
                 <mat-error *ngIf="contratoForm.controls.enderecoDocumento.errors?.required">Nome é Obrigatório</mat-error>
               </mat-form-field>
 
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Gestor / Ponto Focal</mat-label>
+                <input
+                    matInput
+                    formControlName="nomeGestorPontoFocal"
+                    placeholder="Gestor / Ponto FOcal"
+                    autocomplete="off"
+                    type="text"/>
+                <mat-error *ngIf="contratoForm.controls.nomeGestorPontoFocal.errors?.required">Gestor / Ponto Focal é Obrigatório</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
+                <mat-label>Data Revisão</mat-label>
+                <input
+                    matInput
+                    formControlName="dataRevisao"
+                    placeholder="Data Revisão"
+                    autocomplete="off"
+                    type="date"/>
+                <mat-error *ngIf="contratoForm.controls.dataRevisao.errors?.required">Data Revisão é Obrigatório</mat-error>
+              </mat-form-field>
+
               <!--<mat-form-field fxFlex style="width: 50%;" fxFlexOffset="5px">
                 <mat-label>Tipo Contrato</mat-label>
                 <input

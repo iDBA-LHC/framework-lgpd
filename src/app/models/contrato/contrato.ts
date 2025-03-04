@@ -11,4 +11,6 @@ export class Contrato {
     codigoArea: number;
     nomeArea: string;
     nomeProcesso: string;
+    nomeGestorPontoFocal: string;
+    dataRevisao: Date;
 }
