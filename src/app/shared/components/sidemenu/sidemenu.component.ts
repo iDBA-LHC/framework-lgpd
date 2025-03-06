@@ -23,7 +23,7 @@ export class SidemenuComponent implements OnInit {
 
   config = {
     paddingAtStart: true,
-    classname: "label-menu",
+    classname: "my-custom-class",
     fontColor: "#fff",
     selectedListFontColor: "#ffffff",
   };

@@ -84,6 +84,12 @@ export class MenuItems {
 				}
 			]
 		},	
+		// {
+		// 	label: "Data Flow",
+		// 	link: "priva/data-flow",
+		// 	icon: "account_tree",
+		// 	hidden: false,
+    	// }, 
 		{
 			label: "Data Map",
 			link: "priva/data-map",
@@ -101,7 +107,7 @@ export class MenuItems {
 			hidden: false,
     	},
 		{
-			label: "Gestão de Incidentes",
+			label: "Registro de Incidente",
 			link: "priva/incidente",
 			icon: "report_problem",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
@@ -109,41 +115,6 @@ export class MenuItems {
     	},
 		{
 			label: "Solicitação de Titulares",
-			link: "priva/solicitacao-titular",
-			icon: "list_alt",
-			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
-					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
-    	},
-		{
-			label: "Data Discovery",
-			link: "priva/solicitacao-titular",
-			icon: "list_alt",
-			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
-					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
-    	},
-		{
-			label: "Gestão Consentimento",
-			link: "priva/solicitacao-titular",
-			icon: "list_alt",
-			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
-					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
-    	},
-		{
-			label: "Geração do RIPD",
-			link: "priva/solicitacao-titular",
-			icon: "list_alt",
-			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
-					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
-    	},
-		{
-			label: "Gestão de Auditoria",
-			link: "priva/solicitacao-titular",
-			icon: "list_alt",
-			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
-					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
-    	},
-		{
-			label: "Gestão de Cookies",
 			link: "priva/solicitacao-titular",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
