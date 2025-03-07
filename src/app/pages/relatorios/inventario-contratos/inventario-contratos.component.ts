@@ -19,6 +19,8 @@ import * as fs from 'file-saver';
 import { TrataExcessaoConexao } from 'src/app/shared/utils/trata-excessao-conexao';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
+import { DatePipe } from '@angular/common';
+import { DateFormatPipe } from 'src/app/shared/components/pipe/date-format-pipe';
 
 @Component({
   selector: 'app-inventario-contratos',
@@ -52,7 +54,8 @@ export class InventarioContratosComponent implements OnInit {
       private atividadeService: AtividadeService,
       private contratoService: ContratoService,
       private snackBar: CustomSnackBarService,
-      private authService: AuthService,		
+      private authService: AuthService,	
+      private datePipe: DatePipe,
     ) { }
 
     ngOnInit() {
@@ -315,7 +318,7 @@ export class InventarioContratosComponent implements OnInit {
 
   private geraPlanilha(listaContratos: Contrato[]){
 
-		const header = ["Controladora", "Área", "Processo","Nome do Contrato","Endereço","Observações"];
+		const header = ["Controladora", "Área", "Processo","Nome do Contrato","Endereço","Gestor / Ponto Focal","Data de Revisão","Observações"];
 
 		let workbook = new Workbook();
 		let worksheet = workbook.addWorksheet('Inventário de Contratos');                    
@@ -333,6 +336,8 @@ export class InventarioContratosComponent implements OnInit {
 		});
 
 		listaContratos.forEach((contrato) => {
+
+      contrato['dataRevisaoString']  = this.datePipe.transform(contrato.dataRevisao,"dd/MM/yyyy");
 		
       let dado = 
       [
@@ -341,6 +346,8 @@ export class InventarioContratosComponent implements OnInit {
         contrato.nomeProcesso,
         contrato.objetoContrato,
         contrato.enderecoDocumento,
+        contrato.nomeGestorPontoFocal,
+        contrato['dataRevisaoString'],
         contrato.obsContrato
       ]
       let row = worksheet.addRow(dado);
