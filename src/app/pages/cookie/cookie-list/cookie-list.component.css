@@ -1,0 +1,19 @@
+.status-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0px 10px 0px 10px;
+  }
+  
+  .green {
+    background-color: green;
+  }
+  
+  .red {
+    background-color: red;
+  }
+
+  .box-group{
+    width: 98%; padding-right: 1em;
+  }

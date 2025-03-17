@@ -116,35 +116,35 @@ export class MenuItems {
     	},
 		{
 			label: "Data Discovery",
-			link: "priva/solicitacao-titular",
+			link: "priva/data-discovery",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Gestão Consentimento",
-			link: "priva/solicitacao-titular",
+			link: "priva/consentimento",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Geração do RIPD",
-			link: "priva/solicitacao-titular",
+			link: "priva/ripd",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Gestão de Auditoria",
-			link: "priva/solicitacao-titular",
+			link: "priva/auditoria",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Gestão de Cookies",
-			link: "priva/solicitacao-titular",
+			link: "priva/cookie",
 			icon: "list_alt",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,

@@ -204,6 +204,46 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       },
+      {
+        path: "data-discovery",
+        loadChildren: () =>
+          import("./pages/data-discovery/data-discovery.module").then(
+            (module) => module.DataDiscoveryModule
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "consentimento",
+        loadChildren: () =>
+          import("./pages/consentimento/consentimento.module").then(
+            (module) => module.ConsentimentoModule
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "auditoria",
+        loadChildren: () =>
+          import("./pages/auditoria/auditoria.module").then(
+            (module) => module.AuditoriaModule
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "cookie",
+        loadChildren: () =>
+          import("./pages/cookie/cookie.module").then(
+            (module) => module.CookieModule
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "ripd",
+        loadChildren: () =>
+          import("./pages/ripd/ripd.module").then(
+            (module) => module.RIPDModule
+          ),
+        canActivate: [AuthGuard],
+      }
     ],
   },
   {

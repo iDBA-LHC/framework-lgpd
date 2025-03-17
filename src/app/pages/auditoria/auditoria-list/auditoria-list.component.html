@@ -1,0 +1,81 @@
+<mat-card class="marginContent">
+  <div fxLayout="row">
+    <div fxFlex>
+      <mat-form-field fxFlex="30">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar Gestão de Auditoria" />
+
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="gappx">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="mat-elevation-z0 table-list" [hidden]="isLoading">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID#</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="imprimir">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="black" (click)="null" matTooltip="Imprimir">
+            <mat-icon>print</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="indicador">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element.status !== null" class="status-dot"
+            [ngClass]="{'green': element.indicador === 1, 'red': element.indicador === 2}">
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="area">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Área</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.area }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="empresa">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.empresa }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="responsavel">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Responsável</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.responsavel }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="inicio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Início</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.inicio }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechamento">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fechamento</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.fechamento }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.status }}</td>
+      </ng-container>
+      <ng-container matColumnDef="excluir">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="black" (click)="null" matTooltip="Imprimir">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</mat-card>

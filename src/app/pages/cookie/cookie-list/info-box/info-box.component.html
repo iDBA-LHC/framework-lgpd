@@ -1,0 +1,7 @@
+<div class="info-box" [ngClass]="{ 'red-box': isRed }">
+    <div class="title">{{ title }}</div>
+    <div class="value">
+        {{ value }}
+        <ng-content></ng-content>
+    </div>
+</div>

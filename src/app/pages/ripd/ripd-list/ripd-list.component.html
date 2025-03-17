@@ -1,0 +1,53 @@
+<mat-card class="marginContent">
+  <div fxLayout="row">
+    <div fxFlex>
+      <mat-form-field fxFlex="30">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar RIPD" />
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="5px">
+      <div fxLayout="column" fxLayoutAlign="start end">
+        <a mat-raised-button class="action-button" (click)="downloadRelatorio()">Gerar DPIA/RIPD - Relatório de impacto</a>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="start end">
+        <a mat-raised-button class="action-button">Criar nova análise de impacto</a>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="gappx">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="mat-elevation-z0 table-list" [hidden]="isLoading">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="check">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="colunaIcone"></th>
+        <td mat-cell *matCellDef="let element; let i = index" class="colunaIcone">
+          <mat-checkbox color="primary" [checked]="isChecked(element.coluna1)" (change)="handleClickColumn(element.coluna1)"></mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="coluna1">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="colunaFlex">Relatórios</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.coluna1 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="criado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="colunaData">Criado Em</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.criado }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="excluir">
+        <th mat-header-cell *matHeaderCellDef class="colunaIcone"></th>
+        <td mat-cell *matCellDef="let element" class="colunaIcone">
+          <button mat-icon-button color="black" (click)="null" matTooltip="Imprimir">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</mat-card>

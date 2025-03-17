@@ -1,0 +1,77 @@
+<mat-card class="marginContent">
+  <!-- <div fxLayout="row">
+      <div fxFlex>
+        <mat-form-field fxFlex="30">
+          <input
+            matInput
+            (keyup)="applyFilter($event.target.value)"
+            placeholder="Buscar Usuário"/>
+        </mat-form-field>
+        <div fxFlex style="align-items: center; margin-left: 15px;">
+          <mat-slide-toggle
+            color="primary"
+            fxFlex="100"
+            (change)="applyValue($event)">
+              <span class="ng-tns-c15-3 ng-star-inserted">Buscar inativos</span>
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="5px">
+        <div fxLayout="column" fxLayoutAlign="start end">
+          <a
+            mat-raised-button  
+            class="add-button"         
+            [routerLink]="['/priva/usuario', '']"
+            routerLinkActive="active">
+            <mat-icon>add</mat-icon>Novo Usuário</a>
+        </div>
+      </div>
+    </div> -->
+
+  <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="gappx">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <h2>Dados Coletados</h2>
+  <div fxLayout="row wrap" fxLayoutAlign="space-between center" class="box-group">
+    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="URLs" value="16"></app-info-box>
+    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="Cookies" value="13"></app-info-box>
+    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="Form Fields" value="2"></app-info-box>
+    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="Tags" value="29"></app-info-box>
+  </div>
+
+  <h2>Verificação de Políticas</h2>
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="box-group" fxLayoutGap="50px">
+    <app-info-box fxFlex="48" title="Política de Privacidade" [isRed]="true"><mat-icon>warning</mat-icon></app-info-box>
+    <app-info-box fxFlex="48" title="Termos de Uso" [isRed]="true"><mat-icon>warning</mat-icon></app-info-box>
+  </div>
+
+  <h2>Formulários</h2>
+  <div class="mat-elevation-z0 table-list" [hidden]="isLoading">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="formulario">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome do Formulário</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.formulario }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="campo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome do campo</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.campo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo do campo</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.tipo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="obrigatorio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Campo Obrigatório</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.obrigatorio }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</mat-card>

@@ -1,0 +1,29 @@
+.info-box {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.value {
+  font-size: 24px;
+  color: #333;
+}
+
+.red-box {
+  /* background-color: #ffcccc; */
+  border-color: #ff0000; 
+}
+
+.red-box .title,
+.red-box .value {
+  color: #ff0000;
+}

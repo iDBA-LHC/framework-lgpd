@@ -1,0 +1,51 @@
+<mat-card class="marginContent">
+
+  <div fxLayout="row">
+    <div fxFlex>
+      <mat-form-field fxFlex="30">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar Data Discovery" />
+
+      </mat-form-field>
+    </div>
+  </div>
+  <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="gappx">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="mat-elevation-z0 table-list" [hidden]="isLoading">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="area">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Área</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.area }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="processo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Processo</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.processo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="atividade">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Atividade</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.atividade }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="metadados">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Metadados</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.metadados }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="endereco">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Endereço Físico</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.endereco }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="tabela">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tabela</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.tabela }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</mat-card>
