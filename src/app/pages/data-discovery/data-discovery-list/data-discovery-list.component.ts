@@ -11,7 +11,7 @@ export class DataDiscoveryListComponent implements OnInit {
 
   isLoading = false;
 
-  displayedColumns: string[] = ["area", "processo", "atividade", "metadados", "endereco", "tabela"];
+  displayedColumns: string[] = ["area", "processo", "atividade", "metadados", "endereco", "tabela", "modulo"];
 
   jsonData = [
     {
@@ -19,88 +19,99 @@ export class DataDiscoveryListComponent implements OnInit {
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Nome",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "nome_funcionario",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "CPF",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "cpf",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Data Nascimento",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "data_nascimento",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Telefone",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "telefone",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Dados bancários",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "dado_bancario",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "PCD",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "flag_pcd",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Naturalidade",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "naturalidade",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Nacionalidade",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "nacionalidade",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Filiação",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "filiacao",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Sexo",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "sexo",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     },
     {
       "area": "RH",
       "processo": "Admissão",
       "atividade": "Cadastro",
       "metadados": "Endereço",
-      "endereco": "",
-      "tabela": ""
+      "endereco": "endereco",
+      "tabela": "hcm_pessoas",
+      "modulo": "TOTVS HCM"
     }
   ];
 

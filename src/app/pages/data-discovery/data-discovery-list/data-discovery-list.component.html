@@ -44,6 +44,11 @@
         <td mat-cell *matCellDef="let element; let i = index">{{ element.tabela }}</td>
       </ng-container>
 
+      <ng-container matColumnDef="modulo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Módulo</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ element.modulo }}</td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
