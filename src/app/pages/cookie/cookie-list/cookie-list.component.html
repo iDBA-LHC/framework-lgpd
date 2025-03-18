@@ -1,4 +1,4 @@
-<mat-card class="marginContent">
+<mat-card style="padding: 1em; margin: 1em;">
   <!-- <div fxLayout="row">
       <div fxFlex>
         <mat-form-field fxFlex="30">
@@ -33,17 +33,17 @@
   </div>
 
   <h2>Dados Coletados</h2>
-  <div fxLayout="row wrap" fxLayoutAlign="space-between center" class="box-group">
-    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="URLs" value="16"></app-info-box>
-    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="Cookies" value="13"></app-info-box>
-    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="Form Fields" value="2"></app-info-box>
-    <app-info-box fxFlex="45" fxFlex.gt-sm="46" fxFlex.gt-md="22" title="Tags" value="29"></app-info-box>
+  <div fxLayout="row wrap" class="box-container">
+    <app-info-box fxFlex="calc(50% - 10px)" fxFlex.gt-md="calc(25% - 15px)" title="URLs" value="16"></app-info-box>
+    <app-info-box fxFlex="calc(50% - 10px)" fxFlex.gt-md="calc(25% - 15px)" title="Cookies" value="13"></app-info-box>
+    <app-info-box fxFlex="calc(50% - 10px)" fxFlex.gt-md="calc(25% - 15px)" title="Form Fields" value="2"></app-info-box>
+    <app-info-box fxFlex="calc(50% - 10px)" fxFlex.gt-md="calc(25% - 15px)" title="Tags" value="29"></app-info-box>
   </div>
 
   <h2>Verificação de Políticas</h2>
-  <div fxLayout="row" fxLayoutAlign="space-between center" class="box-group" fxLayoutGap="50px">
-    <app-info-box fxFlex="48" title="Política de Privacidade" [isRed]="true"><mat-icon>warning</mat-icon></app-info-box>
-    <app-info-box fxFlex="48" title="Termos de Uso" [isRed]="true"><mat-icon>warning</mat-icon></app-info-box>
+  <div fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+    <app-info-box  fxFlex="calc(50% - 10px)" title="Política de Privacidade" [isRed]="true"><mat-icon>warning</mat-icon></app-info-box>
+    <app-info-box  fxFlex="calc(50% - 10px)" title="Termos de Uso" [isRed]="true"><mat-icon>warning</mat-icon></app-info-box>
   </div>
 
   <h2>Formulários</h2>

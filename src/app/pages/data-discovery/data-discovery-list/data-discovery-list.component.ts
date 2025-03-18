@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 
 @Component({
-  selector: 'app-usuario-list',
+  selector: 'app-data-discovery-list',
   templateUrl: './data-discovery-list.component.html',
   styleUrls: ['./data-discovery-list.component.css'],
 
@@ -10,7 +10,6 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/m
 export class DataDiscoveryListComponent implements OnInit {
 
   isLoading = false;
-  mostraInativos = false;
 
   displayedColumns: string[] = ["area", "processo", "atividade", "metadados", "endereco", "tabela"];
 

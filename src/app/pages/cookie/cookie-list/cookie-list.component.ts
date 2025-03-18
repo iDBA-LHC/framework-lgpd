@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 
 @Component({
-  selector: 'app-usuario-list',
+  selector: 'cookie-list',
   templateUrl: './cookie-list.component.html',
   styleUrls: ['./cookie-list.component.css'],
 
@@ -10,7 +10,6 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/m
 export class CookieListComponent implements OnInit {
 
   isLoading = false;
-  mostraInativos = false;
 
   displayedColumns: string[] = ["formulario", "campo", "tipo", "obrigatorio"];
 

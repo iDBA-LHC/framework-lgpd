@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 
 @Component({
-  selector: 'app-usuario-list',
+  selector: 'consentimento-list',
   templateUrl: './consentimento-list.component.html',
   styleUrls: ['./consentimento-list.component.css'],
 
@@ -10,7 +10,6 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/m
 export class ConsentimentoListComponent implements OnInit {
 
   isLoading = false;
-  mostraInativos = false;
 
   displayedColumns: string[] = ["usuario", "email", "dataHora", "acao", "area"];
 

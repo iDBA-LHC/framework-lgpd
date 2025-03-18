@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 
 @Component({
-  selector: 'app-usuario-list',
+  selector: 'app-ripd-list',
   templateUrl: './ripd-list.component.html',
   styleUrls: ['./ripd-list.component.css'],
 
@@ -10,15 +10,25 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/m
 export class RIPDListComponent implements OnInit {
 
   isLoading = false;
-  mostraInativos = false;
 
-  displayedColumns: string[] = ["check", "coluna1", "criado", "excluir"];
+  displayedColumns: string[] = ["versao", "geracao", "usuario"];
   checkedColumns: string[] = [];
 
   jsonData = [
     {
-      "coluna1": "RIPD1",
-      "criado": "23/09/2021",
+      "versao": "1.0.0",
+      "geracao": "20/12/2023",
+      "usuario": "usuário 1"
+    },
+    {
+      "versao": "1.0.1",
+      "geracao": "01/01/2024",
+      "usuario": "usuário 2"
+    },
+    {
+      "versao": "1.0.2",
+      "geracao": "15/01/2024",
+      "usuario": "usuário 4"
     },
   ];
 
@@ -32,21 +42,16 @@ export class RIPDListComponent implements OnInit {
 
   carregarDados() {
     this.dataSource.data = this.jsonData;
-    // arrumar filtro
-    // this.dataSource.filterPredicate = (
-    //   data: {
-    //     usuario: string,
-    //     email: string,
-    //     dataHora: string,
-    //     acao: string,
-    //     area: string
-    //   },
-    //   filterValue: string
-    // ) => data.usuario.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-    //     data.email.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-    //     data.dataHora.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
-    //     data.acao.toString().trim().toLowerCase().indexOf(filterValue) !== -1||
-    //     data.area.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
+    this.dataSource.filterPredicate = (
+      data: {
+        versao: string,
+        geracao: string,
+        usuario: string
+      },
+      filterValue: string
+    ) => data.usuario.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+        data.versao.toString().trim().toLowerCase().indexOf(filterValue) !== -1 ||
+        data.geracao.toString().trim().toLowerCase().indexOf(filterValue) !== -1;
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -56,24 +61,4 @@ export class RIPDListComponent implements OnInit {
     this.dataSource.filter = value.trim().toLowerCase();
   }
 
-  isChecked(coluna1: string) {
-    return this.checkedColumns.includes(coluna1)
-  }
-
-  handleClickColumn(coluna1: string) {
-    if (this.checkedColumns.includes(coluna1)) {
-      const index = this.checkedColumns.findIndex(el => el === coluna1)
-      this.checkedColumns.splice(index, 1)
-    } else {
-      this.checkedColumns.push(coluna1)
-    }
-  }
-
-  downloadRelatorio() {
-    const filePath = `assets/docs/PRIVA-Template-RIPD.pdf`;
-    const link = document.createElement('a');
-    link.href = filePath;
-    link.download = "PRIVA-Template-RIPD.pdf";
-    link.click();
-  }
 }

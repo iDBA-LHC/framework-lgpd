@@ -117,35 +117,35 @@ export class MenuItems {
 		{
 			label: "Data Discovery",
 			link: "priva/data-discovery",
-			icon: "list_alt",
+			icon: "search",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Gestão Consentimento",
 			link: "priva/consentimento",
-			icon: "list_alt",
+			icon: "fact_check",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
-			label: "Geração do RIPD",
+			label: "Gestão do RIPD",
 			link: "priva/ripd",
-			icon: "list_alt",
+			icon: "security",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Gestão de Auditoria",
 			link: "priva/auditoria",
-			icon: "list_alt",
+			icon: "assignment",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
 		{
 			label: "Gestão de Cookies",
 			link: "priva/cookie",
-			icon: "list_alt",
+			icon: "cookie",
 			hidden: this.authService.getLoggedUserType() === environment.tipoUsuaruioAdmin ||
 					this.authService.getLoggedUserType() === environment.tipoUsuarioEncarregado ? false : true,
     	},
@@ -172,6 +172,12 @@ export class MenuItems {
 					label: "Riscos",
 					link: "priva/mapa-riscos",
 					icon: "travel_explore",
+					hidden: false,
+				},
+				{
+					label: "RIPD",
+					link: "priva/relatorio-ripd",
+					icon: "security",
 					hidden: false,
 				}
 			]

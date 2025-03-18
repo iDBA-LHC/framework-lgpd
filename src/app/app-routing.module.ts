@@ -189,6 +189,14 @@ const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
+        path: "relatorio-ripd",
+        loadChildren: () =>
+          import("./pages/relatorios/relatorio-ripd/relatorio-ripd.module").then(
+            (module) => module.RelatorioRIPDModule
+          ),
+        canActivate: [AuthGuard],
+      },
+      {
         path: "incidente",
         loadChildren: () =>
           import("./pages/incidente/incidente.module").then(

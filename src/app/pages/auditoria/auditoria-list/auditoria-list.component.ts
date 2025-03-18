@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 
 @Component({
-  selector: 'app-usuario-list',
+  selector: 'auditoria-list',
   templateUrl: './auditoria-list.component.html',
   styleUrls: ['./auditoria-list.component.css'],
 
@@ -10,7 +10,6 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/m
 export class AuditoriaListComponent implements OnInit {
 
   isLoading = false;
-  mostraInativos = false;
 
   displayedColumns: string[] = ["id", "imprimir", "indicador", "area", "empresa", "responsavel", "inicio", "fechamento", "status", "excluir"];
 
